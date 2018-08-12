@@ -1,0 +1,32 @@
+{
+  "name": "user_management",
+  "version": "1.0.0",
+  "description": "user_management ===============",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/Thibaut-Decherit/perso-user_management.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/Thibaut-Decherit/perso-user_management/issues"
+  },
+  "homepage": "https://gitlab.com/Thibaut-Decherit/perso-user_management#README",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.2.0",
+    "@symfony/webpack-encore": "^0.20.1",
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.9.3",
+    "popper.js": "^1.14.4",
+    "sass-loader": "^7.1.0",
+    "webpack-notifier": "^1.6.0"
+  }
+}
