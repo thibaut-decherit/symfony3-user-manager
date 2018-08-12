@@ -1,0 +1,59 @@
+@import '~bootstrap/scss/bootstrap';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300');
+
+/* Bootstrap overrides */
+$font-family-base: 'Open Sans', sans-serif;
+
+$input-btn-focus-box-shadow: none;
+$input-btn-focus-width: 0;
+
+.btn.disabled, .btn:disabled {
+  opacity: 1!important;
+}
+
+html {
+  font-size: 1rem;
+}
+
+@include media-breakpoint-up(xs)
+  html {
+    font-size: 1.1rem;
+  }
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.1rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size:0.9rem;
+  }
+}
+
+a {
+  cursor: pointer;
+}
+
+.modal-content {
+  border-radius: 0;
+}
+
+.vh-95 {
+  height: 95vh;
+}
+
+.vh-5 {
+  height: 5vh;
+}
