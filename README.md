@@ -1,4 +1,3 @@
-user_management
-===============
+# User Manager
 
-A Symfony project created on August 12, 2018, 9:27 pm.
+My take on user management with Symfony 3.4
