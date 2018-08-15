@@ -1,8 +1,10 @@
 #User
 
 user:
-  email: Email address
+  email_address: Email address
+  invalid_credentials: Wrong username or password.
+  login: Login
   password: Password
   password_repeat : Repeat Password
-  submit: Register
+  register: Register
   username: Username

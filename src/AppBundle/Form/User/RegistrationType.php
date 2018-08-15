@@ -18,7 +18,7 @@ class RegistrationType extends AbstractType
                 'label' => 'user.username',
             ])
             ->add('email', TextType::class, [
-                'label' => 'user.email',
+                'label' => 'user.email_address',
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,

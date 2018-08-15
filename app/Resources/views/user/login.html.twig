@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if loginError %}
+        <div id="login-error-message">{{ 'user.invalid_credentials' | trans }}</div>
+    {% endif %}
+
+    <form action="{{ path("login") }}" method="post" id="ajax-form-fos-user-login">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" id="formLogin"/>
+
+        <input type="text" class="form-control border-input border-right-0 mb-3 rounded-0" id="username"
+               name="_username" placeholder="{{ 'user.email_address' | trans }}" aria-label="email"
+               aria-describedby="email" required="required"/>
+
+        <input type="password" class="form-control border-input border-right-0 mb-3 rounded-0" id="password"
+               name="_password" placeholder="{{ 'user.password' | trans }}" aria-label="password"
+               aria-describedby="password" required="required"/>
+
+        <input class="btn btn-primary border-0 form-control rounded-0 text-white" type="submit" id="_submit"
+               name="_submit"
+               value="{{ 'user.login'|trans }}"/>
+    </form>
+{% endblock %}

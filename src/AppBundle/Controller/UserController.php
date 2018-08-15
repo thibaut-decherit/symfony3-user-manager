@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends DefaultController
 {
@@ -35,6 +36,25 @@ class UserController extends DefaultController
         return $this->render('user/registration.html.twig', array(
             'user' => $user,
             'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Handles the login.
+     *
+     * @Route("/login", name="login")
+     * @Method({"GET", "POST"})
+     */
+    public function loginAction(AuthenticationUtils $authenticationUtils)
+    {
+        $loginError = false;
+
+        if ($authenticationUtils->getLastAuthenticationError()) {
+            $loginError = true;
+        }
+
+        return $this->render('user/login.html.twig', array(
+            'loginError' => $loginError,
         ));
     }
 }

@@ -62,6 +62,7 @@ class User implements UserInterface, EquatableInterface
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
      *     message = "form_errors.password_strength",
+     * )
      *
      */
     private $password;
