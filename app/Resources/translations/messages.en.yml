@@ -1,0 +1,8 @@
+#User
+
+user:
+  email: Email address
+  password: Password
+  password_repeat : Repeat Password
+  submit: Register
+  username: Username

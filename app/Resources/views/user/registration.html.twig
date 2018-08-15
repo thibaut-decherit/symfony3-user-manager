@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {
+        'method': 'post',
+        'action': path('registration'),
+        'attr': {'id': 'ajax-form-fos-user-registration'}
+    }) }}
+    <div class="row">
+        {{ form_errors(form.username) }}
+        {{ form_errors(form.email) }}
+        {{ form_errors(form.password.first) }}
+    </div>
+
+    <div class="row">
+        {{ form_label(form.username) }}
+        {{ form_widget(form.username) }}
+    </div>
+    <div class="row">
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+    </div>
+    <div class="row">
+        {{ form_label(form.password.first) }}
+        {{ form_widget(form.password.first) }}
+    </div>
+    <div class="row">
+        {{ form_label(form.password.second) }}
+        {{ form_widget(form.password.second) }}
+    </div>
+
+    <div>
+        <input type="submit" value="{{ 'user.submit'|trans }}"/>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

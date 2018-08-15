@@ -1,0 +1,10 @@
+# Form errors
+
+form_errors:
+  not_blank: This field cannot be empty.
+  min_length: This field must contain at least {{ limit }} characters.
+  max_length: This field cannot be longer than {{ limit }} characters.
+  password_strength: Your password must be at least 8 characters long and contain a digit, a lowercase and an uppercase.
+  unique_email: This email is already used.
+  unique_username: This username is already used.
+  valid_email: This email email address is not valid.

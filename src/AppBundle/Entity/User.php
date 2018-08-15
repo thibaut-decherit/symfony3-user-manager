@@ -3,14 +3,24 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="form_errors.unique_email"
+ * )
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="form_errors.unique_username"
+ * )
  */
 class User implements UserInterface, EquatableInterface
 {
@@ -27,6 +37,20 @@ class User implements UserInterface, EquatableInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank(
+     *     message="form_errors.not_blank"
+     * )
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255,
+     *      minMessage = "form_errors.min_length",
+     *      maxMessage = "form_errors.max_length"
+     * )
+     * @Assert\Email(
+     *      message = "form_errors.valid_email",
+     *      checkMX = true
+     * )
      */
     private $username;
 
@@ -34,6 +58,11 @@ class User implements UserInterface, EquatableInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
+     *
+     * @Assert\Regex(
+     *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
+     *     message = "form_errors.password_strength",
+     *
      */
     private $password;
 
@@ -41,13 +70,28 @@ class User implements UserInterface, EquatableInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     *
+     * @Assert\NotBlank(
+     *     message="form_errors.not_blank"
+     * )
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255,
+     *      minMessage = "form_errors.min_length",
+     *      maxMessage = "form_errors.max_length"
+     * )
+     * @Assert\Email(
+     *      message = "form_errors.valid_email",
+     *      checkMX = true
+     * )
      */
     private $email;
 
     /**
+     * ORM mapping not needed if password hash algorithm generates it's own salt (e.g bcrypt)
+     *
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=255)
      */
     private $salt;
 
@@ -57,6 +101,11 @@ class User implements UserInterface, EquatableInterface
      * @ORM\Column(name="roles", type="array", nullable=true)
      */
     private $roles;
+
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+    }
 
     /**
      * Get id
