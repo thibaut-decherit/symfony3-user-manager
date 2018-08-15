@@ -1,7 +1,7 @@
 {
-  "name": "user_management",
+  "name": "user_manager",
   "version": "1.0.0",
-  "description": "user_management ===============",
+  "description": "user_manager ===============",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/Thibaut-Decherit/perso-user_management.git"
+    "url": "git+ssh://git@github.com:thibaut-decherit/user_manager.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/Thibaut-Decherit/perso-user_management/issues"
+    "url": "https://github.com/thibaut-decherit/user_manager/issues"
   },
-  "homepage": "https://gitlab.com/Thibaut-Decherit/perso-user_management#README",
+  "homepage": "https://github.com/thibaut-decherit/user_manager",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@symfony/webpack-encore": "^0.20.1",
