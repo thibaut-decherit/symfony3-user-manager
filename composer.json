@@ -1,5 +1,5 @@
 {
-    "name": "theophany/user_management",
+    "name": "theophany/user_manager",
     "license": "proprietary",
     "type": "project",
     "autoload": {
