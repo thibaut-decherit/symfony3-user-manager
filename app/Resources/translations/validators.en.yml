@@ -7,4 +7,4 @@ form_errors:
   password_strength: Your password must be at least 8 characters long and contain a digit, a lowercase and an uppercase.
   unique_email: This email is already used.
   unique_username: This username is already used.
-  valid_email: This email email address is not valid.
+  valid_email: This email address is not valid.

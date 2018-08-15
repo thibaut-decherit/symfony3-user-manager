@@ -47,10 +47,6 @@ class User implements UserInterface, EquatableInterface
      *      minMessage = "form_errors.min_length",
      *      maxMessage = "form_errors.max_length"
      * )
-     * @Assert\Email(
-     *      message = "form_errors.valid_email",
-     *      checkMX = true
-     * )
      */
     private $username;
 
