@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends DefaultController
@@ -88,14 +90,17 @@ class UserController extends DefaultController
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
-        $loginError = false;
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $errorMessage = null;
 
-        if ($authenticationUtils->getLastAuthenticationError()) {
-            $loginError = true;
+        if ($error instanceof DisabledException) {
+            $errorMessage = $this->get('translator')->trans('user.account_disabled');
+        } elseif ($error) {
+            $errorMessage = $this->get('translator')->trans('user.invalid_credentials');
         }
 
         return $this->render('user/login.html.twig', array(
-            'loginError' => $loginError,
+            'errorMessage' => $errorMessage,
         ));
     }
 }

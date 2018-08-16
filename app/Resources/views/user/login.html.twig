@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if loginError %}
-        <div id="login-error-message">{{ 'user.invalid_credentials' | trans }}</div>
+    {% if errorMessage %}
+        <div id="login-error-message">{{ errorMessage }}</div>
     {% endif %}
 
     <form action="{{ path("login") }}" method="post" id="ajax-form-fos-user-login">
