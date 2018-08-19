@@ -19,6 +19,7 @@ Encore
 
     .addEntry('app', [
         './assets/js/app.js',
+        './assets/js/registration.js',
     ])
 
 
