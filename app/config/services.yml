@@ -1,7 +1,7 @@
 # Learn more about services, parameters and containers at
 # https://symfony.com/doc/current/service_container.html
 parameters:
-  #parameter_name: value
+#parameter_name: value
 
 services:
   # default configuration for services in *this* file
@@ -29,7 +29,8 @@ services:
     public: true
     tags: ['controller.service_arguments']
 
-  # add more services, or override services that need manual wiring
-  # AppBundle\Service\ExampleService:
-  #     arguments:
-  #         $someArgument: 'some_value'
+  mailer.service:
+    class: AppBundle\Service\MailerService
+    public: true
+    arguments:
+    - '@service_container'
