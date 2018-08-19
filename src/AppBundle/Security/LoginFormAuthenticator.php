@@ -96,16 +96,22 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
+     * This is not limited by UserProvider methods. (e.g UserProvider doesn't have a method to find user by email but
+     * guard is still able to do so.
+     *
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
      * @return \AppBundle\Entity\User|null|object|UserInterface
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $username = $credentials['username'];
+        $usernameOrEmail = $credentials['username'];
 
-        return $this->em->getRepository('AppBundle:User')
-            ->findOneBy(['email' => $username]);
+        if (preg_match('/^.+\@\S+\.\S+$/', $usernameOrEmail)) {
+            return $this->em->getRepository('AppBundle:User')->findOneBy(['email' => $usernameOrEmail]);
+        }
+
+        return $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
     }
 
     /**
