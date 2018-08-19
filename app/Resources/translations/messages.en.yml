@@ -1,0 +1,12 @@
+#User
+
+user:
+  account_disabled: You haven't activated your account yet.
+  email_address: Email address
+  invalid_credentials: Wrong username or password.
+  login: Login
+  password: Password
+  password_repeat : Repeat Password
+  register: Register
+  registration_success: Registration successful, check your email, you will receive an activation link shortly.
+  username: Username
