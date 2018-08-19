@@ -24,13 +24,15 @@ class MailerService
      * Email sent after user registration.
      *
      * @param User $user
+     * @param string $activationUrl
      * @throws \Twig\Error\Error
      */
-    public function registrationSuccess(User $user)
+    public function registrationSuccess(User $user, string $activationUrl)
     {
         $emailBody = $this->container->get('templating')->render(
             'email/registration-email.html.twig', [
                 'user' => $user,
+                'activationUrl' => $activationUrl
             ]
         );
 

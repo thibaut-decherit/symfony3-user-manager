@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -55,7 +55,15 @@ class UserController extends DefaultController
             $em->persist($user);
             $em->flush();
 
-            $this->container->get('mailer.service')->registrationSuccess($user);
+            $activationUrl = $this->generateUrl(
+                'activate_account',
+                [
+                    'accountToken' => $user->getAccountToken()
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $this->container->get('mailer.service')->registrationSuccess($user, $activationUrl);
 
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();
@@ -104,5 +112,30 @@ class UserController extends DefaultController
         return $this->render('user/login.html.twig', array(
             'errorMessage' => $errorMessage,
         ));
+    }
+
+    /**
+     * Handles account activation.
+     *
+     * @param string $accountToken
+     * @Route("/activate-account/{accountToken}", name="activate_account")
+     * @Method({"GET"})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function activateAccountAction(string $accountToken)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle:User')->findOneBy(['accountToken' => $accountToken]);
+
+        if ($user === null) {
+            return $this->redirectToRoute('home');
+        }
+
+        $user->activateAccount();
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('user/account-activation-success.html.twig');
     }
 }

@@ -107,10 +107,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      */
     private $hasBeenActivated;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="accountToken", type="string", length=255, nullable=true, unique=true)
+     */
+    private $accountToken;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->hasBeenActivated = false;
+        $this->accountToken = sha1(random_bytes(50));
     }
 
     /**
@@ -267,6 +275,30 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         return $this->hasBeenActivated;
     }
 
+    /**
+     * Set accountToken
+     *
+     * @param string $accountToken
+     *
+     * @return User
+     */
+    public function setAccountToken($accountToken)
+    {
+        $this->accountToken = $accountToken;
+
+        return $this;
+    }
+
+    /**
+     * Get accountToken
+     *
+     * @return string
+     */
+    public function getAccountToken()
+    {
+        return $this->accountToken;
+    }
+
     public function eraseCredentials()
     {
     }
@@ -348,5 +380,12 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
 
         return true;
     }
-}
 
+    public function activateAccount()
+    {
+        $this->setHasBeenActivated(true);
+        $this->setAccountToken(null);
+
+        return $this;
+    }
+}
