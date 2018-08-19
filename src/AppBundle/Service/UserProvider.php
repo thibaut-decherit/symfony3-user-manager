@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
@@ -20,6 +11,9 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 class UserProvider implements UserProviderInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
 
     /**
@@ -31,6 +25,10 @@ class UserProvider implements UserProviderInterface
         $this->em = $em;
     }
 
+    /**
+     * @param string $username
+     * @return null|object|UserInterface
+     */
     public function loadUserByUsername($username)
     {
         $user = $this->findUserByUsername($username);
@@ -42,6 +40,10 @@ class UserProvider implements UserProviderInterface
         return $user;
     }
 
+    /**
+     * @param UserInterface $user
+     * @return null|object|UserInterface
+     */
     public function refreshUser(UserInterface $user)
     {
         if (!$user instanceof User) {
@@ -55,6 +57,10 @@ class UserProvider implements UserProviderInterface
         return $this->findUserByUsername($username);
     }
 
+    /**
+     * @param string $class
+     * @return bool
+     */
     public function supportsClass($class)
     {
         return User::class === $class;

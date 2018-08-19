@@ -5,14 +5,31 @@ namespace AppBundle\Service;
 use AppBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class MailerService
+ * @package AppBundle\Service
+ */
 class MailerService
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
+    /**
+     * @var string
+     */
     protected $autoMailerAddress;
 
+    /**
+     * @var string
+     */
     protected $replyTo;
 
+    /**
+     * MailerService constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -30,7 +47,7 @@ class MailerService
     public function registrationSuccess(User $user, string $activationUrl)
     {
         $emailBody = $this->container->get('templating')->render(
-            'email/registration-email.html.twig', [
+            'Email/registration-email.html.twig', [
                 'user' => $user,
                 'activationUrl' => $activationUrl
             ]

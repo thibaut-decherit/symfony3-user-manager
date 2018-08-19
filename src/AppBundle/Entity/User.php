@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ *
  * @UniqueEntity(
  *     fields={"email"},
  *     message="form_errors.unique_email"
@@ -381,6 +382,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         return true;
     }
 
+    /**
+     * @return $this
+     */
     public function activateAccount()
     {
         $this->setHasBeenActivated(true);

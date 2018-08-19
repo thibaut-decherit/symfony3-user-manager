@@ -1,17 +1,20 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\User;
 
+use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\DisabledException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class UserController extends DefaultController
+/**
+ * Class RegistrationController
+ * @package AppBundle\Controller\User
+ */
+class RegistrationController extends DefaultController
 {
     /**
      * Renders the initial registration form.
@@ -25,7 +28,7 @@ class UserController extends DefaultController
         $user = new User();
         $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
 
-        return $this->render('user/registration.html.twig', array(
+        return $this->render('User/registration.html.twig', array(
             'user' => $user,
             'form' => $form->createView(),
         ));
@@ -38,6 +41,7 @@ class UserController extends DefaultController
      * @Route("/register-ajax", name="registration_ajax")
      * @Method("POST")
      * @return JsonResponse
+     * @throws \Twig\Error\Error
      */
     public function registerAction(Request $request)
     {
@@ -68,7 +72,7 @@ class UserController extends DefaultController
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();
             $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
-            $template = $this->render('user/registration-form.html.twig', array(
+            $template = $this->render('Form/registration-form.html.twig', array(
                 'form' => $form->createView(),
             ));
             $jsonTemplate = json_encode($template->getContent());
@@ -80,7 +84,7 @@ class UserController extends DefaultController
         }
 
         // Renders and json encode the updated form (with errors and input values)
-        $template = $this->render('user/registration-form.html.twig', array(
+        $template = $this->render('User/registration-form.html.twig', array(
             'user' => $user,
             'form' => $form->createView(),
         ));
@@ -90,52 +94,5 @@ class UserController extends DefaultController
         return new JsonResponse([
             'template' => $jsonTemplate
         ], 400);
-    }
-
-    /**
-     * Handles the login.
-     *
-     * @Route("/login", name="login")
-     * @Method({"GET", "POST"})
-     */
-    public function loginAction(AuthenticationUtils $authenticationUtils)
-    {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $errorMessage = null;
-
-        if ($error instanceof DisabledException) {
-            $errorMessage = $this->get('translator')->trans('user.account_disabled');
-        } elseif ($error) {
-            $errorMessage = $this->get('translator')->trans('user.invalid_credentials');
-        }
-
-        return $this->render('user/login.html.twig', array(
-            'errorMessage' => $errorMessage,
-        ));
-    }
-
-    /**
-     * Handles account activation.
-     *
-     * @param string $accountToken
-     * @Route("/activate-account/{accountToken}", name="activate_account")
-     * @Method({"GET"})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function activateAccountAction(string $accountToken)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:User')->findOneBy(['accountToken' => $accountToken]);
-
-        if ($user === null) {
-            return $this->redirectToRoute('home');
-        }
-
-        $user->activateAccount();
-
-        $em->persist($user);
-        $em->flush();
-
-        return $this->render('user/account-activation-success.html.twig');
     }
 }
