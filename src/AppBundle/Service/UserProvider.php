@@ -69,10 +69,10 @@ class UserProvider implements UserProviderInterface
     /**
      * Finds a user by username.
      *
-     * @param $username
+     * @param string $username
      * @return null|object
      */
-    protected function findUserByUsername($username)
+    protected function findUserByUsername(string $username)
     {
         return $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
     }

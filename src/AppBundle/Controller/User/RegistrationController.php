@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class RegistrationController
@@ -38,21 +40,21 @@ class RegistrationController extends DefaultController
      * Handles the registration form submitted with ajax.
      *
      * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @Route("/register-ajax", name="registration_ajax")
      * @Method("POST")
      * @return JsonResponse
      * @throws \Twig\Error\Error
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
         $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
-        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $encoder->encodePassword($user->getPassword(), $user->getSalt());
+            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
 
             $em = $this->getDoctrine()->getManager();
             $user->setPassword($hashedPassword);
@@ -79,7 +81,7 @@ class RegistrationController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'success_message' => $this->get('translator')->trans('user.registration_success')
+                'successMessage' => $this->get('translator')->trans('user.registration_success')
             ], 200);
         }
 

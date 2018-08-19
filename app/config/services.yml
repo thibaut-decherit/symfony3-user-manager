@@ -29,6 +29,9 @@ services:
     public: true
     tags: ['controller.service_arguments']
 
+  app.security.login_form_authenticator:
+    class: AppBundle\Security\LoginFormAuthenticator
+
   mailer.service:
     class: AppBundle\Service\MailerService
     public: true
