@@ -21,6 +21,29 @@ class MailerService
     }
 
     /**
+     * Email sent after user registration.
+     *
+     * @param User $user
+     * @throws \Twig\Error\Error
+     */
+    public function registrationSuccess(User $user)
+    {
+        $emailBody = $this->container->get('templating')->render(
+            'email/registration-email.html.twig', [
+                'user' => $user,
+            ]
+        );
+
+        $this->sendEmail(
+            'Welcome',
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * @param $subject
      * @param $from
      * @param $to

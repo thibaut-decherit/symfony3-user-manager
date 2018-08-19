@@ -55,6 +55,8 @@ class UserController extends DefaultController
             $em->persist($user);
             $em->flush();
 
+            $this->container->get('mailer.service')->registrationSuccess($user);
+
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();
             $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
