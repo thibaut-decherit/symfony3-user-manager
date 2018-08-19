@@ -1,11 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if errorMessage %}
-        <div id="login-error-message">{{ errorMessage }}</div>
-    {% endif %}
+    <div class="alert-danger mb-3 p-1 text-center d-none" id="login-error-alert"></div>
 
-    <form action="{{ path("login") }}" method="post" id="ajax-form-fos-user-login">
+    <form action="{{ path("login") }}" method="post" id="ajax-form-login">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" id="formLogin"/>
 
         <input type="text" class="form-control border-input border-right-0 mb-3 rounded-0" id="username"

@@ -20,12 +20,12 @@ security:
 
     main:
       anonymous: ~
-      form_login:
-        provider: appbundle
-        csrf_token_generator: security.csrf.token_manager
-        login_path: login
-        check_path: login
-        always_use_default_target_path: false
+      guard:
+        authenticators:
+        - app.security.login_form_authenticator
       logout:
-        path: logout
-        target: login
+        path: /logout
+        target: /login
+
+  access_control:
+  - { path: /$, role: IS_AUTHENTICATED_ANONYMOUSLY }
