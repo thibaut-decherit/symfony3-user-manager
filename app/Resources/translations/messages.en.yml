@@ -9,4 +9,5 @@ user:
   password_repeat : Repeat Password
   register: Register
   registration_success: Registration successful, check your email, you will receive an activation link shortly.
+  remember_me: Se souvenir de moi
   username: Username

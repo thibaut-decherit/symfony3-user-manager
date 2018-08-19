@@ -26,6 +26,8 @@ security:
       logout:
         path: /logout
         target: /login
+      remember_me:
+        secret: '%secret%'
 
   access_control:
   - { path: /$, role: IS_AUTHENTICATED_ANONYMOUSLY }
