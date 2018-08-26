@@ -9,7 +9,7 @@
 {% endif %}
 
 {% for message in app.flashes(alertType) %}
-    <div class="alert rounded-0 {{ alertDismissible ? 'alert-dismissible' }} {{ alertStyle }}" role="alert">
+    <div class="alert {{ alertDismissible ? 'alert-dismissible' }} {{ alertStyle }}" role="alert">
         {% if alertDismissible %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
