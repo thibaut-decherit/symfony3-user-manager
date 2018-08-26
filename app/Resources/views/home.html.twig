@@ -1,8 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Home</h1>
-    <a href="{{ path('registration') }}">Register</a>
-    <br/>
-    <a href="{{ path('login') }}">Login</a>
+    <h1>User Manager</h1>
+
+    {% if is_granted("ROLE_USER") %}
+        <div class="d-flex">
+            <p class="my-2 pr-2">Hi {{ app.user.username }} !</p>
+            <a href="{{ path('logout') }}" class="align-self-center">Logout</a>
+        </div>
+    {% else %}
+        <p class="my-2">Hi anonymous visitor !</p>
+    {% endif %}
+
+    <p class="my-3">
+        <a href="{{ path('registration') }}">Register</a>
+        <br/>
+        <a href="{{ path('login') }}">Login</a>
+        <br/>
+        <a href="{{ path('password_reset_request') }}">Reset Password</a>
+    </p>
 {% endblock %}

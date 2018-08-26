@@ -104,22 +104,36 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="hasBeenActivated", type="boolean")
+     * @ORM\Column(name="has_been_activated", type="boolean")
      */
     private $hasBeenActivated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="accountToken", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(name="activation_token", type="string", length=255, unique=true)
      */
-    private $accountToken;
+    private $activationToken;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password_reset_token", type="string", length=255, nullable=true, unique=true)
+     */
+    private $passwordResetToken;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="password_reset_requested_at", type="datetime", nullable=true)
+     */
+    private $passwordResetRequestedAt;
 
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->hasBeenActivated = false;
-        $this->accountToken = sha1(random_bytes(50));
+        $this->activationToken = $this->generateSecureToken();
     }
 
     /**
@@ -277,27 +291,75 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * Set accountToken
+     * Set activationToken
      *
-     * @param string $accountToken
+     * @param string $activationToken
      *
      * @return User
      */
-    public function setAccountToken($accountToken)
+    public function setActivationToken($activationToken)
     {
-        $this->accountToken = $accountToken;
+        $this->activationToken = $activationToken;
 
         return $this;
     }
 
     /**
-     * Get accountToken
+     * Get activationToken
      *
      * @return string
      */
-    public function getAccountToken()
+    public function getActivationToken()
     {
-        return $this->accountToken;
+        return $this->activationToken;
+    }
+
+    /**
+     * Set passwordResetToken
+     *
+     * @param string $passwordResetToken
+     *
+     * @return User
+     */
+    public function setPasswordResetToken($passwordResetToken)
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetToken
+     *
+     * @return string
+     */
+    public function getPasswordResetToken()
+    {
+        return $this->passwordResetToken;
+    }
+
+    /**
+     * Set passwordResetRequestedAt
+     *
+     * @param string $passwordResetRequestedAt
+     *
+     * @return User
+     */
+    public function setPasswordResetRequestedAt($passwordResetRequestedAt)
+    {
+        $this->passwordResetRequestedAt = $passwordResetRequestedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetRequestedAt
+     *
+     * @return \DateTime
+     */
+    public function getPasswordResetRequestedAt()
+    {
+        return $this->passwordResetRequestedAt;
     }
 
     public function eraseCredentials()
@@ -383,13 +445,29 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return $this
+     * @return string
+     * @throws \Exception
      */
-    public function activateAccount()
+    public function generateSecureToken()
     {
-        $this->setHasBeenActivated(true);
-        $this->setAccountToken(null);
+        return sha1(random_bytes(50));
+    }
 
-        return $this;
+    /**
+     * @param int $passwordResetRequestRetryDelay
+     * @return bool
+     */
+    public function isPasswordResetRequestRetryDelayExpired(int $passwordResetRequestRetryDelay)
+    {
+        return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetRequestRetryDelay < time();
+    }
+
+    /**
+     * @param int $passwordResetTokenLifetime
+     * @return bool
+     */
+    public function isPasswordResetTokenExpired(int $passwordResetTokenLifetime)
+    {
+        return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetTokenLifetime < time();
     }
 }

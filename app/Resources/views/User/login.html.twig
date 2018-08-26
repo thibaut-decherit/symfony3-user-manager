@@ -3,6 +3,12 @@
 {% block body %}
     <div class="alert-danger mb-3 p-1 text-center d-none" id="login-error-alert"></div>
 
+    {% include 'flash-message-template.html.twig' with {
+        'alertType': 'success',
+        'alertStyle': 'alert-success',
+        'textAlign': 'center'
+    } %}
+
     <form action="{{ path("login") }}" method="post" id="ajax-form-login">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" id="formLogin"/>
 

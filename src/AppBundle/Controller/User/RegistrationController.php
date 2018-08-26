@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -64,7 +63,7 @@ class RegistrationController extends DefaultController
             $activationUrl = $this->generateUrl(
                 'activate_account',
                 [
-                    'accountToken' => $user->getAccountToken()
+                    'activationToken' => $user->getActivationToken()
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
