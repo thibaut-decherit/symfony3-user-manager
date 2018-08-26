@@ -1,13 +1,32 @@
-#User
+# Global
+
+global:
+  form:
+    submit: Submit
+
+
+# User
 
 user:
-  account_disabled: You haven't activated your account yet.
+  account_not_activated: You haven't activated your account yet.
   email_address: Email address
   invalid_credentials: Wrong username or password.
   login: Login
   password: Password
-  password_repeat : Repeat Password
+  password_repeat: Repeat Password
   register: Register
   registration_success: Registration successful, check your email, you will receive an activation link shortly.
-  remember_me: Se souvenir de moi
+  remember_me: Remember Me
+  send_email: Send Email
   username: Username
+
+
+# Flash
+
+flash:
+  account_already_activated: You have already activated your account, you can log in below.
+  password_reset_email_send: An email with a reset link has been sent to you.
+  password_reset_request_retry_delay_non_expired: You have to wait %limit% minutes before requesting another email.
+  password_reset_success: Your password has been updated, you can now use it to log in below.
+  password_reset_token_expired: Your password reset request has expired, please make a new one below.
+  user_not_found: This user doesn't exist.

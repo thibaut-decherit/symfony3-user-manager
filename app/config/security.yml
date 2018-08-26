@@ -25,7 +25,7 @@ security:
         - app.security.login_form_authenticator
       logout:
         path: /logout
-        target: /login
+        target: /
       remember_me:
         secret: '%secret%'
 
