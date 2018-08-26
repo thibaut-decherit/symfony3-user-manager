@@ -63,7 +63,7 @@ class RegistrationController extends DefaultController
             $activationUrl = $this->generateUrl(
                 'activate_account',
                 [
-                    'accountToken' => $user->getAccountToken()
+                    'activationToken' => $user->getActivationToken()
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

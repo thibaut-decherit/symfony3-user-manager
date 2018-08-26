@@ -8,7 +8,7 @@ global:
 # User
 
 user:
-  account_disabled: You haven't activated your account yet.
+  account_not_activated: You haven't activated your account yet.
   email_address: Email address
   invalid_credentials: Wrong username or password.
   login: Login
@@ -24,6 +24,7 @@ user:
 # Flash
 
 flash:
+  account_already_activated: You have already activated your account, you can log in below.
   password_reset_email_send: An email with a reset link has been sent to you.
   password_reset_request_retry_delay_non_expired: You have to wait %limit% minutes before requesting another email.
   password_reset_success: Your password has been updated, you can now use it to log in below.

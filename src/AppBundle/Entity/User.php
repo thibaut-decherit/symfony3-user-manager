@@ -104,16 +104,23 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="hasBeenActivated", type="boolean")
+     * @ORM\Column(name="has_been_activated", type="boolean")
      */
     private $hasBeenActivated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="accountToken", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(name="activation_token", type="string", length=255, unique=true)
      */
-    private $accountToken;
+    private $activationToken;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password_reset_token", type="string", length=255, nullable=true, unique=true)
+     */
+    private $passwordResetToken;
 
     /**
      * @var \DateTime
@@ -126,7 +133,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     {
         $this->roles = ['ROLE_USER'];
         $this->hasBeenActivated = false;
-        $this->accountToken = $this->generateAccountToken();
+        $this->activationToken = $this->generateSecureToken();
     }
 
     /**
@@ -284,27 +291,51 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * Set accountToken
+     * Set activationToken
      *
-     * @param string $accountToken
+     * @param string $activationToken
      *
      * @return User
      */
-    public function setAccountToken($accountToken)
+    public function setActivationToken($activationToken)
     {
-        $this->accountToken = $accountToken;
+        $this->activationToken = $activationToken;
 
         return $this;
     }
 
     /**
-     * Get accountToken
+     * Get activationToken
      *
      * @return string
      */
-    public function getAccountToken()
+    public function getActivationToken()
     {
-        return $this->accountToken;
+        return $this->activationToken;
+    }
+
+    /**
+     * Set passwordResetToken
+     *
+     * @param string $passwordResetToken
+     *
+     * @return User
+     */
+    public function setPasswordResetToken($passwordResetToken)
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetToken
+     *
+     * @return string
+     */
+    public function getPasswordResetToken()
+    {
+        return $this->passwordResetToken;
     }
 
     /**
@@ -417,20 +448,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @return string
      * @throws \Exception
      */
-    public function generateAccountToken()
+    public function generateSecureToken()
     {
         return sha1(random_bytes(50));
-    }
-
-    /**
-     * @return $this
-     */
-    public function activateAccount()
-    {
-        $this->setHasBeenActivated(true);
-        $this->setAccountToken(null);
-
-        return $this;
     }
 
     /**

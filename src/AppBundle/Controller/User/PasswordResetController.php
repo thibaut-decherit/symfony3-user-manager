@@ -69,7 +69,7 @@ class PasswordResetController extends DefaultController
                 return $this->redirectToRoute('password_reset_request');
             }
 
-            $user->setAccountToken($user->generateAccountToken());
+            $user->setPasswordResetToken($user->generateSecureToken());
             $user->setPasswordResetRequestedAt(new \DateTime());
 
             /*
@@ -79,7 +79,7 @@ class PasswordResetController extends DefaultController
             $passwordResetUrl = $this->generateUrl(
                 'password_reset',
                 [
-                    'accountToken' => $user->getAccountToken()
+                    'passwordResetToken' => $user->getPasswordResetToken()
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -103,20 +103,20 @@ class PasswordResetController extends DefaultController
      * Renders and handles password reset form.
      *
      * @param Request $request
-     * @param string $accountToken
+     * @param string $passwordResetToken
      * @param UserPasswordEncoderInterface $passwordEncoder
      *
-     * @Route("/reset/{accountToken}", name="password_reset")
+     * @Route("/reset/{passwordResetToken}", name="password_reset")
      * @Method({"GET", "POST"})
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function resetAction(Request $request, string $accountToken, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetAction(Request $request, string $passwordResetToken, UserPasswordEncoderInterface $passwordEncoder)
     {
         $em = $this->getDoctrine()->getManager();
         $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
-        $user = $em->getRepository('AppBundle:User')->findOneBy(['accountToken' => $accountToken]);
+        $user = $em->getRepository('AppBundle:User')->findOneBy(['passwordResetToken' => $passwordResetToken]);
 
         if (is_null($user)) {
             $this->addFlash(
@@ -129,7 +129,7 @@ class PasswordResetController extends DefaultController
 
         if ($user->isPasswordResetTokenExpired($passwordResetTokenLifetime) === true) {
             $user->setPasswordResetRequestedAt(null);
-            $user->setAccountToken(null);
+            $user->setPasswordResetToken(null);
 
             $em->persist($user);
             $em->flush();
@@ -151,7 +151,7 @@ class PasswordResetController extends DefaultController
 
             $user->setPassword($hashedPassword);
             $user->setPasswordResetRequestedAt(null);
-            $user->setAccountToken(null);
+            $user->setPasswordResetToken(null);
 
             $em->flush();
 

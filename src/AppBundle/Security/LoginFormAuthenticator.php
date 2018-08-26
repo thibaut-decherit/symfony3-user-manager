@@ -158,7 +158,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if ($exception instanceof DisabledException) {
-            $errorMessage = $this->translatorInterface->trans('user.account_disabled');
+            $errorMessage = $this->translatorInterface->trans('user.account_not_activated');
         } else {
             $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');
         }

@@ -28,7 +28,7 @@ class LoginController extends DefaultController
         $errorMessage = null;
 
         if ($error instanceof DisabledException) {
-            $errorMessage = $this->get('translator')->trans('user.account_disabled');
+            $errorMessage = $this->get('translator')->trans('user.account_not_activated');
         } elseif ($error) {
             $errorMessage = $this->get('translator')->trans('user.invalid_credentials');
         }
