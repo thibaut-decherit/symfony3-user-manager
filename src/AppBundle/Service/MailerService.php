@@ -63,6 +63,35 @@ class MailerService
     }
 
     /**
+     * Email sent when user requests password reset.
+     *
+     * @param User $user
+     * @param string $passwordResetUrl
+     * @param int $passwordResetTokenLifetime
+     * @throws \Twig\Error\Error
+     */
+    public function passwordReset(User $user, string $passwordResetUrl, int $passwordResetTokenLifetime)
+    {
+        $passwordResetTokenLifetimeInMinutes = ceil($passwordResetTokenLifetime / 60);
+
+        $emailBody = $this->container->get('templating')->render(
+            'Email/password-reset-email.html.twig', [
+                'user' => $user,
+                'passwordResetUrl' => $passwordResetUrl,
+                'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
+            ]
+        );
+
+        $this->sendEmail(
+            'Password Reset',
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * @param $subject
      * @param $from
      * @param $to

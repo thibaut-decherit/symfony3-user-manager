@@ -115,11 +115,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      */
     private $accountToken;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="password_reset_requested_at", type="datetime", nullable=true)
+     */
+    private $passwordResetRequestedAt;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->hasBeenActivated = false;
-        $this->accountToken = sha1(random_bytes(50));
+        $this->accountToken = $this->generateAccountToken();
     }
 
     /**
@@ -300,6 +307,30 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         return $this->accountToken;
     }
 
+    /**
+     * Set passwordResetRequestedAt
+     *
+     * @param string $passwordResetRequestedAt
+     *
+     * @return User
+     */
+    public function setPasswordResetRequestedAt($passwordResetRequestedAt)
+    {
+        $this->passwordResetRequestedAt = $passwordResetRequestedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetRequestedAt
+     *
+     * @return \DateTime
+     */
+    public function getPasswordResetRequestedAt()
+    {
+        return $this->passwordResetRequestedAt;
+    }
+
     public function eraseCredentials()
     {
     }
@@ -383,6 +414,15 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
+     * @return string
+     * @throws \Exception
+     */
+    public function generateAccountToken()
+    {
+        return sha1(random_bytes(50));
+    }
+
+    /**
      * @return $this
      */
     public function activateAccount()
@@ -391,5 +431,23 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         $this->setAccountToken(null);
 
         return $this;
+    }
+
+    /**
+     * @param int $passwordResetRequestRetryDelay
+     * @return bool
+     */
+    public function isPasswordResetRequestRetryDelayExpired(int $passwordResetRequestRetryDelay)
+    {
+        return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetRequestRetryDelay < time();
+    }
+
+    /**
+     * @param int $passwordResetTokenLifetime
+     * @return bool
+     */
+    public function isPasswordResetTokenExpired(int $passwordResetTokenLifetime)
+    {
+        return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetTokenLifetime < time();
     }
 }
