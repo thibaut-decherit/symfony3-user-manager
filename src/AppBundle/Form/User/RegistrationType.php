@@ -29,7 +29,7 @@ class RegistrationType extends AbstractType
                 'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
-                'first_options'  => array('label' => 'user.password'),
+                'first_options' => array('label' => 'user.password'),
                 'second_options' => array('label' => 'user.password_repeat'),
             ]);
     }
@@ -37,7 +37,8 @@ class RegistrationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\User'
+            'data_class' => 'AppBundle\Entity\User',
+            'validation_groups' => array('registration')
         ));
     }
 

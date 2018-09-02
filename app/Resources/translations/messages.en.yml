@@ -3,6 +3,7 @@
 global:
   form:
     submit: Submit
+    save_changes: Save Changes
 
 
 # User
@@ -10,6 +11,7 @@ global:
 user:
   account_not_activated: You haven't activated your account yet.
   email_address: Email address
+  information_updated: Account information successfully updated.
   invalid_credentials: Wrong username or password.
   login: Login
   password: Password

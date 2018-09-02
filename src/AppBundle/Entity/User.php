@@ -17,11 +17,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @UniqueEntity(
  *     fields={"email"},
- *     message="form_errors.unique_email"
+ *     message="form_errors.unique_email",
+ *     groups={"registration"}
  * )
  * @UniqueEntity(
  *     fields={"username"},
- *     message="form_errors.unique_username"
+ *     message="form_errors.unique_username",
+ *     groups={"registration"}
  * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
@@ -41,13 +43,15 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank"
+     *     message="form_errors.not_blank",
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length"
+     *      maxMessage = "form_errors.max_length",
+     *      groups={"registration", "user_information"}
      * )
      */
     private $username;
@@ -60,6 +64,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
      *     message = "form_errors.password_strength",
+     *     groups={"registration"}
      * )
      *
      */
@@ -71,17 +76,20 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank"
+     *     message="form_errors.not_blank",
+     *     groups={"registration"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length"
+     *      maxMessage = "form_errors.max_length",
+     *      groups={"registration"}
      * )
      * @Assert\Email(
      *      message = "form_errors.valid_email",
-     *      checkMX = true
+     *      checkMX = true,
+     *      groups={"registration"}
      * )
      */
     private $email;

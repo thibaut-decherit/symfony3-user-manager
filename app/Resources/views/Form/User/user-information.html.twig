@@ -1,0 +1,22 @@
+{{ form_start(form, {
+    'method': 'post',
+    'action': path('user_information_edit_ajax'),
+    'attr': {'id': 'ajax-form-user-information-edit'}
+}) }}
+
+<div class="alert alert-dismissible d-none alert-success" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p id="success-message" class="text-center m-0"></p>
+</div>
+
+<div class="row mt-3">
+    {{ form_label(form.username) }}
+    {{ form_widget(form.username) }}
+</div>
+
+<div class="row mt-3">
+    <input type="submit" value="{{ 'global.form.save_changes'|trans }}"/>
+</div>
+{{ form_end(form) }}
