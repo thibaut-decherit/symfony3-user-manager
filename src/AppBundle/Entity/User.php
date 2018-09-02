@@ -18,12 +18,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="form_errors.unique_email",
- *     groups={"registration"}
+ *     groups={"registration", "user_information"}
  * )
  * @UniqueEntity(
  *     fields={"username"},
  *     message="form_errors.unique_username",
- *     groups={"registration"}
+ *     groups={"registration", "user_information"}
  * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
@@ -77,19 +77,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *     groups={"registration"}
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
      *      maxMessage = "form_errors.max_length",
-     *      groups={"registration"}
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Email(
      *      message = "form_errors.valid_email",
      *      checkMX = true,
-     *      groups={"registration"}
+     *      groups={"registration", "user_information"}
      * )
      */
     private $email;
