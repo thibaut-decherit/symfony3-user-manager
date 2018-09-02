@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,7 @@ class PasswordResetController extends DefaultController
                 $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
             }
 
-            if (is_null($user)) {
+            if ($user === null) {
                 $this->addFlash(
                     "error",
                     $this->get('translator')->trans('flash.user_not_found')
@@ -64,7 +65,7 @@ class PasswordResetController extends DefaultController
 
             $passwordResettingRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
 
-            if (!is_null($user->getPasswordResetRequestedAt())
+            if ($user->getPasswordResetRequestedAt() !== null
                 && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
                 // Displays a flash message informing user that he has to wait $limit minutes between each request
                 $limit = ceil($passwordResettingRequestRetryDelay / 60);
@@ -112,7 +113,7 @@ class PasswordResetController extends DefaultController
      * Renders and handles password reset form.
      *
      * @param Request $request
-     * @param string $passwordResetToken
+     * @param User $user
      * @param UserPasswordEncoderInterface $passwordEncoder
      *
      * @Route("/reset/{passwordResetToken}", name="password_reset")
@@ -120,14 +121,12 @@ class PasswordResetController extends DefaultController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function resetAction(Request $request, string $passwordResetToken, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetAction(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder)
     {
         $em = $this->getDoctrine()->getManager();
         $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
-        $user = $em->getRepository('AppBundle:User')->findOneBy(['passwordResetToken' => $passwordResetToken]);
-
-        if (is_null($user)) {
+        if ($user !== null) {
             $this->addFlash(
                 "error",
                 $this->get('translator')->trans('flash.password_reset_token_expired')

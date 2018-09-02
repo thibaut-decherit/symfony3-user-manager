@@ -38,7 +38,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank"
@@ -55,7 +55,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      *
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
@@ -68,7 +68,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank"
@@ -97,35 +97,35 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array", nullable=true)
+     * @ORM\Column(type="array", nullable=true)
      */
     private $roles;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="has_been_activated", type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $hasBeenActivated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="activation_token", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $activationToken;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password_reset_token", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="password_reset_requested_at", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $passwordResetRequestedAt;
 
@@ -450,7 +450,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      */
     public function generateSecureToken()
     {
-        return sha1(random_bytes(50));
+        return sha1(random_bytes(256));
     }
 
     /**
