@@ -19,7 +19,7 @@ class PasswordResetType extends AbstractType
         $builder
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
                 'first_options' => array('label' => 'user.password'),
