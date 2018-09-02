@@ -8,6 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class PasswordResetType
+ * @package AppBundle\Form\User
+ */
 class PasswordResetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

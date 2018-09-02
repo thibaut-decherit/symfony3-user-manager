@@ -9,6 +9,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class RegistrationType
+ * @package AppBundle\Form\User
+ */
 class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -22,7 +26,7 @@ class RegistrationType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
                 'first_options'  => array('label' => 'user.password'),

@@ -9,6 +9,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
+/**
+ * Class UserProvider
+ * @package AppBundle\Service
+ */
 class UserProvider implements UserProviderInterface
 {
     /**

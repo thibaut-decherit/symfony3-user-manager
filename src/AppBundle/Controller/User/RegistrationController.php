@@ -73,7 +73,7 @@ class RegistrationController extends DefaultController
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();
             $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
-            $template = $this->render('Form/registration-form.html.twig', array(
+            $template = $this->render(':Form/User:registration-form.html.twig', array(
                 'form' => $form->createView(),
             ));
             $jsonTemplate = json_encode($template->getContent());
@@ -85,7 +85,7 @@ class RegistrationController extends DefaultController
         }
 
         // Renders and json encode the updated form (with errors and input values)
-        $template = $this->render('User/registration-form.html.twig', array(
+        $template = $this->render(':Form/User:registration-form.html.twig', array(
             'user' => $user,
             'form' => $form->createView(),
         ));

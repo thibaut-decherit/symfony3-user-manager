@@ -106,27 +106,27 @@ class PasswordResetController extends DefaultController
             );
         }
 
-        return $this->render('User/password-resetting-request.html.twig');
+        return $this->render(':User:password-reset-request.html.twig');
     }
 
     /**
      * Renders and handles password reset form.
      *
      * @param Request $request
-     * @param User $user
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param User|null $user (default null so param converter doesn't throw 404 if no user found)
      *
      * @Route("/reset/{passwordResetToken}", name="password_reset")
      * @Method({"GET", "POST"})
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function resetAction(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
         $em = $this->getDoctrine()->getManager();
         $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
-        if ($user !== null) {
+        if ($user === null) {
             $this->addFlash(
                 "error",
                 $this->get('translator')->trans('flash.password_reset_token_expired')
@@ -171,7 +171,7 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('login');
         }
 
-        return $this->render('User/password-resetting-reset.html.twig', array(
+        return $this->render(':User:password-reset-reset.html.twig', array(
             'form' => $form->createView(),
         ));
     }
