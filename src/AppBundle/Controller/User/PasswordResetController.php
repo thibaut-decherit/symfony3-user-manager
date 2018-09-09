@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,7 @@ class PasswordResetController extends DefaultController
                 $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
             }
 
-            if (is_null($user)) {
+            if ($user === null) {
                 $this->addFlash(
                     "error",
                     $this->get('translator')->trans('flash.user_not_found')
@@ -53,9 +54,18 @@ class PasswordResetController extends DefaultController
                 return $this->redirectToRoute('password_reset_request');
             }
 
+            if ($user->getHasBeenActivated() === false) {
+                $this->addFlash(
+                    "error",
+                    $this->get('translator')->trans('flash.account_not_yet_activated')
+                );
+
+                return $this->redirectToRoute('password_reset_request');
+            }
+
             $passwordResettingRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
 
-            if (!is_null($user->getPasswordResetRequestedAt())
+            if ($user->getPasswordResetRequestedAt() !== null
                 && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
                 // Displays a flash message informing user that he has to wait $limit minutes between each request
                 $limit = ceil($passwordResettingRequestRetryDelay / 60);
@@ -96,29 +106,27 @@ class PasswordResetController extends DefaultController
             );
         }
 
-        return $this->render('User/password-resetting-request.html.twig');
+        return $this->render(':User:password-reset-request.html.twig');
     }
 
     /**
      * Renders and handles password reset form.
      *
      * @param Request $request
-     * @param string $passwordResetToken
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param User|null $user (default null so param converter doesn't throw 404 if no user found)
      *
      * @Route("/reset/{passwordResetToken}", name="password_reset")
      * @Method({"GET", "POST"})
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function resetAction(Request $request, string $passwordResetToken, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
         $em = $this->getDoctrine()->getManager();
         $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
-        $user = $em->getRepository('AppBundle:User')->findOneBy(['passwordResetToken' => $passwordResetToken]);
-
-        if (is_null($user)) {
+        if ($user === null) {
             $this->addFlash(
                 "error",
                 $this->get('translator')->trans('flash.password_reset_token_expired')
@@ -147,7 +155,7 @@ class PasswordResetController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
 
             $user->setPassword($hashedPassword);
             $user->setPasswordResetRequestedAt(null);
@@ -163,7 +171,7 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('login');
         }
 
-        return $this->render('User/password-resetting-reset.html.twig', array(
+        return $this->render(':User:password-reset-reset.html.twig', array(
             'form' => $form->createView(),
         ));
     }

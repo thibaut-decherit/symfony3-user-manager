@@ -5,6 +5,7 @@ namespace AppBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -37,6 +38,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $passwordEncoder;
     private $csrfTokenManager;
     private $translatorInterface;
+    private $sessionInterface;
 
     /**
      * LoginFormAuthenticator constructor.
@@ -45,13 +47,15 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param TranslatorInterface $translatorInterface
+     * @param SessionInterface $sessionInterface
      */
     public function __construct(
         EntityManagerInterface $em,
         RouterInterface $router,
         UserPasswordEncoderInterface $passwordEncoder,
         CsrfTokenManagerInterface $csrfTokenManager,
-        TranslatorInterface $translatorInterface
+        TranslatorInterface $translatorInterface,
+        SessionInterface $sessionInterface
     )
     {
         $this->em = $em;
@@ -59,6 +63,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->passwordEncoder = $passwordEncoder;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->translatorInterface = $translatorInterface;
+        $this->sessionInterface = $sessionInterface;
     }
 
     /**
@@ -185,7 +190,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function start(Request $request, AuthenticationException $exception = null)
     {
-        $url = $this->router->generate('home', ["authenticationRequiredRedirect" => true]);
+        $this->sessionInterface->getFlashBag()->add(
+            "error",
+            $this->translatorInterface->trans('flash.login_required')
+        );
+        $url = $this->router->generate('login');
+
         return new RedirectResponse($url);
     }
 

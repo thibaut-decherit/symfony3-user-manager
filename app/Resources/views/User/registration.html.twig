@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% include 'Form/registration-form.html.twig' %}
+    <div class="row">
+        <h1 class="col">Registration</h1>
+    </div>
+
+    {% include ':Form/User:registration.html.twig' %}
 {% endblock %}

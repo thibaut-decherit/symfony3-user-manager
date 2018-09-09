@@ -2,36 +2,39 @@
 
 namespace AppBundle\Form\User;
 
+use AppBundle\Validator\Constraints\CorrectPassword;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class RegistrationType
+ * Class PasswordChangeType
  * @package AppBundle\Form\User
  */
-class RegistrationType extends AbstractType
+class PasswordChangeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
-                'label' => 'user.username',
-            ])
-            ->add('email', EmailType::class, [
-                'label' => 'user.email_address',
+            ->add('currentPassword', PasswordType::class, [
+                'label' => 'user.current_password',
+                'mapped' => false,
+                'constraints' => array(
+                    new NotBlank(['message' => 'form_errors.not_blank']),
+                    new UserPassword(['message' => 'form_errors.wrong_password']),
+                ),
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => true,
-                'first_options' => array('label' => 'user.password'),
-                'second_options' => array('label' => 'user.password_repeat'),
+                'first_options' => array('label' => 'user.new_password'),
+                'second_options' => array('label' => 'user.new_password_repeat'),
             ]);
     }
 
@@ -39,7 +42,6 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('registration')
         ));
     }
 
