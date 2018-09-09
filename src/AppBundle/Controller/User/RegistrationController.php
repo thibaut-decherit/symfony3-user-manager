@@ -53,7 +53,7 @@ class RegistrationController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
 
             $em = $this->getDoctrine()->getManager();
             $user->setPassword($hashedPassword);

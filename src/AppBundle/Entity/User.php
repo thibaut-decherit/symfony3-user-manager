@@ -60,15 +60,22 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * Used for model validation. Must not be persisted. Needed to avoid raw password overwriting
+     * current user $user->getPassword() when being tested by UserPasswordValidator
+     *
+     * @var string
      *
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
      *     message = "form_errors.password_strength",
-     *     groups={"registration"}
      * )
      *
      */
-    private $password;
+    protected $plainPassword;
 
     /**
      * @var string
@@ -200,6 +207,30 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set plainPassword
+     *
+     * @param string $plainPassword
+     *
+     * @return User
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get plainPassword
+     *
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     /**

@@ -155,7 +155,7 @@ class PasswordResetController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
 
             $user->setPassword($hashedPassword);
             $user->setPasswordResetRequestedAt(null);
