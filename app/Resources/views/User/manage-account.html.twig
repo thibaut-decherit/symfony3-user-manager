@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <h1 class="col">My Account</h1>
+    </div>
+
+    {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::accountInformationFormAction')) }}
+    {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::passwordChangeFormAction')) }}
+{% endblock %}

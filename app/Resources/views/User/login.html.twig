@@ -9,6 +9,12 @@
         'textAlign': 'center'
     } %}
 
+    {% include 'flash-message-template.html.twig' with {
+        'alertType': 'error',
+        'alertStyle': 'alert-danger',
+        'textAlign': 'center'
+    } %}
+
     <form action="{{ path("login") }}" method="post" id="ajax-form-login">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" id="formLogin"/>
 

@@ -17,11 +17,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @UniqueEntity(
  *     fields={"email"},
- *     message="form_errors.unique_email"
+ *     message="form_errors.unique_email",
+ *     groups={"registration", "user_information"}
  * )
  * @UniqueEntity(
  *     fields={"username"},
- *     message="form_errors.unique_username"
+ *     message="form_errors.unique_username",
+ *     groups={"registration", "user_information"}
  * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
@@ -38,16 +40,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank"
+     *     message="form_errors.not_blank",
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length"
+     *      maxMessage = "form_errors.max_length",
+     *      groups={"registration", "user_information"}
      * )
      */
     private $username;
@@ -55,7 +59,15 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * Used for model validation. Must not be persisted. Needed to avoid raw password overwriting
+     * current user $user->getPassword() when being tested by UserPasswordValidator
+     *
+     * @var string
      *
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
@@ -63,25 +75,28 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * )
      *
      */
-    private $password;
+    protected $plainPassword;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank"
+     *     message="form_errors.not_blank",
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length"
+     *      maxMessage = "form_errors.max_length",
+     *      groups={"registration", "user_information"}
      * )
      * @Assert\Email(
      *      message = "form_errors.valid_email",
-     *      checkMX = true
+     *      checkMX = true,
+     *      groups={"registration", "user_information"}
      * )
      */
     private $email;
@@ -97,35 +112,35 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array", nullable=true)
+     * @ORM\Column(type="array", nullable=true)
      */
     private $roles;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="has_been_activated", type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $hasBeenActivated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="activation_token", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $activationToken;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password_reset_token", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="password_reset_requested_at", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $passwordResetRequestedAt;
 
@@ -192,6 +207,30 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set plainPassword
+     *
+     * @param string $plainPassword
+     *
+     * @return User
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get plainPassword
+     *
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     /**
@@ -450,7 +489,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      */
     public function generateSecureToken()
     {
-        return sha1(random_bytes(50));
+        return sha1(random_bytes(256));
     }
 
     /**

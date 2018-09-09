@@ -1,0 +1,48 @@
+{{ form_start(form, {
+    'method': 'post',
+    'action': path('registration_ajax'),
+    'attr': {
+        'id': 'ajax-form-registration',
+        'class': 'col p-0'
+    }
+}) }}
+
+<div class="alert alert-dismissible d-none alert-success" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p id="success-message" class="text-center m-0"></p>
+</div>
+
+<div class="row">
+    <div class="col mt-3">
+        {{ form_label(form.username) }}
+        {{ form_widget(form.username) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col mt-3">
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col mt-3">
+        {{ form_label(form.password.first) }}
+        {{ form_widget(form.password.first) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col mt-3">
+        {{ form_label(form.password.second) }}
+        {{ form_widget(form.password.second) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col mt-3">
+        <input type="submit" value="{{ 'user.register'|trans }}"/>
+    </div>
+</div>
+
+{{ form_end(form) }}

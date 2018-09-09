@@ -21,6 +21,8 @@ Encore
         './assets/js/app.js',
         './assets/js/registration.js',
         './assets/js/login.js',
+        './assets/js/user-information.js',
+        './assets/js/password-change.js',
     ])
 
 

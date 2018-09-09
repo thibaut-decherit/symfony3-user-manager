@@ -4,17 +4,15 @@ namespace AppBundle\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class RegistrationType
+ * Class UserInformationType
  * @package AppBundle\Form\User
  */
-class RegistrationType extends AbstractType
+class UserInformationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -24,14 +22,6 @@ class RegistrationType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'user.email_address',
-            ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'form_errors.repeat_password',
-                'options' => array('attr' => array('class' => 'password-field')),
-                'required' => true,
-                'first_options' => array('label' => 'user.password'),
-                'second_options' => array('label' => 'user.password_repeat'),
             ]);
     }
 
@@ -39,7 +29,7 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('registration')
+            'validation_groups' => array('user_information')
         ));
     }
 
