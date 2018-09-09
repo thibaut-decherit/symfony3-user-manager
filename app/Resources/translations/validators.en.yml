@@ -9,3 +9,4 @@ form_errors:
   unique_email: This email is already used.
   unique_username: This username is already used.
   valid_email: This email address is not valid.
+  wrong_password: Wrong password.

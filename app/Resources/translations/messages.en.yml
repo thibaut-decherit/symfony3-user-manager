@@ -2,6 +2,7 @@
 
 global:
   form:
+    change_password: Change Password
     submit: Submit
     save_changes: Save Changes
 
@@ -10,14 +11,18 @@ global:
 
 user:
   account_not_activated: You haven't activated your account yet.
+  current_password: Current password
   email_address: Email address
   information_updated: Account information successfully updated.
   invalid_credentials: Wrong username or password.
   login: Login
+  new_password: New password
+  new_password_repeat: Repeat new password
   password: Password
   password_repeat: Repeat Password
+  password_updated: Your password has been updated successfully.
   register: Register
-  registration_success: Registration successful, check your email, you will receive an activation link shortly.
+  registration_success: Registration successful, check your email address, you will receive an activation link shortly.
   remember_me: Remember Me
   send_email: Send Email
   username: Username
