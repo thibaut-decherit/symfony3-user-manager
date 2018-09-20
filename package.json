@@ -1,7 +1,7 @@
 {
-  "name": "user_manager",
+  "name": "symfony-user-manager",
   "version": "1.0.0",
-  "description": "user_manager ===============",
+  "description": "symfony-user-manager ===============",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:thibaut-decherit/user_manager.git"
+    "url": "git+ssh://git@github.com:thibaut-decherit/symfony-user-manager.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "thibaut.decherit@protonmail.com",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thibaut-decherit/user_manager/issues"
+    "url": "https://github.com/thibaut-decherit/symfony-user-manager/issues"
   },
-  "homepage": "https://github.com/thibaut-decherit/user_manager",
+  "homepage": "https://github.com/thibaut-decherit/symfony-user-manager",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@symfony/webpack-encore": "^0.20.1",
