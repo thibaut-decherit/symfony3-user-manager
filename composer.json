@@ -1,6 +1,6 @@
 {
-    "name": "theophany/user_manager",
-    "license": "proprietary",
+    "name": "symfony-user-manager",
+    "license": "MIT",
     "type": "project",
     "autoload": {
         "psr-4": {

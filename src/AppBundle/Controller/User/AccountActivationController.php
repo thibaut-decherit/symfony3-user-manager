@@ -18,7 +18,7 @@ class AccountActivationController extends DefaultController
      *
      * @param User $user
      * @Route("/activate-account/{activationToken}", name="activate_account")
-     * @Method({"GET"})
+     * @Method("GET")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function activateAccountAction(User $user)

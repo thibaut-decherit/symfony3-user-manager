@@ -22,7 +22,7 @@ class ManageAccountController extends DefaultController
      * Renders user account view.
      *
      * @Route("/", name="account")
-     * @Method({"GET"})
+     * @Method("GET")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function manageAccountAction()
