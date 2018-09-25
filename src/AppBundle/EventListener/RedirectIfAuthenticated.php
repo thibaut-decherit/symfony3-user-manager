@@ -5,6 +5,7 @@ namespace AppBundle\EventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -42,7 +43,12 @@ class RedirectIfAuthenticated
      * @param RequestStack $request
      * @param RouterInterface $router
      */
-    public function __construct(Security $security, AuthorizationCheckerInterface $authChecker, RequestStack $request, RouterInterface $router)
+    public function __construct(
+        Security $security,
+        AuthorizationCheckerInterface $authChecker,
+        RequestStack $request,
+        RouterInterface $router
+    )
     {
         $this->security = $security;
         $this->authChecker = $authChecker;
@@ -68,16 +74,37 @@ class RedirectIfAuthenticated
          * those kernel requests $this->security->getToken() doesn't yet return a token and the code contained in
          * this condition is executed too early in the "chain" of kernel requests, thus causing the error.
          */
-        if ($this->security->getToken() !== null && $this->authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->security->getToken() !== null
+            && $this->authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $forbiddenRoutes = [
                 "login",
+                "password_reset",
                 "password_reset_request",
                 "registration",
             ];
 
             $route = $this->request->getCurrentRequest()->get('_route');
+
+            // If requested route is one of the forbidden routes
             if (in_array($route, $forbiddenRoutes)) {
-                $url = $this->router->generate('home');
+                $referer = $this->request->getCurrentRequest()->headers->get('referer');
+                $baseWebsiteUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost();
+
+                // Base website url is removed from referer url so router can match result to existing route.
+                $lastUrl = substr($referer, strpos($referer, $baseWebsiteUrl) + strlen($baseWebsiteUrl));
+
+                /*
+                 * Tries to redirect to route matching $lastUrl. If no match is found (most likely because $referer url
+                 * comes from another website), it will throw ResourceNotFoundException.
+                 * If no match is found, it redirects to home.
+                 */
+                try {
+                    $redirectRoute = $this->router->getMatcher()->match($lastUrl)['_route'];
+                    $url = $this->router->generate($redirectRoute);
+                } catch (ResourceNotFoundException $resourceNotFoundException) {
+                    $url = $this->router->generate('home');
+                }
+
                 $event->setResponse(new RedirectResponse($url));
             }
         }
