@@ -37,3 +37,8 @@ services:
     public: true
     arguments:
     - '@service_container'
+
+  kernel.listener.redirect_if_authenticated:
+    class: AppBundle\EventListener\RedirectIfAuthenticated
+    tags:
+    - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
