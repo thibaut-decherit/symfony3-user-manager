@@ -100,7 +100,14 @@ class RedirectIfAuthenticated
                  */
                 try {
                     $redirectRoute = $this->router->getMatcher()->match($lastUrl)['_route'];
-                    $url = $this->router->generate($redirectRoute);
+
+                    // If referer url matches one of the forbidden routes, redirect to home to prevent redirect loop.
+                    if (in_array($redirectRoute, $forbiddenRoutes)) {
+                        $url = $this->router->generate('home');
+                    } else {
+                        $url = $this->router->generate($redirectRoute);
+                    }
+
                 } catch (ResourceNotFoundException $resourceNotFoundException) {
                     $url = $this->router->generate('home');
                 }
