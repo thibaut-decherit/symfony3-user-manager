@@ -21,15 +21,17 @@ class RegistrationType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'user.username',
+                'required' => false,
             ])
             ->add('email', EmailType::class, [
                 'label' => 'user.email_address',
+                'required' => false,
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
-                'required' => true,
+                'required' => false,
                 'first_options' => array('label' => 'user.password'),
                 'second_options' => array('label' => 'user.password_repeat'),
             ]);

@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 /**
  * Class MailerService
@@ -12,9 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MailerService
 {
     /**
-     * @var ContainerInterface
+     * @var TwigEngine
      */
-    protected $container;
+    protected $twigEngine;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    protected $swiftMailer;
 
     /**
      * @var string
@@ -28,13 +33,22 @@ class MailerService
 
     /**
      * MailerService constructor.
-     * @param ContainerInterface $container
+     * @param TwigEngine $twigEngine
+     * @param \Swift_Mailer $swiftMailer
+     * @param string $autoMailerAddress
+     * @param string $replyTo
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        TwigEngine $twigEngine,
+        \Swift_Mailer $swiftMailer,
+        string $autoMailerAddress,
+        string $replyTo
+    )
     {
-        $this->container = $container;
-        $this->autoMailerAddress = $container->getParameter('mailer_user');
-        $this->replyTo = $container->getParameter('mailer_reply_to');
+        $this->twigEngine = $twigEngine;
+        $this->swiftMailer = $swiftMailer;
+        $this->autoMailerAddress = $autoMailerAddress;
+        $this->replyTo = $replyTo;
     }
 
     /**
@@ -46,7 +60,7 @@ class MailerService
      */
     public function registrationSuccess(User $user, string $activationUrl)
     {
-        $emailBody = $this->container->get('templating')->render(
+        $emailBody = $this->twigEngine->render(
             'Email/registration-email.html.twig', [
                 'user' => $user,
                 'activationUrl' => $activationUrl
@@ -74,7 +88,7 @@ class MailerService
     {
         $passwordResetTokenLifetimeInMinutes = ceil($passwordResetTokenLifetime / 60);
 
-        $emailBody = $this->container->get('templating')->render(
+        $emailBody = $this->twigEngine->render(
             'Email/password-reset-email.html.twig', [
                 'user' => $user,
                 'passwordResetUrl' => $passwordResetUrl,
@@ -110,6 +124,7 @@ class MailerService
         if ($attachment) {
             $message->attach($attachment);
         }
-        $this->container->get('mailer')->send($message);
+
+        $this->swiftMailer->send($message);
     }
 }
