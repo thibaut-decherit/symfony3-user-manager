@@ -24,7 +24,6 @@ class PasswordChangeType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => array(
-                    new NotBlank(['message' => 'form_errors.not_blank']),
                     new UserPassword(['message' => 'form_errors.wrong_password']),
                 ),
             ])
