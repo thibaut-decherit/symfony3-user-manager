@@ -70,6 +70,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @var string
      *
+     * @Assert\NotBlank(
+     *     message="form_errors.not_blank",
+     * )
      * @Assert\Regex(
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
      *     message = "form_errors.password_strength",
