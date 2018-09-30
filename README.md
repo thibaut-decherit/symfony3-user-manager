@@ -69,12 +69,12 @@ Feel free to tailor each feature to your needs.
 - Email with reset link and expiration delay sent to user
 - On reset success, redirect to login page and custom flash message with Bootstrap alert success
 
-### Redirect if authenticated (upcoming):
+### Redirect if authenticated:
 - Event listener triggered on each request through `onKernelRequest()` method 
 - Redirect to homepage if authenticated user attempts to access "logged-out only" routes (e.g. login, register and password reset)
 - Add your own routes and modify existing list
 
-### Password rehash on user login if needed (upcoming):
+### Password rehash on user authentication if needed:
 - Event listener triggered on login through `onSecurityInteractiveLogin` method
 - Rehashes password on login if bcrypt cost has been modified in config.yml
   - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change

@@ -9,6 +9,7 @@ parameters:
   locale: en
   password_reset_request_send_email_again_delay: 120 # seconds
   password_reset_token_lifetime: 3600 # seconds
+  bcrypt_cost: 13
 
 framework:
   #esi: ~
