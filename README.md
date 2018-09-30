@@ -85,7 +85,7 @@ Feel free to tailor each feature to your needs.
 - Bcrypt implementation
 - Modify listener and config files to implement another algorithm. According to `password_needs_rehash` documentation it should work even if you switch hashing algorithm in production environment
 
-### Haveibeenpwned API password validator (upcoming):
+### Haveibeenpwned API password validator:
 - Prevents your users from choosing a password compromised in known data breaches
 - Password validation through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API
 - Custom Symfony form error
