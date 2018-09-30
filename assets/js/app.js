@@ -1,5 +1,9 @@
 const $ = require('jquery');
 global.$ = global.jQuery = require('jquery');
+global.body = $('body');
 require('bootstrap');
 
-global.body = $('body');
+require('./registration');
+require('./login');
+require('./user-information');
+require('./password-change');
