@@ -37,7 +37,7 @@ class RedirectIfAuthenticated
     private $router;
 
     /**
-     * RedirectIfAuthenticated constructor
+     * RedirectIfAuthenticated constructor.
      * @param Security $security
      * @param AuthorizationCheckerInterface $authChecker
      * @param RequestStack $request

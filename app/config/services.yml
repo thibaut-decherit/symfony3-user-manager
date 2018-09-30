@@ -42,3 +42,12 @@ services:
     class: AppBundle\EventListener\RedirectIfAuthenticated
     tags:
     - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  app.on_auth_password_rehash_if_needed:
+    class: AppBundle\EventListener\OnAuthPasswordRehashIfNeeded
+    arguments:
+    - '@doctrine.orm.default_entity_manager'
+    - '@security.user_password_encoder.generic'
+    - '%bcrypt_cost%'
+    tags:
+    - { name: kernel.event_listener, event: security.interactive_login }
