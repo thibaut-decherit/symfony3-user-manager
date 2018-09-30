@@ -22,6 +22,7 @@ class PasswordChangeType extends AbstractType
             ->add('currentPassword', PasswordType::class, [
                 'label' => 'user.current_password',
                 'mapped' => false,
+                'required' => false,
                 'constraints' => array(
                     new NotBlank(['message' => 'form_errors.not_blank']),
                     new UserPassword(['message' => 'form_errors.wrong_password']),
@@ -31,7 +32,7 @@ class PasswordChangeType extends AbstractType
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
-                'required' => true,
+                'required' => false,
                 'first_options' => array('label' => 'user.new_password'),
                 'second_options' => array('label' => 'user.new_password_repeat'),
             ]);
