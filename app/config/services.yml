@@ -36,7 +36,10 @@ services:
     class: AppBundle\Service\MailerService
     public: true
     arguments:
-    - '@service_container'
+    - '@templating.engine.twig'
+    - '@mailer'
+    - '%mailer_user%'
+    - '%mailer_reply_to%'
 
   kernel.listener.redirect_if_authenticated:
     class: AppBundle\EventListener\RedirectIfAuthenticated
