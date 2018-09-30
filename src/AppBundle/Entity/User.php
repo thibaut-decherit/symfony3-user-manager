@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as CustomAssert;
 
 /**
  * User
@@ -73,6 +74,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
      *     message = "form_errors.password_strength",
      * )
+     * @CustomAssert\BreachedPassword()
      *
      */
     protected $plainPassword;
