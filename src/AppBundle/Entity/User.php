@@ -122,6 +122,13 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $roles;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $registeredAt;
+
+    /**
      * @var bool
      *
      * @ORM\Column(type="boolean")
@@ -152,6 +159,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
+        $this->registeredAt = new \DateTime();
         $this->hasBeenActivated = false;
         $this->activationToken = $this->generateSecureToken();
     }
@@ -308,6 +316,29 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * Set registeredAt
+     *
+     * @return \DateTime
+     */
+    public function getRegisteredAt()
+    {
+        return $this->registeredAt;
+    }
+
+    /**
+     * Get registeredAt
+     *
+     * @param \DateTime $registeredAt
+     *
+     * @return User
+     */
+    public function setRegisteredAt($registeredAt)
+    {
+        $this->registeredAt = $registeredAt;
+        return $this;
     }
 
     /**
