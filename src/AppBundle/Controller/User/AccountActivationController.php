@@ -29,7 +29,7 @@ class AccountActivationController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
-        if ($user->getHasBeenActivated() === true) {
+        if ($user->isActivated() === true) {
             $this->addFlash(
                 "success",
                 $this->get('translator')->trans('flash.account_already_activated')
@@ -38,7 +38,7 @@ class AccountActivationController extends DefaultController
             return $this->redirectToRoute('login');
         }
 
-        $user->setHasBeenActivated(true);
+        $user->setActivated(true);
 
         $em->persist($user);
         $em->flush();

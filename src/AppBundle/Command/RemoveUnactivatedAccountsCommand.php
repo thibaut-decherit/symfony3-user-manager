@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class SendAutoEmailCommand
+ * Class RemoveUnactivatedAccountsCommand
  * @package AppBundle\Command
  */
 class RemoveUnactivatedAccountsCommand extends Command

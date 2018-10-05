@@ -54,7 +54,7 @@ class PasswordResetController extends DefaultController
                 return $this->redirectToRoute('password_reset_request');
             }
 
-            if ($user->getHasBeenActivated() === false) {
+            if ($user->isActivated() === false) {
                 $this->addFlash(
                     "error",
                     $this->get('translator')->trans('flash.account_not_yet_activated')

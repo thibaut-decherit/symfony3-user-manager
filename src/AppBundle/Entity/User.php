@@ -133,7 +133,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @ORM\Column(type="boolean")
      */
-    private $hasBeenActivated;
+    private $activated;
 
     /**
      * @var string
@@ -160,281 +160,224 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     {
         $this->roles = ['ROLE_USER'];
         $this->registeredAt = new \DateTime();
-        $this->hasBeenActivated = false;
+        $this->activated = false;
         $this->activationToken = $this->generateSecureToken();
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * Set username
-     *
-     * @param string $username
-     *
+     * @param int $id
      * @return User
      */
-    public function setUsername($username)
+    public function setId(int $id): User
     {
-        $this->username = $username;
-
+        $this->id = $id;
         return $this;
     }
 
     /**
-     * Get username
-     *
-     * @return string
+     * @return null|string
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
     /**
-     * Set password
-     *
-     * @param string $password
-     *
+     * @param string $username
      * @return User
      */
-    public function setPassword($password)
+    public function setUsername(string $username): User
     {
-        $this->password = $password;
-
+        $this->username = $username;
         return $this;
     }
 
     /**
-     * Get password
-     *
-     * @return string
+     * @return null|string
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
     /**
-     * Set plainPassword
-     *
-     * @param string $plainPassword
-     *
+     * @param string $password
      * @return User
      */
-    public function setPlainPassword($plainPassword)
+    public function setPassword(string $password): User
     {
-        $this->plainPassword = $plainPassword;
-
+        $this->password = $password;
         return $this;
     }
 
     /**
-     * Get plainPassword
-     *
-     * @return string
+     * @return null|string
      */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
     /**
-     * Set email
-     *
-     * @param string $email
-     *
+     * @param string $plainPassword
      * @return User
      */
-    public function setEmail($email)
+    public function setPlainPassword(string $plainPassword): User
     {
-        $this->email = $email;
-
+        $this->plainPassword = $plainPassword;
         return $this;
     }
 
     /**
-     * Get email
-     *
-     * @return string
+     * @return null|string
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
     /**
-     * Set salt
-     *
-     * @param string $salt
-     *
+     * @param string $email
      * @return User
      */
-    public function setSalt($salt)
+    public function setEmail(string $email): User
     {
-        $this->salt = $salt;
-
+        $this->email = $email;
         return $this;
     }
 
     /**
-     * Get salt
-     *
-     * @return string
+     * @return null|string
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
 
     /**
-     * Set roles
-     *
-     * @param array $roles
-     *
+     * @param string $salt
      * @return User
      */
-    public function setRoles($roles)
+    public function setSalt(string $salt): User
     {
-        $this->roles = $roles;
-
+        $this->salt = $salt;
         return $this;
     }
 
     /**
-     * Get roles
-     *
-     * @return array
+     * @return array|null
      */
-    public function getRoles()
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
 
     /**
-     * Set registeredAt
-     *
-     * @return \DateTime
+     * @param array $roles
+     * @return User
      */
-    public function getRegisteredAt()
+    public function setRoles(array $roles): User
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getRegisteredAt(): ?\DateTime
     {
         return $this->registeredAt;
     }
 
     /**
-     * Get registeredAt
-     *
      * @param \DateTime $registeredAt
-     *
      * @return User
      */
-    public function setRegisteredAt($registeredAt)
+    public function setRegisteredAt(\DateTime $registeredAt): User
     {
         $this->registeredAt = $registeredAt;
         return $this;
     }
 
     /**
-     * Set hasBeenActivated
-     *
-     * @param bool $hasBeenActivated
-     *
+     * @return bool|null
+     */
+    public function isActivated(): ?bool
+    {
+        return $this->activated;
+    }
+
+    /**
+     * @param bool $activated
      * @return User
      */
-    public function setHasBeenActivated($hasBeenActivated)
+    public function setActivated(bool $activated): User
     {
-        $this->hasBeenActivated = $hasBeenActivated;
-
+        $this->activated = $activated;
         return $this;
     }
 
     /**
-     * Get hasBeenActivated
-     *
-     * @return bool
+     * @return null|string
      */
-    public function getHasBeenActivated()
-    {
-        return $this->hasBeenActivated;
-    }
-
-    /**
-     * Set activationToken
-     *
-     * @param string $activationToken
-     *
-     * @return User
-     */
-    public function setActivationToken($activationToken)
-    {
-        $this->activationToken = $activationToken;
-
-        return $this;
-    }
-
-    /**
-     * Get activationToken
-     *
-     * @return string
-     */
-    public function getActivationToken()
+    public function getActivationToken(): ?string
     {
         return $this->activationToken;
     }
 
     /**
-     * Set passwordResetToken
-     *
-     * @param string $passwordResetToken
-     *
+     * @param string $activationToken
      * @return User
      */
-    public function setPasswordResetToken($passwordResetToken)
+    public function setActivationToken(string $activationToken): User
     {
-        $this->passwordResetToken = $passwordResetToken;
-
+        $this->activationToken = $activationToken;
         return $this;
     }
 
     /**
-     * Get passwordResetToken
-     *
-     * @return string
+     * @return null|string
      */
-    public function getPasswordResetToken()
+    public function getPasswordResetToken(): ?string
     {
         return $this->passwordResetToken;
     }
 
     /**
-     * Set passwordResetRequestedAt
-     *
-     * @param string $passwordResetRequestedAt
-     *
+     * @param string $passwordResetToken
      * @return User
      */
-    public function setPasswordResetRequestedAt($passwordResetRequestedAt)
+    public function setPasswordResetToken(string $passwordResetToken): User
     {
-        $this->passwordResetRequestedAt = $passwordResetRequestedAt;
-
+        $this->passwordResetToken = $passwordResetToken;
         return $this;
     }
 
     /**
-     * Get passwordResetRequestedAt
-     *
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getPasswordResetRequestedAt()
+    public function getPasswordResetRequestedAt(): ?\DateTime
     {
         return $this->passwordResetRequestedAt;
+    }
+
+    /**
+     * @param \DateTime $passwordResetRequestedAt
+     * @return User
+     */
+    public function setPasswordResetRequestedAt(\DateTime $passwordResetRequestedAt): User
+    {
+        $this->passwordResetRequestedAt = $passwordResetRequestedAt;
+        return $this;
     }
 
     public function eraseCredentials()
@@ -451,7 +394,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @see AccountExpiredException
      */
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
@@ -466,7 +409,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @see LockedException
      */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
@@ -481,7 +424,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @see CredentialsExpiredException
      */
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
@@ -493,12 +436,16 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @see DisabledException
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
-        return $this->hasBeenActivated;
+        return $this->activated;
     }
 
-    public function isEqualTo(UserInterface $user)
+    /**
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user): bool
     {
         if (!$user instanceof User) {
             return false;
@@ -523,7 +470,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @return string
      * @throws \Exception
      */
-    public function generateSecureToken()
+    public function generateSecureToken(): string
     {
         return sha1(random_bytes(256));
     }
@@ -532,7 +479,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @param int $passwordResetRequestRetryDelay
      * @return bool
      */
-    public function isPasswordResetRequestRetryDelayExpired(int $passwordResetRequestRetryDelay)
+    public function isPasswordResetRequestRetryDelayExpired(int $passwordResetRequestRetryDelay): bool
     {
         return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetRequestRetryDelay < time();
     }
@@ -541,7 +488,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @param int $passwordResetTokenLifetime
      * @return bool
      */
-    public function isPasswordResetTokenExpired(int $passwordResetTokenLifetime)
+    public function isPasswordResetTokenExpired(int $passwordResetTokenLifetime): bool
     {
         return $this->getPasswordResetRequestedAt()->getTimestamp() + $passwordResetTokenLifetime < time();
     }

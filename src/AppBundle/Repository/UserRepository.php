@@ -12,7 +12,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('user');
         $qb
-            ->where('user.hasBeenActivated = false')
+            ->where('user.activated = false')
             ->andWhere("user.registeredAt < DATE_SUB(CURRENT_TIME(), :days, 'day')")
             ->setParameter('days', $days)
             ->setMaxResults($limit);
