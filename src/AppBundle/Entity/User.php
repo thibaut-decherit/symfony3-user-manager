@@ -19,12 +19,12 @@ use AppBundle\Validator\Constraints as CustomAssert;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="form_errors.unique_email",
- *     groups={"registration", "user_information"}
+ *     groups={"Registration", "User_Information"}
  * )
  * @UniqueEntity(
  *     fields={"username"},
  *     message="form_errors.unique_username",
- *     groups={"registration", "user_information"}
+ *     groups={"Registration", "User_Information"}
  * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
@@ -45,14 +45,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *      groups={"registration", "user_information"}
+     *     groups={"Registration", "User_Information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
      *      maxMessage = "form_errors.max_length",
-     *      groups={"registration", "user_information"}
+     *      groups={"Registration", "User_Information"}
      * )
      */
     private $username;
@@ -89,19 +89,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *      groups={"registration", "user_information"}
+     *      groups={"Registration", "User_Information"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
      *      maxMessage = "form_errors.max_length",
-     *      groups={"registration", "user_information"}
+     *      groups={"Registration", "User_Information"}
      * )
      * @Assert\Email(
      *      message = "form_errors.valid_email",
      *      checkMX = true,
-     *      groups={"registration", "user_information"}
+     *      groups={"Registration", "User_Information"}
      * )
      */
     private $email;
