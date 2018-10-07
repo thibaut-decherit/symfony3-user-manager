@@ -3,8 +3,10 @@ My take on user management with Symfony 3.4
 
 
 ## **Dependencies**
+- Webpack Encore (SCSS and JS compiling)
 - jQuery (AJAX and DOM manipulation)
 - Bootstrap 4 (forms and alerts)
+- Guzzle 6 (API consuming)
 
 ## **Features**
 
@@ -89,7 +91,7 @@ Feel free to tailor each feature to your needs.
 - Prevents your users from choosing a password compromised in known data breaches
 - Password validation through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API
 - Custom Symfony form error
-- Consider implementing this through someting less strict than a validator if you think it could deter potential users (e.g. an informative message on user profile)
+- Consider implementing this through something less strict than a validator if you think it could deter potential users (e.g. an informative message on user profile)
 
 ### Unactivated accounts removal command:
 - Command to delete users registered for more than `d` days if they haven't activated their account
