@@ -12,7 +12,7 @@ $input-btn-focus-box-shadow: none;
 $input-btn-focus-width: 0;
 
 .btn.disabled, .btn:disabled {
-  opacity: 1!important;
+  opacity: 1 !important;
 }
 
 html {
@@ -20,9 +20,9 @@ html {
 }
 
 @include media-breakpoint-up(xs)
-  html {
-    font-size: 1.1rem;
-  }
+html {
+  font-size: 1.1rem;
+}
 
 @include media-breakpoint-up(sm) {
   html {
@@ -38,22 +38,6 @@ html {
 
 @include media-breakpoint-up(lg) {
   html {
-    font-size:0.9rem;
+    font-size: 0.9rem;
   }
-}
-
-a {
-  cursor: pointer;
-}
-
-.modal-content {
-  border-radius: 0;
-}
-
-.vh-95 {
-  height: 95vh;
-}
-
-.vh-5 {
-  height: 5vh;
 }

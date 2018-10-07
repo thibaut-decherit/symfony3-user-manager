@@ -21,9 +21,6 @@ Encore
         './assets/js/app.js',
     ])
 
-
-    // Seulement si le fichier css ne s'appel pas app
-
     .addStyleEntry('global', './assets/css/global.scss')
 
 
