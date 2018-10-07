@@ -41,7 +41,7 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('registration')
+            'validation_groups' => array('Default', 'Registration')
         ));
     }
 

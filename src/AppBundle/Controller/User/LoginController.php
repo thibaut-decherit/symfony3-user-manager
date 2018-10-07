@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -13,10 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class LoginController extends DefaultController
 {
     /**
-     * Handles the login.
+     * Handles login.
      *
-     * @Route("/login", name="login")
-     * @Method("GET")
+     * @Route("/login", name="login", methods={"GET", "POST"})
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction()

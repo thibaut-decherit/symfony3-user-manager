@@ -31,6 +31,7 @@ user:
 # Flash
 
 flash:
+  account_activated_successfully: Your account has been activated successfully, you can log in below.
   account_already_activated: You have already activated your account, you can log in below.
   account_not_yet_activated: You have to activate your account to access this feature.
   login_required: You must login to access this page.
