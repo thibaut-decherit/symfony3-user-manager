@@ -4,7 +4,6 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,8 +16,7 @@ class AccountActivationController extends DefaultController
      * Handles account activation.
      *
      * @param User $user
-     * @Route("/activate-account/{activationToken}", name="activate_account")
-     * @Method("GET")
+     * @Route("/activate-account/{activationToken}", name="activate_account", methods={"GET"})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function activateAccountAction(User $user)
