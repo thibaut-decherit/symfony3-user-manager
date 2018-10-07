@@ -157,7 +157,7 @@ class PasswordResetController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "success",
+                "login-flash-success",
                 $this->get('translator')->trans('flash.password_reset_success')
             );
 
