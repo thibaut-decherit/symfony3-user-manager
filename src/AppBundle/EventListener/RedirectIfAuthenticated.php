@@ -81,6 +81,7 @@ class RedirectIfAuthenticated
                 "password_reset",
                 "password_reset_request",
                 "registration",
+                "registration_ajax"
             ];
 
             $route = $this->request->getCurrentRequest()->get('_route');
