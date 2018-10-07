@@ -29,7 +29,7 @@ class AccountActivationController extends DefaultController
 
         if ($user->isActivated() === true) {
             $this->addFlash(
-                "success",
+                "login-flash-success",
                 $this->get('translator')->trans('flash.account_already_activated')
             );
 
@@ -38,9 +38,13 @@ class AccountActivationController extends DefaultController
 
         $user->setActivated(true);
 
-        $em->persist($user);
         $em->flush();
 
-        return $this->render('User/account-activation-success.html.twig');
+        $this->addFlash(
+            "login-flash-success",
+            $this->get('translator')->trans('flash.account_activated_successfully')
+        );
+
+        return $this->redirectToRoute('login');
     }
 }

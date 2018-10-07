@@ -1,17 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="alert-danger mb-3 p-1 text-center d-none" id="login-error-alert"></div>
+    <div class="alert alert-danger mb-3 p-1 text-center d-none" id="login-error-alert"></div>
 
     {% include 'flash-message-template.html.twig' with {
-        'alertType': 'success',
-        'alertStyle': 'alert-success',
-        'textAlign': 'center'
-    } %}
-
-    {% include 'flash-message-template.html.twig' with {
-        'alertType': 'error',
-        'alertStyle': 'alert-danger',
+        'alertId': 'login-flash-success',
+        'alertStyle': 'success',
+        'alertType': 'login-flash-success',
         'textAlign': 'center'
     } %}
 
