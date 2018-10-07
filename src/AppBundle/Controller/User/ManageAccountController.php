@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,8 +20,7 @@ class ManageAccountController extends DefaultController
     /**
      * Renders user account view.
      *
-     * @Route("/", name="account")
-     * @Method("GET")
+     * @Route("/", name="account", methods={"GET"})
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function manageAccountAction()
@@ -50,13 +48,12 @@ class ManageAccountController extends DefaultController
      *
      * @param Request $request
      * @param UserInterface $user
-     * @Route("/user-information-edit-ajax", name="user_information_edit_ajax")
-     * @Method("POST")
+     * @Route("/user-information-edit-ajax", name="user_information_edit_ajax", methods={"PATCH"})
      * @return JsonResponse
      */
     public function accountInformationEditAction(Request $request, UserInterface $user)
     {
-        $form = $this->createForm('AppBundle\Form\User\UserInformationType', $user);
+        $form = $this->createForm('AppBundle\Form\User\UserInformationType', $user, ['method' => 'patch']);
 
         $form->handleRequest($request);
 
@@ -114,13 +111,12 @@ class ManageAccountController extends DefaultController
      * @param Request $request
      * @param UserInterface $user
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @Route("/password-change-ajax", name="password_change_ajax")
-     * @Method("POST")
+     * @Route("/password-change-ajax", name="password_change_ajax", methods={"PATCH"})
      * @return JsonResponse
      */
     public function passwordChangeAction(Request $request, UserInterface $user, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $form = $this->createForm('AppBundle\Form\User\PasswordChangeType', $user);
+        $form = $this->createForm('AppBundle\Form\User\PasswordChangeType', $user, ['method' => 'patch']);
 
         $form->handleRequest($request);
 

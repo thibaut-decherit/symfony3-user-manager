@@ -35,6 +35,7 @@ services:
   mailer.service:
     class: AppBundle\Service\MailerService
     public: true
+    lazy: true
     arguments:
     - '@templating.engine.twig'
     - '@mailer'
@@ -53,4 +54,4 @@ services:
     - '@security.user_password_encoder.generic'
     - '%bcrypt_cost%'
     tags:
-    - { name: kernel.event_listener, event: security.interactive_login }
+    - { name: kernel.event_listener, event: security.interactive_login, lazy: true }

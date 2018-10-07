@@ -7,7 +7,7 @@ body.on('submit', '#ajax-form-change-password', function (e) {
     e.preventDefault();
 
     $.ajax({
-        type: $(this).attr('method'),
+        type: $(this).find('input' + "[name='_method']").val(),
         url: $(this).attr('action'),
         data: $(this).serialize()
     })

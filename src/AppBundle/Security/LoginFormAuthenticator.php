@@ -102,7 +102,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     /**
      * This is not limited by UserProvider methods. (e.g UserProvider doesn't have a method to find user by email but
-     * guard is still able to do so.
+     * guard is still able to do so)
      *
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider

@@ -4,7 +4,6 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,8 +16,7 @@ class AccountActivationController extends DefaultController
      * Handles account activation.
      *
      * @param User $user
-     * @Route("/activate-account/{activationToken}", name="activate_account")
-     * @Method("GET")
+     * @Route("/activate-account/{activationToken}", name="activate_account", methods={"GET"})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function activateAccountAction(User $user)
@@ -29,20 +27,24 @@ class AccountActivationController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
-        if ($user->getHasBeenActivated() === true) {
+        if ($user->isActivated() === true) {
             $this->addFlash(
-                "success",
+                "login-flash-success",
                 $this->get('translator')->trans('flash.account_already_activated')
             );
 
             return $this->redirectToRoute('login');
         }
 
-        $user->setHasBeenActivated(true);
+        $user->setActivated(true);
 
-        $em->persist($user);
         $em->flush();
 
-        return $this->render('User/account-activation-success.html.twig');
+        $this->addFlash(
+            "login-flash-success",
+            $this->get('translator')->trans('flash.account_activated_successfully')
+        );
+
+        return $this->redirectToRoute('login');
     }
 }

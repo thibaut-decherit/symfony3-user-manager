@@ -19,7 +19,11 @@ body.on('submit', '#ajax-form-login', function (e) {
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {
             const LOGIN_ERROR_ALERT = $('#login-error-alert');
+            const LOGIN_FLASH_SUCCESS = $('#login-flash-success');
             const PASSWORD_FIELD = LOGIN_FORM.find('#password');
+
+            // Hide flash message showing if user just activated his/her account or reset his/her password
+            LOGIN_FLASH_SUCCESS.addClass('d-none');
 
             PASSWORD_FIELD.val('');
             PASSWORD_FIELD.removeAttr('required');
