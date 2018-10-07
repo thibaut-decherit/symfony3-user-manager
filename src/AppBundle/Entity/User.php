@@ -353,10 +353,10 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @param string $passwordResetToken
+     * @param null|string $passwordResetToken
      * @return User
      */
-    public function setPasswordResetToken(string $passwordResetToken): User
+    public function setPasswordResetToken(?string $passwordResetToken): User
     {
         $this->passwordResetToken = $passwordResetToken;
         return $this;
@@ -371,10 +371,10 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @param \DateTime $passwordResetRequestedAt
+     * @param \DateTime|null $passwordResetRequestedAt
      * @return User
      */
-    public function setPasswordResetRequestedAt(\DateTime $passwordResetRequestedAt): User
+    public function setPasswordResetRequestedAt(?\DateTime $passwordResetRequestedAt): User
     {
         $this->passwordResetRequestedAt = $passwordResetRequestedAt;
         return $this;
