@@ -35,7 +35,7 @@ Feel free to tailor each feature to your needs.
 - Login form, submitted with AJAX to avoid refresh, so you can freely embed it in another view (e.g. in a modal)
   - Username/email compatible field
 - Bootstrap alert danger with message on wrong credentials
-- Bootstrap alert danger with message on login attempt to non-activated account
+- Bootstrap alert danger with message on login attempt to unactivated account
 - Redirect to login page on access attempt to page requiring authentication
 - Remember me
 - Guard
@@ -54,7 +54,7 @@ Feel free to tailor each feature to your needs.
 
 ### Password change:
 - Password change form submitted with AJAX to avoid refresh
-- Form embedded in parent view through Twig {{ render(controler()) }} , so you can group it together with profile edit form
+- Form embedded in parent view through Twig `{{ render(controler()) }}` , so you can group it together with profile edit form
 - Current password field
 - Repeat new password field
 - Custom Symfony form errors
@@ -78,7 +78,7 @@ Feel free to tailor each feature to your needs.
 
 ### Password rehash on user authentication if needed:
 - Event listener triggered on login through `onSecurityInteractiveLogin` method
-- Rehashes password on login if bcrypt cost has been modified in config.yml
+- Rehashes password on login if bcrypt cost has been modified in `config.yml`
   - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
   - This could be an issue if your existing users don't update their password
   - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that ? Have you been hacked ? Are my data safe ?")
