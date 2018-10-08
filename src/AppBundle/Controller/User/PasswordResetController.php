@@ -63,7 +63,7 @@ class PasswordResetController extends DefaultController
 
             if ($user->getPasswordResetRequestedAt() !== null
                 && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
-                // Displays a flash message informing user that he has to wait $limit minutes between each request
+                // Displays a flash message informing user that he/she has to wait $limit minutes between each request
                 $limit = ceil($passwordResettingRequestRetryDelay / 60);
                 $this->addFlash(
                     "error",
@@ -93,7 +93,6 @@ class PasswordResetController extends DefaultController
             $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
             $this->get('mailer.service')->passwordReset($user, $passwordResetUrl, $passwordResetTokenLifetime);
 
-            $em->persist($user);
             $em->flush();
 
             $this->addFlash(
@@ -132,7 +131,6 @@ class PasswordResetController extends DefaultController
             $user->setPasswordResetRequestedAt(null);
             $user->setPasswordResetToken(null);
 
-            $em->persist($user);
             $em->flush();
 
             $this->addFlash(
