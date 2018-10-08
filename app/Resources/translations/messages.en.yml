@@ -40,4 +40,4 @@ flash:
   password_reset_request_retry_delay_non_expired: You have to wait %limit% minutes before requesting another email.
   password_reset_success: Your password has been updated, you can now use it to log in below.
   password_reset_token_expired: Your password reset request has expired, please make a new one below.
-  user_not_found: This user doesn't exist.
+  user_not_found: This user doesn not exist.
