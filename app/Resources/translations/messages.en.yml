@@ -26,6 +26,7 @@ user:
   remember_me: Remember Me
   send_email: Send Email
   username: Username
+  username_or_email_address: Username or Email address
 
 
 # Flash
