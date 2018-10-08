@@ -28,7 +28,7 @@ Feel free to tailor each feature to your needs.
 - Custom Symfony form errors
 - Bootstrap alert success with message on successful registration
 - Email with activation link sent to newly registered user
-  - Activation confirmation page
+  - Redirect to login page with custom flash message with Bootstrap alert success if account successfully activated
   - Redirect to login page with custom flash message with Bootstrap alert success if account already activated
 
 ### Login with Guard component:

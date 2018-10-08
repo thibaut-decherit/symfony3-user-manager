@@ -73,7 +73,7 @@ class ManageAccountController extends DefaultController
         }
 
         /*
-         * $user must be refreshed or invalid POST data will conflict with logged-in user and crash the session,
+         * $user must be refreshed or invalid PATCH data will conflict with logged-in user and crash the session,
          * this line is not needed when editing with ajax any other entity than User
          */
         $this->getDoctrine()->getManager()->refresh($user);
@@ -138,7 +138,7 @@ class ManageAccountController extends DefaultController
         }
 
         /*
-         * $user must be refreshed or invalid POST data will conflict with logged-in user and crash the session,
+         * $user must be refreshed or invalid PATCH data will conflict with logged-in user and crash the session,
          * this line is not needed when editing with ajax any other entity than User
          */
         $this->getDoctrine()->getManager()->refresh($user);
