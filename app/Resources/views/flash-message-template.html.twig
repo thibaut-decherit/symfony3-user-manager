@@ -1,22 +1,10 @@
-{% if alertDismissible is not defined %}
-    {% set alertDismissible = false %}
-{% endif %}
+{% set alertDismissible = alertDismissible is defined ? alertDismissible : false %}
 
-{% if alertId is not defined %}
-    {% set alertId = '' %}
-{% endif %}
+{% set alertId = alertId is defined ? alertId : '' %}
 
-{% if alertStyle is not defined %}
-    {% set alertStyle = 'alert-success' %}
-{% else %}
-    {% set alertStyle = 'alert-' ~ alertStyle %}
-{% endif %}
+{% set alertStyle = alertStyle is defined ? 'alert-' ~ alertStyle : 'alert-success' %}
 
-{% if textAlign is defined %}
-    {% set textAlign = 'text-' ~ textAlign %}
-{% else %}
-    {% set textAlign = '' %}
-{% endif %}
+{% set textAlign = textAlign is defined ? 'text-' ~ textAlign : '' %}
 
 {% for message in app.flashes(alertType) %}
     <div class="alert {{ alertDismissible ? 'alert-dismissible' }} {{ alertStyle }}" role="alert" id="{{ alertId }}">
