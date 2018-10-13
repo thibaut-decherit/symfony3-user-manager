@@ -472,7 +472,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      */
     public function generateSecureToken(): string
     {
-        return sha1(random_bytes(256));
+        return bin2hex(random_bytes(50));
     }
 
     /**
