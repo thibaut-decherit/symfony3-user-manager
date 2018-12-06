@@ -62,7 +62,6 @@ class OnAuthPasswordRehashIfNeeded
                 $this->passwordEncoder->encodePassword($user, $plainPassword)
             );
 
-            $em->persist($user);
             $em->flush();
         }
     }
