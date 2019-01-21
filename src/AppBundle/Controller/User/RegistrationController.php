@@ -54,8 +54,19 @@ class RegistrationController extends DefaultController
 
             $em = $this->getDoctrine()->getManager();
             $user->setPassword($hashedPassword);
-            $em->persist($user);
-            $em->flush();
+
+            // Generates activation token and retries if token already exists.
+            $loop = true;
+            while ($loop) {
+                $token = $user->generateSecureToken();
+
+                $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['activationToken' => $token]);
+
+                if (empty($duplicate)) {
+                    $loop = false;
+                    $user->setActivationToken($token);
+                }
+            }
 
             $activationUrl = $this->generateUrl(
                 'activate_account',
@@ -66,6 +77,9 @@ class RegistrationController extends DefaultController
             );
 
             $this->container->get('mailer.service')->registrationSuccess($user, $activationUrl);
+
+            $em->persist($user);
+            $em->flush();
 
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();

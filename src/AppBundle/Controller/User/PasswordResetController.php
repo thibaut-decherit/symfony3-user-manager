@@ -75,7 +75,19 @@ class PasswordResetController extends DefaultController
                 return $this->redirectToRoute('password_reset_request');
             }
 
-            $user->setPasswordResetToken($user->generateSecureToken());
+            // Generates password reset token and retries if token already exists.
+            $loop = true;
+            while ($loop) {
+                $token = $user->generateSecureToken();
+
+                $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['passwordResetToken' => $token]);
+
+                if (empty($duplicate)) {
+                    $loop = false;
+                    $user->setPasswordResetToken($token);
+                }
+            }
+
             $user->setPasswordResetRequestedAt(new \DateTime());
 
             /*

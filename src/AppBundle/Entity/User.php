@@ -161,7 +161,6 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         $this->roles = ['ROLE_USER'];
         $this->registeredAt = new \DateTime();
         $this->activated = false;
-        $this->activationToken = $this->generateSecureToken();
     }
 
     /**
