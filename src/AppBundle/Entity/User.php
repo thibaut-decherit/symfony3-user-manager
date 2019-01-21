@@ -48,11 +48,17 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *     groups={"Registration", "User_Information"}
      * )
      * @Assert\Length(
-     *      min = 2,
-     *      max = 255,
-     *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length",
-     *      groups={"Registration", "User_Information"}
+     *     min=2,
+     *     max=255,
+     *     minMessage="form_errors.min_length",
+     *     maxMessage="form_errors.max_length",
+     *     groups={"Registration", "User_Information"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/^.+\@\S+\.\S+$/",
+     *     match=false,
+     *     message="form_errors.username_cannot_be_email",
+     *     groups={"Registration", "User_Information"}
      * )
      */
     private $username;
