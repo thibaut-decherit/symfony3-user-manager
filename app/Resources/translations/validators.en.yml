@@ -9,5 +9,6 @@ form_errors:
   repeat_password: The password fields must match.
   unique_email: This email is already used.
   unique_username: This username is already used.
+  username_cannot_be_email: Your username cannot be an email address.
   valid_email: This email address is not valid.
   wrong_password: Wrong password.
