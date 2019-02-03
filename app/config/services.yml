@@ -47,6 +47,11 @@ services:
     tags:
     - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+  kernel.listener.csp_header_builder:
+    class: AppBundle\EventListener\CspHeaderBuilder
+    tags:
+    - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
   app.on_auth_password_rehash_if_needed:
     class: AppBundle\EventListener\OnAuthPasswordRehashIfNeeded
     arguments:
