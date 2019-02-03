@@ -81,7 +81,7 @@ Feel free to tailor each feature to your needs.
 - Rehashes password on login if bcrypt cost has been modified in `config.yml`
   - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
   - This could be an issue if your existing users don't update their password
-  - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that ? Have you been hacked ? Are my data safe ?")
+  - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that? Have you been hacked? Are my data safe?")
   - This listener prevents all that by working seamlessly in the backgroup while your users log in
 - Password checked through `password_needs_rehash`  method
 - Bcrypt implementation
@@ -98,3 +98,11 @@ Feel free to tailor each feature to your needs.
 - Removes accounts that will most probably never be used
 - Modify time between registration and removal as needed
 - Execute `php bin/console app:remove-unactivated-accounts-older-than d` command (e.g. through a cron job)
+
+### Content Security Policy Header Builder:
+- Event listener triggered on each response through `onKernelResponse()` method
+- Adds a Content-Security-Policy header to the response
+- Allows you to protect your users from malicious resources (e.g. malicious JavaScript code that could end up in your dependencies, like [this one](https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident))
+- Two level policy, normal & strict, in case you want to make sure critical routes are better protected (e.g. your website consumes an API with Ajax/fetch or requires a CDN for specific features, but you want to make sure this API or CDN cannot compromise your most critical routes, like login or checkout, if they ever become compromised [themselves](https://www.troyhunt.com/the-javascript-supply-chain-paradox-sri-csp-and-trust-in-third-party-libraries/))
+  - Add your own routes to the list of those requiring a policy stricter than the normal one
+  - Customizable directives for each policy level (modify existing ones, add your own)
