@@ -55,7 +55,7 @@ class CspHeaderBuilder
     private $scriptWhitelist;
 
     /**
-     * CspHeader constructor.
+     * CspHeaderBuilder constructor.
      * @param RequestStack $request
      * @param RouterInterface $router
      */
