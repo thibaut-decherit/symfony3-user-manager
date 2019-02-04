@@ -4,7 +4,6 @@ namespace AppBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class CspHeaderBuilder
@@ -16,11 +15,6 @@ class CspHeaderBuilder
      * @var RequestStack
      */
     private $request;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
 
     /**
      * @var bool
@@ -57,12 +51,10 @@ class CspHeaderBuilder
     /**
      * CspHeaderBuilder constructor.
      * @param RequestStack $request
-     * @param RouterInterface $router
      */
-    public function __construct(RequestStack $request, RouterInterface $router)
+    public function __construct(RequestStack $request)
     {
         $this->request = $request;
-        $this->router = $router;
         $this->strictPolicy = false;
     }
 
