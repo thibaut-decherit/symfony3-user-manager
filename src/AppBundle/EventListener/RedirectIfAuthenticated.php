@@ -67,14 +67,17 @@ class RedirectIfAuthenticated
         /*
          * $this->security->getToken() === null is needed to prevent "AuthenticationCredentialsNotFoundException
          * (The token storage contains no authentication token. One possible reason may be that there is no firewall
-         * configured for this URL.)" when user attempts to access an unknown route, and to prevent breaking the
-         * profiler.
-         *
+         * configured for this URL.)" when user attempts to access an unknown route.
          * Reason : The kernel is requested multiple times when user requests a route, and during some of
          * those previous kernel requests $this->security->getToken() doesn't yet return a token and the code contained in
          * this listener is executed too early in the "chain" of kernel requests, thus causing the error.
+         *
+         * $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction is needed to ensure
+         * profiler requests won't be modified by this listener.
          */
+        $profilerToolbarAction = "web_profiler.controller.profiler:toolbarAction";
         if ($this->security->getToken() === null
+            || $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction
             || $this->authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
             return;
         }
@@ -87,15 +90,15 @@ class RedirectIfAuthenticated
             "registration_ajax"
         ];
 
-        $requestedRoute = $this->request->getCurrentRequest()->get('_route');
+        $requestedRoute = $this->request->getMasterRequest()->get('_route');
 
         // If requested route is not blacklisted, do nothing.
         if (!in_array($requestedRoute, $blacklistedRoutes)) {
             return;
         }
 
-        $referer = $this->request->getCurrentRequest()->headers->get('referer');
-        $baseWebsiteUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost();
+        $referer = $this->request->getMasterRequest()->headers->get('referer');
+        $baseWebsiteUrl = $this->request->getMasterRequest()->getSchemeAndHttpHost();
 
         // Base website url is removed from referer url so router can match result to existing route.
         $lastUrl = substr($referer, strpos($referer, $baseWebsiteUrl) + strlen($baseWebsiteUrl));
