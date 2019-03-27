@@ -123,7 +123,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="json_array")
      */
     private $roles;
 
