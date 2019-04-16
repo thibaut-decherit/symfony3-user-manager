@@ -70,12 +70,13 @@ class CspHeaderBuilder
 
         $policies = $this->policyBuilder();
 
-        $responseHeaders->set('Content-Security-Policy', "
-            {$policies['default']};
-            {$policies['connect']};
-            {$policies['form-action']};
-            {$policies['script']};
-        ");
+        $headerValues = '';
+
+        foreach ($policies as $policy) {
+            $headerValues .= "$policy; ";
+        }
+
+        $responseHeaders->set('Content-Security-Policy', $headerValues);
     }
 
     public function policyBuilder()
