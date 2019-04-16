@@ -49,6 +49,13 @@ class CspHeaderBuilder
     private $scriptWhitelist;
 
     /**
+     * Whitelist for style-src directive
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
+     * @var array
+     */
+    private $styleWhitelist;
+
+    /**
      * CspHeaderBuilder constructor.
      * @param RequestStack $request
      */
@@ -117,7 +124,12 @@ class CspHeaderBuilder
                 ]);
 
                 $this->setScriptWhitelist([
+                    "'unsafe-eval'",
                     "'unsafe-inline'",
+                ]);
+
+                $this->setStyleWhitelist([
+                    "'unsafe-inline'"
                 ]);
 
                 break;
@@ -142,6 +154,11 @@ class CspHeaderBuilder
                 ]);
 
                 $this->setScriptWhitelist([
+                    "'unsafe-eval'",
+                    "'unsafe-inline'",
+                ]);
+
+                $this->setStyleWhitelist([
                     "'unsafe-inline'",
                 ]);
 
@@ -152,12 +169,14 @@ class CspHeaderBuilder
         $connectWhitelist = implode(" ", $this->getConnectWhitelist());
         $formActionWhitelist = implode(" ", $this->getFormActionWhitelist());
         $scriptWhitelist = implode(" ", $this->getScriptWhitelist());
+        $styleWhitelist = implode(" ", $this->getStyleWhitelist());
 
         $policies = [
             'default' => "default-src $mainWhitelist",
             'connect' => "connect-src $mainWhitelist $connectWhitelist",
             'form-action' => "form-action $mainWhitelist $formActionWhitelist",
             'script' => "script-src $mainWhitelist $scriptWhitelist",
+            'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
 
         return $policies;
@@ -241,5 +260,21 @@ class CspHeaderBuilder
     public function setScriptWhitelist(array $scriptWhitelist): void
     {
         $this->scriptWhitelist = $scriptWhitelist;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStyleWhitelist(): array
+    {
+        return $this->styleWhitelist;
+    }
+
+    /**
+     * @param array $styleWhitelist
+     */
+    public function setStyleWhitelist(array $styleWhitelist): void
+    {
+        $this->styleWhitelist = $styleWhitelist;
     }
 }
