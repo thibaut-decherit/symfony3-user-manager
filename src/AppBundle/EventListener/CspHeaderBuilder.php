@@ -93,7 +93,7 @@ class CspHeaderBuilder
         $responseHeaders->set('Content-Security-Policy', $headerValues);
     }
 
-    public function policyBuilder()
+    private function policyBuilder()
     {
         // Routes where strict policy must be used.
         $protectedRoutes = [
@@ -234,7 +234,7 @@ class CspHeaderBuilder
     /**
      * @return bool
      */
-    public function isStrictPolicy(): bool
+    private function isStrictPolicy(): bool
     {
         return $this->strictPolicy;
     }
@@ -242,7 +242,7 @@ class CspHeaderBuilder
     /**
      * @param bool $strictPolicy
      */
-    public function setStrictPolicy(bool $strictPolicy): void
+    private function setStrictPolicy(bool $strictPolicy): void
     {
         $this->strictPolicy = $strictPolicy;
     }
@@ -250,7 +250,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getMainWhitelist(): array
+    private function getMainWhitelist(): array
     {
         return $this->mainWhitelist;
     }
@@ -258,7 +258,7 @@ class CspHeaderBuilder
     /**
      * @param array $mainWhitelist
      */
-    public function setMainWhitelist(array $mainWhitelist): void
+    private function setMainWhitelist(array $mainWhitelist): void
     {
         $this->mainWhitelist = $mainWhitelist;
     }
@@ -266,7 +266,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getConnectWhitelist(): array
+    private function getConnectWhitelist(): array
     {
         return $this->connectWhitelist;
     }
@@ -274,7 +274,7 @@ class CspHeaderBuilder
     /**
      * @param array $connectWhitelist
      */
-    public function setConnectWhitelist(array $connectWhitelist): void
+    private function setConnectWhitelist(array $connectWhitelist): void
     {
         $this->connectWhitelist = $connectWhitelist;
     }
@@ -282,7 +282,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getFormActionWhitelist(): array
+    private function getFormActionWhitelist(): array
     {
         return $this->formActionWhitelist;
     }
@@ -290,7 +290,7 @@ class CspHeaderBuilder
     /**
      * @param array $formActionWhitelist
      */
-    public function setFormActionWhitelist(array $formActionWhitelist): void
+    private function setFormActionWhitelist(array $formActionWhitelist): void
     {
         $this->formActionWhitelist = $formActionWhitelist;
     }
@@ -298,7 +298,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getScriptWhitelist(): array
+    private function getScriptWhitelist(): array
     {
         return $this->scriptWhitelist;
     }
@@ -306,7 +306,7 @@ class CspHeaderBuilder
     /**
      * @param array $scriptWhitelist
      */
-    public function setScriptWhitelist(array $scriptWhitelist): void
+    private function setScriptWhitelist(array $scriptWhitelist): void
     {
         $this->scriptWhitelist = $scriptWhitelist;
     }
@@ -314,7 +314,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getStyleWhitelist(): array
+    private function getStyleWhitelist(): array
     {
         return $this->styleWhitelist;
     }
@@ -322,7 +322,7 @@ class CspHeaderBuilder
     /**
      * @param array $styleWhitelist
      */
-    public function setStyleWhitelist(array $styleWhitelist): void
+    private function setStyleWhitelist(array $styleWhitelist): void
     {
         $this->styleWhitelist = $styleWhitelist;
     }
