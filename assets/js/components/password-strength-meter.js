@@ -1,5 +1,7 @@
+import {SHA1} from 'crypto-js';
+
 function haveIBeenPwnedPasswordCheck(plainPassword) {
-    const plainPasswordSHA1 = CryptoJS.SHA1(plainPassword).toString().toUpperCase();
+    const plainPasswordSHA1 = SHA1(plainPassword).toString().toUpperCase();
     const plainPasswordSHA1Prefix = plainPasswordSHA1.slice(0, 5);
     const plainPasswordSHA1Suffix = plainPasswordSHA1.slice(5);
 
@@ -31,6 +33,7 @@ function haveIBeenPwnedPasswordCheck(plainPassword) {
                 resolve(false);
             })
             .catch(() => {
+
                 // Prevents a second resolve if latencyTimeout has been triggered.
                 if (didTimeout) {
                     return;

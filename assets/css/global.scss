@@ -16,6 +16,10 @@ $input-btn-focus-width: 0;
   opacity: 1 !important;
 }
 
+.form-control {
+  border-radius: 0;
+}
+
 html {
   font-size: 1rem;
 }
@@ -41,8 +45,4 @@ html {
   html {
     font-size: 0.9rem;
   }
-}
-
-.form-control {
-  border-radius: 0;
 }

@@ -1,9 +1,7 @@
-const $ = require('jquery');
-global.$ = global.jQuery = require('jquery');
+import $ from 'jquery';
 global.body = $('body');
-require('bootstrap');
-require('babel-polyfill'); // Required to use async await.
-global.CryptoJS = require('crypto-js');
+import 'bootstrap';
+import 'babel-polyfill'; // Required to use async await.
 
 require('./registration');
 require('./login');
