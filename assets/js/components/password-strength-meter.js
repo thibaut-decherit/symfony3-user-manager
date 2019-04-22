@@ -8,7 +8,6 @@ function haveIBeenPwnedPasswordCheck(plainPassword) {
 
         // Defaults to NOT breached in case of high latency.
         const latencyTimeout = setTimeout(() => {
-            console.log('timeout');
             didTimeout = true;
             resolve(false);
         }, 250);
@@ -26,7 +25,6 @@ function haveIBeenPwnedPasswordCheck(plainPassword) {
                 const breachedPasswordsSHA1Suffixes = await response.text();
 
                 if (breachedPasswordsSHA1Suffixes.indexOf(plainPasswordSHA1Suffix) !== -1) {
-                    console.log('breached');
                     resolve(true);
                 }
 
@@ -61,20 +59,26 @@ async function checkPasswordStrength() {
     if (passwordLength < 8 || passwordBreached) {
         passwordStrength = 'weak';
     } else if (passwordLength >= 8 && passwordLength < 16) {
-        passwordStrength = 'good';
+        passwordStrength = 'average';
     } else {
-        passwordStrength = 'great';
+        passwordStrength = 'good';
     }
+
+    updatePasswordMeter(passwordStrength);
+}
+
+function updatePasswordMeter(passwordStrength) {
+    const passwordMeter = $('.password-strength-meter');
 
     switch (passwordStrength) {
         case 'weak':
-            // TODO: display weak meter
+            passwordMeter.val('1');
+            break;
+        case 'average':
+            passwordMeter.val('2');
             break;
         case 'good':
-            // TODO: display good meter
-            break;
-        case 'excellent':
-            // TODO: display excellent meter
+            passwordMeter.val('3');
             break;
     }
 }
@@ -86,5 +90,5 @@ body.on('keyup', '#appbundle_user_plainPassword_first', () => {
 
     typingTimer = setTimeout(() => {
         checkPasswordStrength();
-    }, 250);
+    }, 200);
 });

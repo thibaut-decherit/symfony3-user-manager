@@ -30,10 +30,11 @@
     <div class="col mt-3">
         {{ form_label(form.plainPassword.first) }}
         {{ form_widget(form.plainPassword.first) }}
+        <meter value="0" max="3" class="password-strength-meter"></meter>
     </div>
 </div>
 <div class="row">
-    <div class="col mt-3">
+    <div class="col">
         {{ form_label(form.plainPassword.second) }}
         {{ form_widget(form.plainPassword.second) }}
     </div>
