@@ -29,6 +29,7 @@
     "node-sass": "^4.11.0",
     "popper.js": "^1.14.7",
     "sass-loader": "^7.1.0",
-    "webpack-notifier": "^1.7.0"
+    "webpack-notifier": "^1.7.0",
+    "zxcvbn": "^4.4.2"
   }
 }

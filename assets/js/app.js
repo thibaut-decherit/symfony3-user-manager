@@ -3,6 +3,7 @@ global.body = $('body');
 import 'bootstrap';
 import 'babel-polyfill'; // Required to use async await.
 
+require('./components/helper');
 require('./registration');
 require('./login');
 require('./user-information');
