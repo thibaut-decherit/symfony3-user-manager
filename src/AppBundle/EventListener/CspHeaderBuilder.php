@@ -17,6 +17,11 @@ class CspHeaderBuilder
     private $request;
 
     /**
+     * @var string
+     */
+    private $kernelEnvironment;
+
+    /**
      * @var bool
      */
     private $strictPolicy;
@@ -49,11 +54,20 @@ class CspHeaderBuilder
     private $scriptWhitelist;
 
     /**
+     * Whitelist for style-src directive
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
+     * @var array
+     */
+    private $styleWhitelist;
+
+    /**
      * CspHeaderBuilder constructor.
+     * @param string $kernelEnvironment
      * @param RequestStack $request
      */
-    public function __construct(RequestStack $request)
+    public function __construct(string $kernelEnvironment, RequestStack $request)
     {
+        $this->kernelEnvironment = $kernelEnvironment;
         $this->request = $request;
         $this->strictPolicy = false;
     }
@@ -70,15 +84,16 @@ class CspHeaderBuilder
 
         $policies = $this->policyBuilder();
 
-        $responseHeaders->set('Content-Security-Policy', "
-            {$policies['default']};
-            {$policies['connect']};
-            {$policies['form-action']};
-            {$policies['script']};
-        ");
+        $headerValues = '';
+
+        foreach ($policies as $policy) {
+            $headerValues .= "$policy; ";
+        }
+
+        $responseHeaders->set('Content-Security-Policy', $headerValues);
     }
 
-    public function policyBuilder()
+    private function policyBuilder()
     {
         // Routes where strict policy must be used.
         $protectedRoutes = [
@@ -98,13 +113,8 @@ class CspHeaderBuilder
 
             // Directives applied to every route except protected ones.
             case false:
-                /*
-                 * In dev env 'self' === localhost, NOT 127.0.0.1. You need to whitelist this IP if you dev at 127.0.0.1
-                 * and not at localhost.
-                 */
                 $this->setMainWhitelist([
                     "'self'",
-                    "127.0.0.1:8000",
                 ]);
 
                 $this->setConnectWhitelist([
@@ -117,19 +127,18 @@ class CspHeaderBuilder
 
                 $this->setScriptWhitelist([
                     "'unsafe-inline'",
+                ]);
+
+                $this->setStyleWhitelist([
+                    // Add sources here
                 ]);
 
                 break;
 
             // Directives applied to protected routes.
             case true:
-                /*
-                 * In dev env 'self' === localhost, NOT 127.0.0.1. You need to whitelist this IP if you dev at 127.0.0.1
-                 * and not at localhost.
-                 */
                 $this->setMainWhitelist([
                     "'self'",
-                    "127.0.0.1:8000",
                 ]);
 
                 $this->setConnectWhitelist([
@@ -144,28 +153,88 @@ class CspHeaderBuilder
                     "'unsafe-inline'",
                 ]);
 
+                $this->setStyleWhitelist([
+                    // Add sources here
+                ]);
+
                 break;
         }
+
+        $this->addDevDirectivesIfDevEnvironment();
 
         $mainWhitelist = implode(" ", $this->getMainWhitelist());
         $connectWhitelist = implode(" ", $this->getConnectWhitelist());
         $formActionWhitelist = implode(" ", $this->getFormActionWhitelist());
         $scriptWhitelist = implode(" ", $this->getScriptWhitelist());
+        $styleWhitelist = implode(" ", $this->getStyleWhitelist());
 
         $policies = [
             'default' => "default-src $mainWhitelist",
             'connect' => "connect-src $mainWhitelist $connectWhitelist",
             'form-action' => "form-action $mainWhitelist $formActionWhitelist",
             'script' => "script-src $mainWhitelist $scriptWhitelist",
+            'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
 
         return $policies;
     }
 
+    // Adds dev only directives if the app runs in dev environment.
+    private function addDevDirectivesIfDevEnvironment()
+    {
+        if ($this->kernelEnvironment !== 'dev') {
+            return;
+        }
+
+        /*
+         * In dev env 'self' === localhost, NOT 127.0.0.1. You need to whitelist this IP if you dev at 127.0.0.1
+         * and not at localhost.
+         */
+        $mainWhitelistDevDirectives = [
+            "127.0.0.1:8000",
+        ];
+
+        $connectWhitelistDevDirectives = [
+            // Add sources here
+        ];
+
+        $formActionWhitelistDevDirectives = [
+            // Add sources here
+        ];
+
+        $scriptWhitelistDevDirectives = [
+            "'unsafe-eval'",
+        ];
+
+        $styleWhitelistDevDirectives = [
+            "'unsafe-inline'",
+        ];
+
+        $this->setMainWhitelist(
+            array_merge($this->getMainWhitelist(), $mainWhitelistDevDirectives)
+        );
+
+        $this->setConnectWhitelist(
+            array_merge($this->getConnectWhitelist(), $connectWhitelistDevDirectives)
+        );
+
+        $this->setFormActionWhitelist(
+            array_merge($this->getFormActionWhitelist(), $formActionWhitelistDevDirectives)
+        );
+
+        $this->setScriptWhitelist(
+            array_merge($this->getScriptWhitelist(), $scriptWhitelistDevDirectives)
+        );
+
+        $this->setStyleWhitelist(
+            array_merge($this->getStyleWhitelist(), $styleWhitelistDevDirectives)
+        );
+    }
+
     /**
      * @return bool
      */
-    public function isStrictPolicy(): bool
+    private function isStrictPolicy(): bool
     {
         return $this->strictPolicy;
     }
@@ -173,7 +242,7 @@ class CspHeaderBuilder
     /**
      * @param bool $strictPolicy
      */
-    public function setStrictPolicy(bool $strictPolicy): void
+    private function setStrictPolicy(bool $strictPolicy): void
     {
         $this->strictPolicy = $strictPolicy;
     }
@@ -181,7 +250,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getMainWhitelist(): array
+    private function getMainWhitelist(): array
     {
         return $this->mainWhitelist;
     }
@@ -189,7 +258,7 @@ class CspHeaderBuilder
     /**
      * @param array $mainWhitelist
      */
-    public function setMainWhitelist(array $mainWhitelist): void
+    private function setMainWhitelist(array $mainWhitelist): void
     {
         $this->mainWhitelist = $mainWhitelist;
     }
@@ -197,7 +266,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getConnectWhitelist(): array
+    private function getConnectWhitelist(): array
     {
         return $this->connectWhitelist;
     }
@@ -205,7 +274,7 @@ class CspHeaderBuilder
     /**
      * @param array $connectWhitelist
      */
-    public function setConnectWhitelist(array $connectWhitelist): void
+    private function setConnectWhitelist(array $connectWhitelist): void
     {
         $this->connectWhitelist = $connectWhitelist;
     }
@@ -213,7 +282,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getFormActionWhitelist(): array
+    private function getFormActionWhitelist(): array
     {
         return $this->formActionWhitelist;
     }
@@ -221,7 +290,7 @@ class CspHeaderBuilder
     /**
      * @param array $formActionWhitelist
      */
-    public function setFormActionWhitelist(array $formActionWhitelist): void
+    private function setFormActionWhitelist(array $formActionWhitelist): void
     {
         $this->formActionWhitelist = $formActionWhitelist;
     }
@@ -229,7 +298,7 @@ class CspHeaderBuilder
     /**
      * @return array
      */
-    public function getScriptWhitelist(): array
+    private function getScriptWhitelist(): array
     {
         return $this->scriptWhitelist;
     }
@@ -237,8 +306,24 @@ class CspHeaderBuilder
     /**
      * @param array $scriptWhitelist
      */
-    public function setScriptWhitelist(array $scriptWhitelist): void
+    private function setScriptWhitelist(array $scriptWhitelist): void
     {
         $this->scriptWhitelist = $scriptWhitelist;
+    }
+
+    /**
+     * @return array
+     */
+    private function getStyleWhitelist(): array
+    {
+        return $this->styleWhitelist;
+    }
+
+    /**
+     * @param array $styleWhitelist
+     */
+    private function setStyleWhitelist(array $styleWhitelist): void
+    {
+        $this->styleWhitelist = $styleWhitelist;
     }
 }
