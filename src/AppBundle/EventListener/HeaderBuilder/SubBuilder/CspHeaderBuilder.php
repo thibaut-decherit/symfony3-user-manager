@@ -1,20 +1,29 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventListener\HeaderBuilder\SubBuilder;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Class CspHeaderBuilder
- * @package AppBundle\EventListener
+ *
+ * Adds Content Security Policy header to a response.
+ * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+ *
+ * @package AppBundle\EventListener\HeaderBuilder\SubBuilder
  */
 class CspHeaderBuilder
 {
     /**
      * @var RequestStack
      */
-    private $request;
+    private $requestStack;
+
+    /**
+     * @var ResponseHeaderBag
+     */
+    private $responseHeaders;
 
     /**
      * @var string
@@ -61,39 +70,32 @@ class CspHeaderBuilder
     private $styleWhitelist;
 
     /**
-     * CspHeaderBuilder constructor.
+     * HeaderBuilder constructor.
      * @param string $kernelEnvironment
-     * @param RequestStack $request
+     * @param RequestStack $requestStack
+     * @param ResponseHeaderBag $responseHeaders
      */
-    public function __construct(string $kernelEnvironment, RequestStack $request)
+    public function __construct(string $kernelEnvironment, RequestStack $requestStack, ResponseHeaderBag $responseHeaders)
     {
         $this->kernelEnvironment = $kernelEnvironment;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
         $this->strictPolicy = false;
+        $this->responseHeaders = $responseHeaders;
+    }
+
+    public function set()
+    {
+        $headerValues = $this->build();
+
+        $this->responseHeaders->set('Content-Security-Policy', $headerValues);
     }
 
     /**
-     * Adds Content-Security-Policy header to every response.
+     * Builds Content Security Policy header values.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
      *
-     * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $responseHeaders = $event->getResponse()->headers;
-
-        $policies = $this->policyBuilder();
-
-        $headerValues = '';
-
-        foreach ($policies as $policy) {
-            $headerValues .= "$policy; ";
-        }
-
-        $responseHeaders->set('Content-Security-Policy', $headerValues);
-    }
-
-    private function policyBuilder()
+    private function build()
     {
         // Routes where strict policy must be used.
         $protectedRoutes = [
@@ -103,9 +105,9 @@ class CspHeaderBuilder
             "registration",
         ];
 
-        $requestedRoute = $this->request->getMasterRequest()->get('_route');
+        $requestStackedRoute = $this->requestStack->getMasterRequest()->get('_route');
 
-        if (in_array($requestedRoute, $protectedRoutes)) {
+        if (in_array($requestStackedRoute, $protectedRoutes)) {
             $this->setStrictPolicy(true);
         }
 
@@ -176,7 +178,13 @@ class CspHeaderBuilder
             'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
 
-        return $policies;
+        $headerValues = '';
+
+        foreach ($policies as $policy) {
+            $headerValues .= "$policy; ";
+        }
+
+        return $headerValues;
     }
 
     // Adds dev only directives if the app runs in dev environment.
