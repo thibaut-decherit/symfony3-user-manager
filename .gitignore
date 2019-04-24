@@ -16,3 +16,7 @@
 /vendor/
 /web/bundles/
 /web/build/
+
+composer\.lock
+
+package-lock\.json

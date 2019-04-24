@@ -174,8 +174,17 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('login');
         }
 
+        // Password blacklist to be used by zxcvbn.
+        $passwordBlacklist = [
+            $user->getUsername(),
+            $user->getEmail(),
+            $user->getPasswordResetToken(),
+            $user->getActivationToken(),
+        ];
+
         return $this->render(':User:password-reset-reset.html.twig', array(
             'form' => $form->createView(),
+            'passwordBlacklist' => json_encode($passwordBlacklist),
         ));
     }
 }

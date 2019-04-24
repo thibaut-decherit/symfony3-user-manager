@@ -3,10 +3,11 @@ My take on user management with Symfony 3.4
 
 
 ## **Dependencies**
-- Webpack Encore (SCSS and JS compiling)
+- Webpack Encore (SCSS and JS compilation)
 - jQuery (AJAX and DOM manipulation)
 - Bootstrap 4 (forms and alerts)
-- Guzzle 6 (API consuming)
+- Guzzle 6 (API consumption)
+- [zxcvbn](https://github.com/dropbox/zxcvbn) (password strength estimation)
 
 ## **Features**
 
@@ -92,6 +93,11 @@ Feel free to tailor each feature to your needs.
 - Password validation through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API
 - Custom Symfony form error
 - Consider implementing this through something less strict than a validator if you think it could deter potential users (e.g. an informative message on user profile)
+
+### Password strength meter:
+- Usable separately or conjointly with the back-end HIBP password validator
+- Visual indicator ONLY, to help your users choose a "good" password
+- Password strength is based on length, [zxcvbn](https://github.com/dropbox/zxcvbn) password strength estimator from Dropbox and a check against previously leaked passwords through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API (if available)
 
 ### Unactivated accounts removal command:
 - Command to delete users registered for more than `d` days if they haven't activated their account

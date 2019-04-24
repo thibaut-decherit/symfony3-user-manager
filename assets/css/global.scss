@@ -4,6 +4,7 @@
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300');
+@import 'password-strength-metter';
 
 /* Bootstrap overrides */
 $font-family-base: 'Open Sans', sans-serif;
@@ -13,6 +14,10 @@ $input-btn-focus-width: 0;
 
 .btn.disabled, .btn:disabled {
   opacity: 1 !important;
+}
+
+.form-control {
+  border-radius: 0;
 }
 
 html {

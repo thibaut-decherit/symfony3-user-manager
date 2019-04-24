@@ -118,7 +118,7 @@ class CspHeaderBuilder
                 ]);
 
                 $this->setConnectWhitelist([
-                    // Add sources here
+                    "https://api.pwnedpasswords.com",
                 ]);
 
                 $this->setFormActionWhitelist([
@@ -142,7 +142,7 @@ class CspHeaderBuilder
                 ]);
 
                 $this->setConnectWhitelist([
-                    // Add sources here
+                    "https://api.pwnedpasswords.com",
                 ]);
 
                 $this->setFormActionWhitelist([

@@ -1,9 +1,11 @@
-const $ = require('jquery');
-global.$ = global.jQuery = require('jquery');
+import $ from 'jquery';
 global.body = $('body');
-require('bootstrap');
+import 'bootstrap';
+import 'babel-polyfill'; // Required to use async await.
 
+require('./components/helper');
 require('./registration');
 require('./login');
 require('./user-information');
 require('./password-change');
+require('./components/password-strength-meter');
