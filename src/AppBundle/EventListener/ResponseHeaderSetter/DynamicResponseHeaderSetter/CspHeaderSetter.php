@@ -1,19 +1,19 @@
 <?php
 
-namespace AppBundle\EventListener\HeaderBuilder\SubBuilder;
+namespace AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Class CspHeaderBuilder
+ * Class CspHeaderSetter
  *
  * Adds Content Security Policy header to a response.
  * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
  *
- * @package AppBundle\EventListener\HeaderBuilder\SubBuilder
+ * @package AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter
  */
-class CspHeaderBuilder
+class CspHeaderSetter
 {
     /**
      * @var RequestStack
@@ -70,7 +70,7 @@ class CspHeaderBuilder
     private $styleWhitelist;
 
     /**
-     * HeaderBuilder constructor.
+     * CspHeaderSetter constructor.
      * @param string $kernelEnvironment
      * @param RequestStack $requestStack
      * @param ResponseHeaderBag $responseHeaders
