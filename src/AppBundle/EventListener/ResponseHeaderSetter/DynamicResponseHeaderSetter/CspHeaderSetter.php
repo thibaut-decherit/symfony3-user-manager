@@ -85,17 +85,15 @@ class CspHeaderSetter
 
     public function set()
     {
-        $headerValues = $this->build();
-
-        $this->responseHeaders->set('Content-Security-Policy', $headerValues);
+        $this->responseHeaders->set('Content-Security-Policy', $this->generate());
     }
 
     /**
-     * Builds Content Security Policy header values.
+     * Generates Content Security Policy header value.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
      *
      */
-    private function build()
+    private function generate()
     {
         // Routes where strict policy must be used.
         $protectedRoutes = [
@@ -178,13 +176,13 @@ class CspHeaderSetter
             'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
 
-        $headerValues = '';
+        $headerValue = '';
 
         foreach ($policies as $policy) {
-            $headerValues .= "$policy; ";
+            $headerValue .= "$policy; ";
         }
 
-        return $headerValues;
+        return $headerValue;
     }
 
     // Adds dev only directives if the app runs in dev environment.
