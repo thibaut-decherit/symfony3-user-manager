@@ -55,6 +55,14 @@ class CspHeaderSetter
      */
     private $formActionWhitelist;
 
+
+    /**
+     * Whitelist for frame-ancestors directive
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
+     * @var array
+     */
+    private $frameAncestorsWhitelist;
+
     /**
      * Whitelist for script-src directive
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
@@ -91,7 +99,6 @@ class CspHeaderSetter
     /**
      * Generates Content Security Policy header value.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-     *
      */
     private function generate()
     {
@@ -125,6 +132,10 @@ class CspHeaderSetter
                     // Add sources here
                 ]);
 
+                $this->setFrameAncestorsWhitelist([
+                    "'none'",
+                ]);
+
                 $this->setScriptWhitelist([
                     "'unsafe-inline'",
                 ]);
@@ -149,6 +160,10 @@ class CspHeaderSetter
                     // Add sources here
                 ]);
 
+                $this->setFrameAncestorsWhitelist([
+                    "'none'",
+                ]);
+
                 $this->setScriptWhitelist([
                     "'unsafe-inline'",
                 ]);
@@ -165,13 +180,16 @@ class CspHeaderSetter
         $mainWhitelist = implode(" ", $this->getMainWhitelist());
         $connectWhitelist = implode(" ", $this->getConnectWhitelist());
         $formActionWhitelist = implode(" ", $this->getFormActionWhitelist());
+        $frameAncestorsWhitelist = implode(" ", $this->getFrameAncestorsWhitelist());
         $scriptWhitelist = implode(" ", $this->getScriptWhitelist());
         $styleWhitelist = implode(" ", $this->getStyleWhitelist());
 
         $policies = [
+            'base-uri' => "base-uri 'self'",
             'default' => "default-src $mainWhitelist",
             'connect' => "connect-src $mainWhitelist $connectWhitelist",
             'form-action' => "form-action $mainWhitelist $formActionWhitelist",
+            'frame-ancestors' => "frame-ancestors $frameAncestorsWhitelist",
             'script' => "script-src $mainWhitelist $scriptWhitelist",
             'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
@@ -299,6 +317,22 @@ class CspHeaderSetter
     private function setFormActionWhitelist(array $formActionWhitelist): void
     {
         $this->formActionWhitelist = $formActionWhitelist;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFrameAncestorsWhitelist(): array
+    {
+        return $this->frameAncestorsWhitelist;
+    }
+
+    /**
+     * @param array $frameAncestorsWhitelist
+     */
+    public function setFrameAncestorsWhitelist(array $frameAncestorsWhitelist): void
+    {
+        $this->frameAncestorsWhitelist = $frameAncestorsWhitelist;
     }
 
     /**
