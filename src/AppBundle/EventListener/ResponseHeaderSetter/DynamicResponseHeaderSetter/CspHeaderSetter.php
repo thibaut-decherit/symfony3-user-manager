@@ -265,10 +265,12 @@ class CspHeaderSetter
 
     /**
      * @param bool $strictPolicy
+     * @return CspHeaderSetter
      */
-    private function setStrictPolicy(bool $strictPolicy): void
+    private function setStrictPolicy(bool $strictPolicy): CspHeaderSetter
     {
         $this->strictPolicy = $strictPolicy;
+        return $this;
     }
 
     /**
@@ -281,10 +283,12 @@ class CspHeaderSetter
 
     /**
      * @param array $mainWhitelist
+     * @return CspHeaderSetter
      */
-    private function setMainWhitelist(array $mainWhitelist): void
+    private function setMainWhitelist(array $mainWhitelist): CspHeaderSetter
     {
         $this->mainWhitelist = $mainWhitelist;
+        return $this;
     }
 
     /**
@@ -297,10 +301,12 @@ class CspHeaderSetter
 
     /**
      * @param array $connectWhitelist
+     * @return CspHeaderSetter
      */
-    private function setConnectWhitelist(array $connectWhitelist): void
+    private function setConnectWhitelist(array $connectWhitelist): CspHeaderSetter
     {
         $this->connectWhitelist = $connectWhitelist;
+        return $this;
     }
 
     /**
@@ -313,26 +319,30 @@ class CspHeaderSetter
 
     /**
      * @param array $formActionWhitelist
+     * @return CspHeaderSetter
      */
-    private function setFormActionWhitelist(array $formActionWhitelist): void
+    private function setFormActionWhitelist(array $formActionWhitelist): CspHeaderSetter
     {
         $this->formActionWhitelist = $formActionWhitelist;
+        return $this;
     }
 
     /**
      * @return array
      */
-    public function getFrameAncestorsWhitelist(): array
+    private function getFrameAncestorsWhitelist(): array
     {
         return $this->frameAncestorsWhitelist;
     }
 
     /**
      * @param array $frameAncestorsWhitelist
+     * @return CspHeaderSetter
      */
-    public function setFrameAncestorsWhitelist(array $frameAncestorsWhitelist): void
+    private function setFrameAncestorsWhitelist(array $frameAncestorsWhitelist): CspHeaderSetter
     {
         $this->frameAncestorsWhitelist = $frameAncestorsWhitelist;
+        return $this;
     }
 
     /**
@@ -345,10 +355,12 @@ class CspHeaderSetter
 
     /**
      * @param array $scriptWhitelist
+     * @return CspHeaderSetter
      */
-    private function setScriptWhitelist(array $scriptWhitelist): void
+    private function setScriptWhitelist(array $scriptWhitelist): CspHeaderSetter
     {
         $this->scriptWhitelist = $scriptWhitelist;
+        return $this;
     }
 
     /**
@@ -361,9 +373,11 @@ class CspHeaderSetter
 
     /**
      * @param array $styleWhitelist
+     * @return CspHeaderSetter
      */
-    private function setStyleWhitelist(array $styleWhitelist): void
+    private function setStyleWhitelist(array $styleWhitelist): CspHeaderSetter
     {
         $this->styleWhitelist = $styleWhitelist;
+        return $this;
     }
 }
