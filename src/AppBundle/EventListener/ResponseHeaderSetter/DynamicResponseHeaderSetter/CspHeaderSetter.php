@@ -137,7 +137,7 @@ class CspHeaderSetter
                 ]);
 
                 $this->setScriptWhitelist([
-                    "'unsafe-inline'",
+                    // Add sources here
                 ]);
 
                 $this->setStyleWhitelist([
@@ -165,7 +165,7 @@ class CspHeaderSetter
                 ]);
 
                 $this->setScriptWhitelist([
-                    "'unsafe-inline'",
+                    // Add sources here
                 ]);
 
                 $this->setStyleWhitelist([
@@ -226,8 +226,13 @@ class CspHeaderSetter
             // Add sources here
         ];
 
+        $frameAncestorsWhitelistDevDirectives = [
+            // Add sources here
+        ];
+
         $scriptWhitelistDevDirectives = [
             "'unsafe-eval'",
+            "'unsafe-inline'",
         ];
 
         $styleWhitelistDevDirectives = [
@@ -244,6 +249,10 @@ class CspHeaderSetter
 
         $this->setFormActionWhitelist(
             array_merge($this->getFormActionWhitelist(), $formActionWhitelistDevDirectives)
+        );
+
+        $this->setFrameAncestorsWhitelist(
+            array_merge($this->getFrameAncestorsWhitelist(), $frameAncestorsWhitelistDevDirectives)
         );
 
         $this->setScriptWhitelist(
