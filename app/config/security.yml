@@ -23,7 +23,7 @@ security:
       anonymous: ~
       guard:
         authenticators:
-        - app.security.login_form_authenticator
+          - app.security.login_form_authenticator
       logout:
         path: /logout
         target: /
@@ -40,5 +40,5 @@ security:
   # If access control is also controller side via @Security annotation, the strictest control will prevail, like so:
   # IS_AUTHENTICATED_ANONYMOUSLY < IS_AUTHENTICATED_FULLY < ROLE_SOMETHING < ROLE_SOMETHING_2 inheriting of ROLE_SOMETHING
   access_control:
-  - { path: ^/account, role: ROLE_USER }
-  - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/account, role: ROLE_USER }
+    - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }

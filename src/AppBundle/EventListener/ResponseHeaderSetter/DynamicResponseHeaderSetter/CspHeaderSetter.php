@@ -1,20 +1,29 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Class CspHeaderBuilder
- * @package AppBundle\EventListener
+ * Class CspHeaderSetter
+ *
+ * Adds Content Security Policy header to a response.
+ * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+ *
+ * @package AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter
  */
-class CspHeaderBuilder
+class CspHeaderSetter
 {
     /**
      * @var RequestStack
      */
-    private $request;
+    private $requestStack;
+
+    /**
+     * @var ResponseHeaderBag
+     */
+    private $responseHeaders;
 
     /**
      * @var string
@@ -46,6 +55,14 @@ class CspHeaderBuilder
      */
     private $formActionWhitelist;
 
+
+    /**
+     * Whitelist for frame-ancestors directive
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
+     * @var array
+     */
+    private $frameAncestorsWhitelist;
+
     /**
      * Whitelist for script-src directive
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
@@ -61,39 +78,29 @@ class CspHeaderBuilder
     private $styleWhitelist;
 
     /**
-     * CspHeaderBuilder constructor.
+     * CspHeaderSetter constructor.
      * @param string $kernelEnvironment
-     * @param RequestStack $request
+     * @param RequestStack $requestStack
+     * @param ResponseHeaderBag $responseHeaders
      */
-    public function __construct(string $kernelEnvironment, RequestStack $request)
+    public function __construct(string $kernelEnvironment, RequestStack $requestStack, ResponseHeaderBag $responseHeaders)
     {
         $this->kernelEnvironment = $kernelEnvironment;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
         $this->strictPolicy = false;
+        $this->responseHeaders = $responseHeaders;
+    }
+
+    public function set()
+    {
+        $this->responseHeaders->set('Content-Security-Policy', $this->generate());
     }
 
     /**
-     * Adds Content-Security-Policy header to every response.
+     * Generates Content Security Policy header value.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-     *
-     * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $responseHeaders = $event->getResponse()->headers;
-
-        $policies = $this->policyBuilder();
-
-        $headerValues = '';
-
-        foreach ($policies as $policy) {
-            $headerValues .= "$policy; ";
-        }
-
-        $responseHeaders->set('Content-Security-Policy', $headerValues);
-    }
-
-    private function policyBuilder()
+    private function generate()
     {
         // Routes where strict policy must be used.
         $protectedRoutes = [
@@ -103,9 +110,9 @@ class CspHeaderBuilder
             "registration",
         ];
 
-        $requestedRoute = $this->request->getMasterRequest()->get('_route');
+        $requestStackedRoute = $this->requestStack->getMasterRequest()->get('_route');
 
-        if (in_array($requestedRoute, $protectedRoutes)) {
+        if (in_array($requestStackedRoute, $protectedRoutes)) {
             $this->setStrictPolicy(true);
         }
 
@@ -125,8 +132,12 @@ class CspHeaderBuilder
                     // Add sources here
                 ]);
 
+                $this->setFrameAncestorsWhitelist([
+                    "'none'",
+                ]);
+
                 $this->setScriptWhitelist([
-                    "'unsafe-inline'",
+                    // Add sources here
                 ]);
 
                 $this->setStyleWhitelist([
@@ -149,8 +160,12 @@ class CspHeaderBuilder
                     // Add sources here
                 ]);
 
+                $this->setFrameAncestorsWhitelist([
+                    "'none'",
+                ]);
+
                 $this->setScriptWhitelist([
-                    "'unsafe-inline'",
+                    // Add sources here
                 ]);
 
                 $this->setStyleWhitelist([
@@ -165,18 +180,27 @@ class CspHeaderBuilder
         $mainWhitelist = implode(" ", $this->getMainWhitelist());
         $connectWhitelist = implode(" ", $this->getConnectWhitelist());
         $formActionWhitelist = implode(" ", $this->getFormActionWhitelist());
+        $frameAncestorsWhitelist = implode(" ", $this->getFrameAncestorsWhitelist());
         $scriptWhitelist = implode(" ", $this->getScriptWhitelist());
         $styleWhitelist = implode(" ", $this->getStyleWhitelist());
 
         $policies = [
+            'base-uri' => "base-uri 'self'",
             'default' => "default-src $mainWhitelist",
             'connect' => "connect-src $mainWhitelist $connectWhitelist",
             'form-action' => "form-action $mainWhitelist $formActionWhitelist",
+            'frame-ancestors' => "frame-ancestors $frameAncestorsWhitelist",
             'script' => "script-src $mainWhitelist $scriptWhitelist",
             'style' => "style-src $mainWhitelist $styleWhitelist",
         ];
 
-        return $policies;
+        $headerValue = '';
+
+        foreach ($policies as $policy) {
+            $headerValue .= "$policy; ";
+        }
+
+        return $headerValue;
     }
 
     // Adds dev only directives if the app runs in dev environment.
@@ -202,8 +226,13 @@ class CspHeaderBuilder
             // Add sources here
         ];
 
+        $frameAncestorsWhitelistDevDirectives = [
+            // Add sources here
+        ];
+
         $scriptWhitelistDevDirectives = [
             "'unsafe-eval'",
+            "'unsafe-inline'",
         ];
 
         $styleWhitelistDevDirectives = [
@@ -220,6 +249,10 @@ class CspHeaderBuilder
 
         $this->setFormActionWhitelist(
             array_merge($this->getFormActionWhitelist(), $formActionWhitelistDevDirectives)
+        );
+
+        $this->setFrameAncestorsWhitelist(
+            array_merge($this->getFrameAncestorsWhitelist(), $frameAncestorsWhitelistDevDirectives)
         );
 
         $this->setScriptWhitelist(
@@ -241,10 +274,12 @@ class CspHeaderBuilder
 
     /**
      * @param bool $strictPolicy
+     * @return CspHeaderSetter
      */
-    private function setStrictPolicy(bool $strictPolicy): void
+    private function setStrictPolicy(bool $strictPolicy): CspHeaderSetter
     {
         $this->strictPolicy = $strictPolicy;
+        return $this;
     }
 
     /**
@@ -257,10 +292,12 @@ class CspHeaderBuilder
 
     /**
      * @param array $mainWhitelist
+     * @return CspHeaderSetter
      */
-    private function setMainWhitelist(array $mainWhitelist): void
+    private function setMainWhitelist(array $mainWhitelist): CspHeaderSetter
     {
         $this->mainWhitelist = $mainWhitelist;
+        return $this;
     }
 
     /**
@@ -273,10 +310,12 @@ class CspHeaderBuilder
 
     /**
      * @param array $connectWhitelist
+     * @return CspHeaderSetter
      */
-    private function setConnectWhitelist(array $connectWhitelist): void
+    private function setConnectWhitelist(array $connectWhitelist): CspHeaderSetter
     {
         $this->connectWhitelist = $connectWhitelist;
+        return $this;
     }
 
     /**
@@ -289,10 +328,30 @@ class CspHeaderBuilder
 
     /**
      * @param array $formActionWhitelist
+     * @return CspHeaderSetter
      */
-    private function setFormActionWhitelist(array $formActionWhitelist): void
+    private function setFormActionWhitelist(array $formActionWhitelist): CspHeaderSetter
     {
         $this->formActionWhitelist = $formActionWhitelist;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFrameAncestorsWhitelist(): array
+    {
+        return $this->frameAncestorsWhitelist;
+    }
+
+    /**
+     * @param array $frameAncestorsWhitelist
+     * @return CspHeaderSetter
+     */
+    private function setFrameAncestorsWhitelist(array $frameAncestorsWhitelist): CspHeaderSetter
+    {
+        $this->frameAncestorsWhitelist = $frameAncestorsWhitelist;
+        return $this;
     }
 
     /**
@@ -305,10 +364,12 @@ class CspHeaderBuilder
 
     /**
      * @param array $scriptWhitelist
+     * @return CspHeaderSetter
      */
-    private function setScriptWhitelist(array $scriptWhitelist): void
+    private function setScriptWhitelist(array $scriptWhitelist): CspHeaderSetter
     {
         $this->scriptWhitelist = $scriptWhitelist;
+        return $this;
     }
 
     /**
@@ -321,9 +382,11 @@ class CspHeaderBuilder
 
     /**
      * @param array $styleWhitelist
+     * @return CspHeaderSetter
      */
-    private function setStyleWhitelist(array $styleWhitelist): void
+    private function setStyleWhitelist(array $styleWhitelist): CspHeaderSetter
     {
         $this->styleWhitelist = $styleWhitelist;
+        return $this;
     }
 }

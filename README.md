@@ -105,10 +105,19 @@ Feel free to tailor each feature to your needs.
 - Modify time between registration and removal as needed
 - Execute `php bin/console app:remove-unactivated-accounts-older-than d` command (e.g. through a cron job)
 
-### Content Security Policy Header Builder:
+### Response header setter:
 - Event listener triggered on each response through `onKernelResponse()` method
-- Adds a Content-Security-Policy header to the response
-- Allows you to protect your users from malicious resources (e.g. malicious JavaScript code that could end up in your dependencies, like [this one](https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident))
-- Two level policy, normal & strict, in case you want to make sure critical routes are better protected (e.g. your website consumes an API with Ajax/fetch or requires a CDN for specific features, but you want to make sure this API or CDN cannot compromise your most critical routes, like login or checkout, if they ever become compromised [themselves](https://www.troyhunt.com/the-javascript-supply-chain-paradox-sri-csp-and-trust-in-third-party-libraries/))
-  - Add your own routes to the list of those requiring a policy stricter than the normal one
-  - Customizable directives for each policy level (modify existing ones, add your own)
+- Adds custom headers to the response
+- Support for "static" headers specified in `config.yml`
+  - Currently includes security / privacy related headers:
+    - Referrer-Policy
+    - X-Content-Type-Options
+    - X-Frame-Options
+    - X-XSS-Protection
+- Support for "dynamic" headers generated according to specific parameters (app environment, requested route...)
+  - Currently includes a Content Security Policy header generator and setter:
+    - Allows you to protect your users from malicious resources (e.g. malicious JavaScript code that could end up in your dependencies, like [this one](https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident))
+    - Two level policy, normal & strict, in case you want to make sure critical routes are better protected (e.g. your website consumes an API with Ajax/fetch or requires a CDN for specific features, but you want to make sure this API or CDN cannot compromise your most critical routes, like login or checkout, if they ever become compromised [themselves](https://www.troyhunt.com/the-javascript-supply-chain-paradox-sri-csp-and-trust-in-third-party-libraries/))
+    - Add your own routes to the list of those requiring strict policy
+    - Customizable directives for each policy level (modify existing ones, add your own)
+    - Dev environment directives to generate (less secure) directives allowing Symfony Profiler to work properly. The Profiler relies on inline JS and CSS, which you are strongly advised to block in production environment to counter XSS. Current whitelists block these by default in production environment.

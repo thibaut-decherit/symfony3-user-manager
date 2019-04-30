@@ -47,10 +47,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-  kernel.listener.csp_header_builder:
-    class: AppBundle\EventListener\CspHeaderBuilder
+  kernel.listener.response_header_setter:
+    class: AppBundle\EventListener\ResponseHeaderSetter\ResponseHeaderSetter
     arguments:
       - '%kernel.environment%'
+      - '%response_headers%'
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
