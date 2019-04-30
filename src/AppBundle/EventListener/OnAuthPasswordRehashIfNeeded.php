@@ -2,7 +2,7 @@
 
 namespace AppBundle\EventListener;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -13,7 +13,12 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class OnAuthPasswordRehashIfNeeded
 {
     /**
-     * @var EntityManager
+     * @var int
+     */
+    private $cost;
+
+    /**
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
@@ -23,17 +28,16 @@ class OnAuthPasswordRehashIfNeeded
     private $passwordEncoder;
 
     /**
-     * @var int
-     */
-    private $cost;
-
-    /**
      * OnAuthPasswordRehashIfNeeded constructor.
-     * @param EntityManager $entityManager
-     * @param UserPasswordEncoderInterface $passwordEncoder
      * @param int $cost
+     * @param EntityManagerInterface $entityManager
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function __construct(EntityManager $entityManager, UserPasswordEncoderInterface $passwordEncoder, int $cost)
+    public function __construct(
+        int $cost,
+        EntityManagerInterface $entityManager,
+        UserPasswordEncoderInterface $passwordEncoder
+    )
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
@@ -45,8 +49,6 @@ class OnAuthPasswordRehashIfNeeded
      * WARNING : Will rehash password even if new cost is lower than current hash cost
      *
      * @param InteractiveLoginEvent $event
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
