@@ -3,7 +3,8 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
+use Swift_Mailer;
 
 /**
  * Class MailerService
@@ -12,37 +13,37 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 class MailerService
 {
     /**
-     * @var TwigEngine
+     * @var string
      */
-    protected $twigEngine;
-
-    /**
-     * @var \Swift_Mailer
-     */
-    protected $swiftMailer;
+    private $autoMailerAddress;
 
     /**
      * @var string
      */
-    protected $autoMailerAddress;
+    private $replyTo;
 
     /**
-     * @var string
+     * @var EngineInterface
      */
-    protected $replyTo;
+    private $twigEngine;
+
+    /**
+     * @var Swift_Mailer
+     */
+    private $swiftMailer;
 
     /**
      * MailerService constructor.
-     * @param TwigEngine $twigEngine
-     * @param \Swift_Mailer $swiftMailer
      * @param string $autoMailerAddress
      * @param string $replyTo
+     * @param EngineInterface $twigEngine
+     * @param Swift_Mailer $swiftMailer
      */
     public function __construct(
-        TwigEngine $twigEngine,
-        \Swift_Mailer $swiftMailer,
         string $autoMailerAddress,
-        string $replyTo
+        string $replyTo,
+        EngineInterface $twigEngine,
+        Swift_Mailer $swiftMailer
     )
     {
         $this->twigEngine = $twigEngine;
@@ -52,37 +53,11 @@ class MailerService
     }
 
     /**
-     * Email sent after user registration.
-     *
-     * @param User $user
-     * @param string $activationUrl
-     * @throws \Twig\Error\Error
-     */
-    public function registrationSuccess(User $user, string $activationUrl)
-    {
-        $emailBody = $this->twigEngine->render(
-            'Email/registration-email.html.twig', [
-                'user' => $user,
-                'activationUrl' => $activationUrl
-            ]
-        );
-
-        $this->sendEmail(
-            'Welcome',
-            [$this->autoMailerAddress => 'UserManager'],
-            $user->getEmail(),
-            $this->replyTo,
-            $emailBody
-        );
-    }
-
-    /**
      * Email sent when user requests password reset.
      *
      * @param User $user
      * @param string $passwordResetUrl
      * @param int $passwordResetTokenLifetime
-     * @throws \Twig\Error\Error
      */
     public function passwordReset(User $user, string $passwordResetUrl, int $passwordResetTokenLifetime)
     {
@@ -106,6 +81,30 @@ class MailerService
     }
 
     /**
+     * Email sent after user registration.
+     *
+     * @param User $user
+     * @param string $activationUrl
+     */
+    public function registrationSuccess(User $user, string $activationUrl)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/registration-email.html.twig', [
+                'user' => $user,
+                'activationUrl' => $activationUrl
+            ]
+        );
+
+        $this->sendEmail(
+            'Welcome',
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * @param $subject
      * @param $from
      * @param $to
@@ -113,7 +112,7 @@ class MailerService
      * @param $body
      * @param null $attachment
      */
-    protected function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null)
+    private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
