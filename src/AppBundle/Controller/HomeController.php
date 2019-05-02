@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -11,7 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends DefaultController
 {
     /**
+     * Renders homepage.
+     *
      * @Route(name="home")
+     * @return Response
      */
     public function homeAction()
     {

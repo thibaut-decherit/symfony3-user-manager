@@ -2,10 +2,11 @@
 
 namespace AppBundle\Validator\Constraints;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Translation\TranslatorInterface;
-use GuzzleHttp\Client as GuzzleClient;
 
 class BreachedPasswordValidator extends ConstraintValidator
 {
@@ -29,7 +30,7 @@ class BreachedPasswordValidator extends ConstraintValidator
      *
      * @param mixed $plainPassword
      * @param Constraint $constraint
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function validate($plainPassword, Constraint $constraint)
     {

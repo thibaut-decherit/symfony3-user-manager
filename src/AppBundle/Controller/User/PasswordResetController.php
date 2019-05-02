@@ -4,8 +4,11 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
+use Exception;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -22,8 +25,8 @@ class PasswordResetController extends DefaultController
      *
      * @param Request $request
      * @Route(name="password_reset_request", methods={"GET", "POST"})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig\Error\Error
+     * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function requestAction(Request $request)
     {
@@ -123,7 +126,7 @@ class PasswordResetController extends DefaultController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param User|null $user (default null so param converter doesn't throw 404 if no user found)
      * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {

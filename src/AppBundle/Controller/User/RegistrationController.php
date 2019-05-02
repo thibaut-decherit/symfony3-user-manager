@@ -4,8 +4,10 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,7 +22,7 @@ class RegistrationController extends DefaultController
      * Renders the initial registration form.
      *
      * @Route("/register", name="registration", methods="GET")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function registerFormAction()
     {
@@ -40,7 +42,7 @@ class RegistrationController extends DefaultController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @Route("/register-ajax", name="registration_ajax", methods="POST")
      * @return JsonResponse
-     * @throws \Twig\Error\Error
+     * @throws Exception
      */
     public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

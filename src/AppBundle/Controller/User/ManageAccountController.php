@@ -5,6 +5,7 @@ namespace AppBundle\Controller\User;
 use AppBundle\Controller\DefaultController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +22,7 @@ class ManageAccountController extends DefaultController
      * Renders user account view.
      *
      * @Route(name="account", methods="GET")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function manageAccountAction()
     {
@@ -32,7 +33,7 @@ class ManageAccountController extends DefaultController
      * Renders the account information edit form.
      *
      * @param UserInterface $user
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function accountInformationFormAction(UserInterface $user)
     {
@@ -94,7 +95,7 @@ class ManageAccountController extends DefaultController
      * Renders the password change form.
      *
      * @param UserInterface $user
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function passwordChangeFormAction(UserInterface $user)
     {
