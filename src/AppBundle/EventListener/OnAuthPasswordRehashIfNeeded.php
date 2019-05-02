@@ -39,9 +39,9 @@ class OnAuthPasswordRehashIfNeeded
         UserPasswordEncoderInterface $passwordEncoder
     )
     {
+        $this->cost = $cost;
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
-        $this->cost = $cost;
     }
 
     /**

@@ -4,8 +4,11 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
+use Exception;
 use SensioLabs\Security\Exception\HttpException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -21,13 +24,13 @@ class PasswordResetController extends DefaultController
      * Renders and handles password resetting request form.
      *
      * @param Request $request
-     * @Route("/", name="password_reset_request", methods={"GET", "PATCH"})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig\Error\Error
+     * @Route(name="password_reset_request", methods={"GET", "POST"})
+     * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function requestAction(Request $request)
     {
-        if ($request->isMethod('PATCH')) {
+        if ($request->isMethod('POST')) {
             if ($this->isCsrfTokenValid('password_reset_request', $request->get('csrfToken')) === false) {
                 throw new HttpException(400);
             }
@@ -122,8 +125,8 @@ class PasswordResetController extends DefaultController
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param User|null $user (default null so param converter doesn't throw 404 if no user found)
-     * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "PATCH"})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
+     * @return RedirectResponse|Response
      */
     public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
@@ -153,7 +156,7 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('password_reset_request');
         }
 
-        $form = $this->createForm('AppBundle\Form\User\PasswordResetType', $user, ['method' => 'patch']);
+        $form = $this->createForm('AppBundle\Form\User\PasswordResetType', $user);
 
         $form->handleRequest($request);
 

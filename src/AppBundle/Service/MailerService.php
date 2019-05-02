@@ -46,10 +46,10 @@ class MailerService
         Swift_Mailer $swiftMailer
     )
     {
-        $this->twigEngine = $twigEngine;
-        $this->swiftMailer = $swiftMailer;
         $this->autoMailerAddress = $autoMailerAddress;
         $this->replyTo = $replyTo;
+        $this->twigEngine = $twigEngine;
+        $this->swiftMailer = $swiftMailer;
     }
 
     /**
