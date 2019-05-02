@@ -79,9 +79,11 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
      * )
-     * @Assert\Regex(
-     *     pattern = "/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])[\w~@#$%^&*+=`|{}:;!.?""''()\[\]-]{8,50}$/",
-     *     message = "form_errors.password_strength",
+     * @Assert\Length(
+     *     min=8,
+     *     max=150,
+     *     minMessage="form_errors.password_length",
+     *     maxMessage="form_errors.password_length",
      * )
      * @CustomAssert\BreachedPassword()
      *

@@ -5,7 +5,7 @@ form_errors:
   max_length: This field cannot be longer than {{ limit }} characters.
   min_length: This field must contain at least {{ limit }} characters.
   not_blank: This field cannot be empty.
-  password_strength: Your password must be at least 8 characters long and contain a digit, a lowercase and an uppercase.
+  password_length: Your password must be between 8 and 50 characters.
   repeat_password: The password fields must match.
   unique_email: This email is already used.
   unique_username: This username is already used.
