@@ -7,7 +7,7 @@ body.on('submit', '#ajax-form-user-information-edit', function (e) {
     e.preventDefault();
 
     $.ajax({
-        type: $(this).find('input' + "[name='_method']").val(),
+        type: $(this).attr('method'),
         url: $(this).attr('action'),
         data: $(this).serialize()
     })

@@ -19,7 +19,7 @@ class RegistrationController extends DefaultController
     /**
      * Renders the initial registration form.
      *
-     * @Route("/register", name="registration", methods={"GET"})
+     * @Route("/register", name="registration", methods="GET")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function registerFormAction()
@@ -38,7 +38,7 @@ class RegistrationController extends DefaultController
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @Route("/register-ajax", name="registration_ajax", methods={"POST"})
+     * @Route("/register-ajax", name="registration_ajax", methods="POST")
      * @return JsonResponse
      * @throws \Twig\Error\Error
      */

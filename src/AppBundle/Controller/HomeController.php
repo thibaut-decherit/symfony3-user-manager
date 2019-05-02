@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends DefaultController
 {
     /**
-     * @Route("/", name="home")
+     * @Route(name="home")
      */
     public function homeAction()
     {
