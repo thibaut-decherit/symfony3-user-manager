@@ -14,7 +14,7 @@ class HomeController extends DefaultController
     /**
      * Renders homepage.
      *
-     * @Route(name="home")
+     * @Route(name="home", methods="GET")
      * @return Response
      */
     public function homeAction()
