@@ -50,6 +50,8 @@ services:
     arguments:
       - '%kernel.environment%'
       - '%response_headers%'
+      - '@request_stack'
+      - '%csp_report_uri%'
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 

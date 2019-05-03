@@ -16,6 +16,11 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class CspHeaderSetter
 {
     /**
+     * @var string
+     */
+    private $kernelEnvironment;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -26,9 +31,9 @@ class CspHeaderSetter
     private $responseHeaders;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $kernelEnvironment;
+    private $cspReportUri;
 
     /**
      * @var bool
@@ -82,13 +87,20 @@ class CspHeaderSetter
      * @param string $kernelEnvironment
      * @param RequestStack $requestStack
      * @param ResponseHeaderBag $responseHeaders
+     * @param string|null $cspReportUri
      */
-    public function __construct(string $kernelEnvironment, RequestStack $requestStack, ResponseHeaderBag $responseHeaders)
+    public function __construct(
+        string $kernelEnvironment,
+        RequestStack $requestStack,
+        ResponseHeaderBag $responseHeaders,
+        ?string $cspReportUri
+    )
     {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->requestStack = $requestStack;
-        $this->strictPolicy = false;
         $this->responseHeaders = $responseHeaders;
+        $this->cspReportUri = $cspReportUri;
+        $this->strictPolicy = false;
     }
 
     public function set()
@@ -198,6 +210,11 @@ class CspHeaderSetter
 
         foreach ($policies as $policy) {
             $headerValue .= "$policy; ";
+        }
+
+        // Adds violation report URI if csp_report_uri parameter is specified in config.yml.
+        if (!empty($this->cspReportUri)) {
+            $headerValue .= "report-uri $this->cspReportUri;";
         }
 
         return $headerValue;
