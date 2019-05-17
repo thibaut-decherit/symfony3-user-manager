@@ -1,11 +1,4 @@
-import $ from 'jquery';
-global.body = $('body');
+require('../css/app.scss');
 import 'bootstrap';
-import 'babel-polyfill'; // Required to use async await.
-
 require('./components/helper');
-require('./registration');
-require('./login');
-require('./user-information');
-require('./password-change');
-require('./components/password-strength-meter');
+global.body = $('body');

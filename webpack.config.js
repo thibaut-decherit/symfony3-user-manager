@@ -11,11 +11,21 @@ Encore
     // Only needed for CDN's or sub-directory deploy.
     // .setManifestKeyPrefix('build/')
 
-    // Compiles JS into web/build/app.js.
+    // Main entry for JS required globally. File includes a reference to assets/css/app.scss for CSS required globally.
     .addEntry('app', './assets/js/app.js')
 
-    // Compiles SCSS into CSS at web/build/global.css.
-    .addStyleEntry('global', './assets/css/global.scss')
+    /*
+     Entries for JS tied to a specific page/feature.
+     Each file can optionally include a reference to a CSS file tied to the same page/feature.
+     */
+    .addEntry('login', './assets/js/login.js')
+    .addEntry('password-change', './assets/js/password-change.js')
+    .addEntry('password-strength-meter', './assets/js/components/password-strength-meter.js')
+    .addEntry('registration', './assets/js/registration.js')
+    .addEntry('user-information', './assets/js/user-information.js')
+
+    // Splits entries into chunks to avoid code duplication (e.g. two page-tied JS files both importing jQuery).
+    .splitEntryChunks()
 
     // Allows sass/scss files to be processed.
     .enableSassLoader()
@@ -31,7 +41,7 @@ Encore
     // Purges the outputPath directory before each build (doesn't work on subsequent builds triggered by --watch).
     .cleanupOutputBeforeBuild()
 
-    // Requires an extra script tag for runtime.js which must be loaded before any other script.
+    // Requires an extra script tag for runtime.js which must be loaded before any other script tag.
     .enableSingleRuntimeChunk()
 
     // Uncomment if you use TypeScript.

@@ -1,5 +1,7 @@
+require('../../css/components/password-strength-meter.scss');
 import {SHA1} from 'crypto-js';
 import estimatePasswordStrength from 'zxcvbn';
+import 'babel-polyfill'; // Required to use async await.
 
 let typingTimer;
 
