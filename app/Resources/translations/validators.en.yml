@@ -1,6 +1,7 @@
 # Form errors
 
 form_errors:
+  alphanumeric_only_username: Your username can only contain alphanumeric characters.
   breached_password: This password has been found in data breaches, it is not safe.
   max_length: This field cannot be longer than {{ limit }} characters.
   min_length: This field must contain at least {{ limit }} characters.
