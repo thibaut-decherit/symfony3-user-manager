@@ -80,13 +80,13 @@ Feel free to tailor each feature to your needs.
 ### Password rehash on user authentication if needed:
 - Event listener triggered on login through `onSecurityInteractiveLogin` method
 - Rehashes password on login if bcrypt cost has been modified in `config.yml`
-  - Without this listener, cost change would apply only to passwords persisted (registration) or updated (password change or reset) after the change
+  - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
   - This could be an issue if your existing users don't update their password
   - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that? Have you been hacked? Are my data safe?")
   - This listener prevents all that by working seamlessly in the backgroup while your users log in
 - Password checked through `password_needs_rehash`  method
 - Bcrypt implementation
-- Modify listener and config files to implement another algorithm. According to `password_needs_rehash` documentation it should work even if you switch hashing algorithm in production environment
+- Modify listener and config files to implement another algorithm. If you need to switch algorithm on an existing database, see [here](https://gist.github.com/thibaut-decherit/fb041311b6e387132a8077062acd6ded#the-following-is-optional-needed-if-you-have-passwords-hashed-with-legacy-algorithms-eg-sha-1-you-have-two-options).
 
 ### Haveibeenpwned API password validator:
 - Prevents your users from choosing a password compromised in known data breaches
