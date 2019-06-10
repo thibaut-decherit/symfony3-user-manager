@@ -55,9 +55,8 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *     groups={"Registration", "User_Information"}
      * )
      * @Assert\Regex(
-     *     pattern="/^.+\@\S+\.\S+$/",
-     *     match=false,
-     *     message="form_errors.username_cannot_be_email",
+     *     pattern="/^[a-zA-Z0-9]*$/",
+     *     message="form_errors.alphanumeric_only_username",
      *     groups={"Registration", "User_Information"}
      * )
      */
