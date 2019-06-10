@@ -1,9 +1,20 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('password-strength-meter') }}
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <h1 class="col">Registration</h1>
     </div>
 
     {% include ':Form/User:registration.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('registration') }}
+    {{ encore_entry_script_tags('password-strength-meter') }}
 {% endblock %}

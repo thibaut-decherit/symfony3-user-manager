@@ -80,7 +80,7 @@ Feel free to tailor each feature to your needs.
 ### Password rehash on user authentication if needed:
 - Event listener triggered on login through `onSecurityInteractiveLogin` method
 - Rehashes password on login if bcrypt cost has been modified in `config.yml`
-  - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
+  - Without this listener, cost change would apply only to passwords persisted (registration) or updated (password change or reset) after the change
   - This could be an issue if your existing users don't update their password
   - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that? Have you been hacked? Are my data safe?")
   - This listener prevents all that by working seamlessly in the backgroup while your users log in
