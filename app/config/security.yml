@@ -1,3 +1,6 @@
+parameters:
+  csp_report_uri: '/csp-violation-report-endpoint'
+
 # To get started with security, check out the documentation:
 # https://symfony.com/doc/current/security.html
 security:

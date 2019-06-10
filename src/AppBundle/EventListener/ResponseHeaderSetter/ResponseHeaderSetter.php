@@ -33,16 +33,28 @@ class ResponseHeaderSetter
     private $requestStack;
 
     /**
+     * @var string|null
+     */
+    private $cspReportUri;
+
+    /**
      * ResponseHeaderSetter constructor.
      * @param string $kernelEnvironment
      * @param array $simpleHeaders
      * @param RequestStack $requestStack
+     * @param string|null $cspReportUri
      */
-    public function __construct(string $kernelEnvironment, array $simpleHeaders, RequestStack $requestStack)
+    public function __construct(
+        string $kernelEnvironment,
+        array $simpleHeaders,
+        RequestStack $requestStack,
+        ?string $cspReportUri = null
+    )
     {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->simpleHeaders = $simpleHeaders;
         $this->requestStack = $requestStack;
+        $this->cspReportUri = $cspReportUri;
     }
 
     /**
@@ -67,7 +79,8 @@ class ResponseHeaderSetter
         (new CspHeaderSetter(
             $this->kernelEnvironment,
             $this->requestStack,
-            $responseHeaders
+            $responseHeaders,
+            $this->cspReportUri
         ))->set();
     }
 
