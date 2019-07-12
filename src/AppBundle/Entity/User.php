@@ -145,14 +145,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=86, unique=true)
      */
     private $activationToken;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=86, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
@@ -473,12 +473,20 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
+     * Generates an URI safe base64 encoded string that does not contain "+", "/" or "=" which need to be URL
+     * encoded and make URLs unnecessarily longer.
+     * With 512 bits of entropy this method will return a string of 86 characters, with 256 bits of entropy it will
+     * return 43 characters, and so on.
+     * 
+     * @param int $entropy
      * @return string
      * @throws \Exception
      */
-    public function generateSecureToken(): string
+    public function generateSecureToken(int $entropy = 512): string
     {
-        return bin2hex(random_bytes(50));
+        $bytes = random_bytes($entropy / 8);
+
+        return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
     }
 
     /**
