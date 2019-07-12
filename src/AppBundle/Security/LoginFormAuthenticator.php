@@ -2,6 +2,7 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,7 +107,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      *
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
-     * @return \AppBundle\Entity\User|null|object|UserInterface
+     * @return User|null|object|UserInterface
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {

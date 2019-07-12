@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
+use Swift_Message;
 use Symfony\Component\Templating\EngineInterface;
 use Swift_Mailer;
 
@@ -114,7 +115,7 @@ class MailerService
      */
     private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null)
     {
-        $message = \Swift_Message::newInstance()
+        $message = Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)

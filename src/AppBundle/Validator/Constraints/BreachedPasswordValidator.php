@@ -2,6 +2,7 @@
 
 namespace AppBundle\Validator\Constraints;
 
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\Constraint;
@@ -49,7 +50,7 @@ class BreachedPasswordValidator extends ConstraintValidator
                 'https://api.pwnedpasswords.com/range/' . $plainPasswordSHA1Prefix
             );
             $breachedPasswordsSuffixes = $guzzleRequest->getBody()->getContents();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $breachedPasswordsSuffixes = '';
         }
 
