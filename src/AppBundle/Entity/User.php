@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -129,7 +131,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $roles;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime")
      */
@@ -145,19 +147,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=86, unique=true)
      */
     private $activationToken;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=86, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -166,7 +168,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
-        $this->registeredAt = new \DateTime();
+        $this->registeredAt = new DateTime();
         $this->activated = false;
     }
 
@@ -297,18 +299,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getRegisteredAt(): ?\DateTime
+    public function getRegisteredAt(): ?DateTime
     {
         return $this->registeredAt;
     }
 
     /**
-     * @param \DateTime $registeredAt
+     * @param DateTime $registeredAt
      * @return User
      */
-    public function setRegisteredAt(\DateTime $registeredAt): User
+    public function setRegisteredAt(DateTime $registeredAt): User
     {
         $this->registeredAt = $registeredAt;
         return $this;
@@ -369,18 +371,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getPasswordResetRequestedAt(): ?\DateTime
+    public function getPasswordResetRequestedAt(): ?DateTime
     {
         return $this->passwordResetRequestedAt;
     }
 
     /**
-     * @param \DateTime|null $passwordResetRequestedAt
+     * @param DateTime|null $passwordResetRequestedAt
      * @return User
      */
-    public function setPasswordResetRequestedAt(?\DateTime $passwordResetRequestedAt): User
+    public function setPasswordResetRequestedAt(?DateTime $passwordResetRequestedAt): User
     {
         $this->passwordResetRequestedAt = $passwordResetRequestedAt;
         return $this;
@@ -473,12 +475,20 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
+     * Generates an URI safe base64 encoded string that does not contain "+", "/" or "=" which need to be URL
+     * encoded and make URLs unnecessarily longer.
+     * With 512 bits of entropy this method will return a string of 86 characters, with 256 bits of entropy it will
+     * return 43 characters, and so on.
+     * 
+     * @param int $entropy
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    public function generateSecureToken(): string
+    public function generateSecureToken(int $entropy = 512): string
     {
-        return bin2hex(random_bytes(50));
+        $bytes = random_bytes($entropy / 8);
+
+        return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
     }
 
     /**

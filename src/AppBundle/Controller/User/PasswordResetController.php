@@ -4,6 +4,7 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
+use DateTime;
 use Exception;
 use SensioLabs\Security\Exception\HttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -91,7 +92,7 @@ class PasswordResetController extends DefaultController
                 }
             }
 
-            $user->setPasswordResetRequestedAt(new \DateTime());
+            $user->setPasswordResetRequestedAt(new DateTime());
 
             /*
              * Parameter (referenceType) UrlGeneratorInterface::ABSOLUTE_URL is needed to generate an url

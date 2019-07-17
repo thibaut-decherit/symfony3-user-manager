@@ -2,11 +2,13 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\ORM\EntityRepository;
+
 /**
  * Class UserRepository
  * @package AppBundle\Repository
  */
-class UserRepository extends \Doctrine\ORM\EntityRepository
+class UserRepository extends EntityRepository
 {
     public function findUnactivatedAccountsOlderThan($days, $limit)
     {
