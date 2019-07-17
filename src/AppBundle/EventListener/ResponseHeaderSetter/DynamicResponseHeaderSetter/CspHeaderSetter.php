@@ -31,14 +31,19 @@ class CspHeaderSetter
     private $responseHeaders;
 
     /**
-     * @var string|null
+     * @var array
      */
-    private $cspReportUri;
+    private $cspConfig;
 
     /**
      * @var bool
      */
     private $strictPolicy;
+
+    /**
+     * @var string|null
+     */
+    private $cspReportUri;
 
     /**
      * Whitelist added to every directive
@@ -88,19 +93,22 @@ class CspHeaderSetter
      * @param RequestStack $requestStack
      * @param ResponseHeaderBag $responseHeaders
      * @param string|null $cspReportUri
+     * @param array $cspConfig
      */
     public function __construct(
         string $kernelEnvironment,
         RequestStack $requestStack,
         ResponseHeaderBag $responseHeaders,
+        array $cspConfig,
         ?string $cspReportUri
     )
     {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->requestStack = $requestStack;
         $this->responseHeaders = $responseHeaders;
-        $this->cspReportUri = $cspReportUri;
+        $this->cspConfig = $cspConfig;
         $this->strictPolicy = false;
+        $this->cspReportUri = $cspReportUri;
     }
 
     public function set()
@@ -115,74 +123,48 @@ class CspHeaderSetter
     private function generate()
     {
         // Routes where strict policy must be used.
-        $protectedRoutes = [
-            "login",
-            "password_reset",
-            "password_reset_request",
-            "registration",
-        ];
+        $protectedRoutes = $this->cspConfig['protected_routes'];
 
-        $requestStackedRoute = $this->requestStack->getMasterRequest()->get('_route');
+        $requestedRoute = $this->requestStack->getMasterRequest()->get('_route');
 
-        if (in_array($requestStackedRoute, $protectedRoutes)) {
+        if (in_array($requestedRoute, $protectedRoutes)) {
             $this->setStrictPolicy(true);
         }
+
+        $laxPolicies = $this->cspConfig['policies']['lax'];
+        $strictPolicies = $this->cspConfig['policies']['strict'];
 
         switch ($this->isStrictPolicy()) {
 
             // Directives applied to every route except protected ones.
             case false:
-                $this->setMainWhitelist([
-                    "'self'",
-                ]);
+                $this->setMainWhitelist($laxPolicies['main']);
 
-                $this->setConnectWhitelist([
-                    "https://api.pwnedpasswords.com",
-                ]);
+                $this->setConnectWhitelist($laxPolicies['connect']);
 
-                $this->setFormActionWhitelist([
-                    // Add sources here
-                ]);
+                $this->setFormActionWhitelist($laxPolicies['form_action']);
 
-                $this->setFrameAncestorsWhitelist([
-                    "'none'",
-                ]);
+                $this->setFrameAncestorsWhitelist($laxPolicies['frame_ancestors']);
 
-                $this->setScriptWhitelist([
-                    // Add sources here
-                ]);
+                $this->setScriptWhitelist($laxPolicies['script']);
 
-                $this->setStyleWhitelist([
-                    // Add sources here
-                ]);
+                $this->setStyleWhitelist($laxPolicies['style']);
 
                 break;
 
             // Directives applied to protected routes.
             case true:
-                $this->setMainWhitelist([
-                    "'self'",
-                ]);
+                $this->setMainWhitelist($strictPolicies['main']);
 
-                $this->setConnectWhitelist([
-                    "https://api.pwnedpasswords.com",
-                ]);
+                $this->setConnectWhitelist($strictPolicies['connect']);
 
-                $this->setFormActionWhitelist([
-                    // Add sources here
-                ]);
+                $this->setFormActionWhitelist($strictPolicies['form_action']);
 
-                $this->setFrameAncestorsWhitelist([
-                    "'none'",
-                ]);
+                $this->setFrameAncestorsWhitelist($strictPolicies['frame_ancestors']);
 
-                $this->setScriptWhitelist([
-                    // Add sources here
-                ]);
+                $this->setScriptWhitelist($strictPolicies['script']);
 
-                $this->setStyleWhitelist([
-                    // Add sources here
-                ]);
+                $this->setStyleWhitelist($strictPolicies['style']);
 
                 break;
         }

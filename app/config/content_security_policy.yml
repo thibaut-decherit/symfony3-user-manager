@@ -1,0 +1,28 @@
+parameters:
+  content_security_policy:
+    protected_routes:
+      - login
+      - password_reset
+      - password_reset_request
+      - registration
+    policies:
+      lax:
+        main:
+          - "'self'"
+        connect:
+          - https://api.pwnedpasswords.com
+        form_action: []
+        frame_ancestors:
+          - "'none'"
+        script: []
+        style: []
+      strict:
+        main:
+          - "'self'"
+        connect:
+          - https://api.pwnedpasswords.com
+        form_action: []
+        frame_ancestors:
+          - "'none'"
+        script: []
+        style: []
