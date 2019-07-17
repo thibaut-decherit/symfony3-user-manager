@@ -6,6 +6,7 @@ use AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter\Csp
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class ResponseHeaderSetter
@@ -38,9 +39,9 @@ class ResponseHeaderSetter
     private $cspConfig;
 
     /**
-     * @var string|null
+     * @var RouterInterface
      */
-    private $cspReportUri;
+    private $router;
 
     /**
      * ResponseHeaderSetter constructor.
@@ -48,21 +49,21 @@ class ResponseHeaderSetter
      * @param array $simpleHeaders
      * @param RequestStack $requestStack
      * @param array $cspConfig
-     * @param string|null $cspReportUri
+     * @param RouterInterface $router
      */
     public function __construct(
         string $kernelEnvironment,
         array $simpleHeaders,
         RequestStack $requestStack,
         array $cspConfig,
-        ?string $cspReportUri = null
+        RouterInterface $router
     )
     {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->simpleHeaders = $simpleHeaders;
         $this->requestStack = $requestStack;
         $this->cspConfig = $cspConfig;
-        $this->cspReportUri = $cspReportUri;
+        $this->router = $router;
     }
 
     /**
@@ -89,7 +90,7 @@ class ResponseHeaderSetter
             $this->requestStack,
             $responseHeaders,
             $this->cspConfig,
-            $this->cspReportUri
+            $this->router
         ))->set();
     }
 
@@ -100,8 +101,8 @@ class ResponseHeaderSetter
      */
     private function setStaticHeaders(ResponseHeaderBag $responseHeaders)
     {
-        foreach ($this->simpleHeaders as $key => $value) {
-            $responseHeaders->set($key, $value);
+        foreach ($this->simpleHeaders as $headerName => $headerValue) {
+            $responseHeaders->set($headerName, $headerValue);
         }
     }
 }
