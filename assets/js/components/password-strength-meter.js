@@ -50,6 +50,7 @@ function getCustomBlacklist() {
         customBlacklistArrayFromBackEnd = JSON.parse(customBlacklistJsonFromBackEnd);
     }
 
+    // Retrieves value of current form inputs that should not be reused as a password.
     const customBlacklistFromInputs = [
         $('#appbundle_user_username').val(),
         $('#appbundle_user_email').val(),
@@ -84,7 +85,7 @@ function haveIBeenPwnedPasswordCheck(plainPassword) {
 
                 const breachedPasswordsSHA1Suffixes = await response.text();
 
-                if (breachedPasswordsSHA1Suffixes.indexOf(plainPasswordSHA1Suffix) !== -1) {
+                if (breachedPasswordsSHA1Suffixes.includes(plainPasswordSHA1Suffix)) {
                     resolve(true);
                 }
 
