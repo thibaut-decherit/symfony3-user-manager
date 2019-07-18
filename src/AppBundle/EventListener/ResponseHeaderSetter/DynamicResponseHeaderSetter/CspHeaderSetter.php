@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter;
 
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\RouterInterface;
@@ -70,7 +71,10 @@ class CspHeaderSetter
         $this->directives = [];
     }
 
-    public function set()
+    /**
+     * @throws Exception
+     */
+    public function set(): void
     {
         $this->responseHeaders->set('Content-Security-Policy', $this->generate());
     }
@@ -79,27 +83,30 @@ class CspHeaderSetter
      * Generates Content Security Policy header value.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
      * @return string
+     * @throws Exception
      */
-    private function generate()
+    private function generate(): string
     {
-        // Routes where strict policy must be used.
-        $protectedRoutes = $this->cspConfig['protected_routes'];
+        $this->parseDirectivesConfig();
 
-        $requestedRoute = $this->requestStack->getMasterRequest()->get('_route');
-
-        if (in_array($requestedRoute, $protectedRoutes)) {
-            $this->setDirectives($this->cspConfig['directives']['strict']);
-        } else {
-            $this->setDirectives($this->cspConfig['directives']['lax']);
-        }
-
-        $this->addReportUriIfSet();
+        $this->addReportUri();
 
         $this->addDevDirectivesIfDevEnvironment();
 
         $headerValue = '';
 
-        foreach ($this->directives as $directiveName => $directiveContent) {
+        $directives = $this->getDirectives();
+
+        foreach ($directives as $directiveName => $directiveContent) {
+
+            if (empty($directiveContent)) {
+                throw new Exception("$directiveName: Directives cannot be empty");
+            } elseif (!is_array($directiveContent)) {
+                throw new Exception("$directiveName: Directives must be of type array");
+            } elseif (in_array(null, $directiveContent) || in_array("", $directiveContent)) {
+                throw new Exception("$directiveName: Directives cannot contain null or empty values");
+            }
+
             $directiveContentString = implode(" ", $directiveContent);
 
             $directive = "$directiveName $directiveContentString; ";
@@ -110,8 +117,108 @@ class CspHeaderSetter
         return $headerValue;
     }
 
-    // Adds dev only directives if the app runs in dev environment.
-    private function addDevDirectivesIfDevEnvironment()
+    /**
+     * Sets $this->directives with lax or strict directives, depending on strict_routes contents and requested route.
+     * @throws Exception
+     */
+    private function parseDirectivesConfig(): void
+    {
+        // Routes where strict policy must be used.
+        $strictRoutes = [];
+
+        $hasStrictPolicy = false;
+
+        if (!empty($this->cspConfig['strict_routes'])) {
+
+            if (!is_array($this->cspConfig['strict_routes'])) {
+                throw new Exception('content_security_policy.strict_routes parameter must be of type array');
+            } elseif (empty($this->cspConfig['directives']['strict'])) {
+                throw new Exception(
+                    'content_security_policy.directives.strict: At least one strict directive must be defined'
+                );
+            }
+
+            $strictRoutes = $this->cspConfig['strict_routes'];
+            $hasStrictPolicy = true;
+        }
+
+        switch ($hasStrictPolicy) {
+            case false:
+                if (empty($this->cspConfig['directives']['lax'])) {
+                    throw new Exception(
+                        'content_security_policy.directives.lax: At least one lax directive must be defined'
+                    );
+                }
+
+                $this->setDirectives($this->cspConfig['directives']['lax']);
+
+                break;
+
+            case true:
+                $requestedRoute = $this->requestStack->getMasterRequest()->get('_route');
+
+                if (in_array($requestedRoute, $strictRoutes)) {
+                    $this->setDirectives($this->cspConfig['directives']['strict']);
+                } else {
+
+                    if (empty($this->cspConfig['directives']['lax'])) {
+                        throw new Exception(
+                            'content_security_policy.directives.lax: At least one lax directive must be defined'
+                        );
+                    }
+
+                    $this->setDirectives($this->cspConfig['directives']['lax']);
+                }
+
+                break;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addReportUri(): void
+    {
+        if (!isset($this->cspConfig['report_uri'])) {
+            return;
+        }
+
+        if (empty($this->cspConfig['report_uri']['method'])) {
+            throw new Exception('report_uri.method is undefined or empty');
+        } elseif (empty($this->cspConfig['report_uri']['data'])) {
+            throw new Exception('report_uri.data is undefined or empty');
+        }
+
+        $reportUri = '';
+
+        switch ($this->cspConfig['report_uri']['method']) {
+            case 'plain':
+                $reportUri = $this->cspConfig['report_uri']['data'];
+
+                break;
+
+            case 'match':
+                $reportUri = $this->router->generate($this->cspConfig['report_uri']['data']);
+
+                break;
+
+            default:
+                throw new Exception("report_uri.method must be of type string and contain 'plain' or 'match'");
+
+                break;
+        }
+
+        $directives = $this->getDirectives();
+
+        $directives['report-uri'][] = $reportUri;
+
+        $this->setDirectives($directives);
+    }
+
+    /**
+     * Adds dev only directives if the app runs in dev environment.
+     */
+    private function addDevDirectivesIfDevEnvironment(): void
     {
         if ($this->kernelEnvironment !== 'dev') {
             return;
@@ -132,33 +239,6 @@ class CspHeaderSetter
         $directives['form-action'][] = $baseUrl;
         $directives['script-src'][] = "$baseUrl 'self' 'unsafe-eval' 'unsafe-inline'";
         $directives['style-src'][] = "$baseUrl 'self' 'unsafe-inline'";
-
-        $this->setDirectives($directives);
-    }
-
-    private function addReportUriIfSet()
-    {
-        if (!isset($this->cspConfig['report_uri'])) {
-            return;
-        }
-
-        $reportUri = '';
-
-        switch ($this->cspConfig['report_uri']['method']) {
-            case 'plain':
-                $reportUri = $this->cspConfig['report_uri']['data'];
-
-                break;
-
-            case 'match':
-                $reportUri = $this->router->generate($this->cspConfig['report_uri']['data']);
-
-                break;
-        }
-
-        $directives = $this->getDirectives();
-
-        $directives['report-uri'][] = $reportUri;
 
         $this->setDirectives($directives);
     }

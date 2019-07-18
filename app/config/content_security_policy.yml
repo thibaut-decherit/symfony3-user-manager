@@ -6,8 +6,9 @@ parameters:
       method: plain
       data: http://127.0.0.1:8001/csp-violation-logger/new
 
+    # OPTIONAL
     # Routes where directives.strict will be applied instead of directives.lax
-    protected_routes:
+    strict_routes:
       - login
       - password_reset
       - password_reset_request
@@ -15,6 +16,7 @@ parameters:
 
     # Either lax or strict
     # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#Directives
+    # Settings below are a good base setup.
     directives:
 
       lax:
@@ -30,6 +32,8 @@ parameters:
         frame-ancestors:
           - "'none'"
 
+      # OPTIONAL
+      # MANDATORY if strict_routes is defined and not empty
       strict:
         base-uri:
           - "'self'"

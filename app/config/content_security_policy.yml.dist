@@ -3,11 +3,12 @@ parameters:
     report_uri:
       # Either match (data must contain route name, use that if your logger is included in the app)
       # or plain (data must contain URL)
-      method: plain
-      data: http://127.0.0.1:8001/csp-violation-logger/new
+      method: # match|plain
+      data: # route_name|http://example.com/csp-report-uri-endpoint
 
+    # OPTIONAL
     # Routes where directives.strict will be applied instead of directives.lax
-    protected_routes: []
+    strict_routes: # []
 
     # Either lax or strict
     # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#Directives
@@ -26,14 +27,6 @@ parameters:
         frame-ancestors:
           - "'none'"
 
-      strict:
-        base-uri:
-          - "'self'"
-        default-src:
-          - "'self'"
-        connect-src:
-          - "'self'"
-        form-action:
-          - "'self'"
-        frame-ancestors:
-          - "'none'"
+      # OPTIONAL
+      # MANDATORY if strict_routes is defined and not empty
+      strict: # []
