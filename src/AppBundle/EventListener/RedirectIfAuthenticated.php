@@ -103,6 +103,9 @@ class RedirectIfAuthenticated
         // Base website url is removed from referer url so router can match result to existing route.
         $lastUrl = substr($referer, strpos($referer, $baseWebsiteUrl) + strlen($baseWebsiteUrl));
 
+        // Removes potential query string
+        $lastUrl = explode('?', $lastUrl)[0];
+
         /*
          * Tries to redirect to route matching $lastUrl. If no match is found (most likely because $referer url
          * comes from another website), it will throw ResourceNotFoundException.
