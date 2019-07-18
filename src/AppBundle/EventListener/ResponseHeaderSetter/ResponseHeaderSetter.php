@@ -3,6 +3,7 @@
 namespace AppBundle\EventListener\ResponseHeaderSetter;
 
 use AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter\CspHeaderSetter;
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -68,6 +69,7 @@ class ResponseHeaderSetter
 
     /**
      * @param FilterResponseEvent $event
+     * @throws Exception
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -82,6 +84,7 @@ class ResponseHeaderSetter
      * requested route...).
      *
      * @param ResponseHeaderBag $responseHeaders
+     * @throws Exception
      */
     private function setDynamicHeaders(ResponseHeaderBag $responseHeaders)
     {
