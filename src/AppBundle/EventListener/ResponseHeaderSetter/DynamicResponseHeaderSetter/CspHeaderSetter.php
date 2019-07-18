@@ -230,9 +230,7 @@ class CspHeaderSetter
          * In dev env 'self' === http://localhost:port, NOT 127.0.0.1. You need to whitelist this IP if you dev at
          * http://127.0.0.1:port and not at http://localhost:port.
          */
-        $uriArray = explode('/', $this->requestStack->getCurrentRequest()->getUri());
-        array_splice($uriArray, 3);
-        $baseUrl = implode('/', $uriArray);
+        $baseUrl = $this->requestStack->getMasterRequest()->getSchemeAndHttpHost();
 
         $directives['default-src'][] = $baseUrl;
         $directives['connect-src'][] = $baseUrl;
