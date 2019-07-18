@@ -3,7 +3,7 @@ parameters:
     report_uri:
       # Either match (data must contain route name, use that if your logger is included in the app)
       # or plain (data must contain URL)
-      method: # match|plain
+      mode: # match|plain
       data: # route_name|http://example.com/csp-report-uri-endpoint
 
     # OPTIONAL

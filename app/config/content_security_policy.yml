@@ -3,7 +3,7 @@ parameters:
     report_uri:
       # Either match (data must contain route name, use that if your logger is included in the app)
       # or plain (data must contain URL)
-      method: plain
+      mode: plain
       data: http://127.0.0.1:8001/csp-violation-logger/new
 
     # OPTIONAL

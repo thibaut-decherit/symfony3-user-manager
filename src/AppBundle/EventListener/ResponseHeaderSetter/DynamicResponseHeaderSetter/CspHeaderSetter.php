@@ -183,15 +183,15 @@ class CspHeaderSetter
             return;
         }
 
-        if (empty($this->cspConfig['report_uri']['method'])) {
-            throw new Exception('report_uri.method is undefined or empty');
+        if (empty($this->cspConfig['report_uri']['mode'])) {
+            throw new Exception('report_uri.mode is undefined or empty');
         } elseif (empty($this->cspConfig['report_uri']['data'])) {
             throw new Exception('report_uri.data is undefined or empty');
         }
 
         $reportUri = '';
 
-        switch ($this->cspConfig['report_uri']['method']) {
+        switch ($this->cspConfig['report_uri']['mode']) {
             case 'plain':
                 $reportUri = $this->cspConfig['report_uri']['data'];
 
@@ -203,7 +203,7 @@ class CspHeaderSetter
                 break;
 
             default:
-                throw new Exception("report_uri.method must be of type string and contain 'plain' or 'match'");
+                throw new Exception("report_uri.mode must be of type string and contain 'plain' or 'match'");
 
                 break;
         }

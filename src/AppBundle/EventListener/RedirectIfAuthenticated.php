@@ -2,10 +2,10 @@
 
 namespace AppBundle\EventListener;
 
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -69,8 +69,8 @@ class RedirectIfAuthenticated
          * (The token storage contains no authentication token. One possible reason may be that there is no firewall
          * configured for this URL.)" when user attempts to access an unknown route.
          * Reason : The kernel is requested multiple times when user requests a route, and during some of
-         * those previous kernel requests $this->security->getToken() doesn't yet return a token and the code contained in
-         * this listener is executed too early in the "chain" of kernel requests, thus causing the error.
+         * those previous kernel requests $this->security->getToken() doesn't yet return a token and the code contained
+         * in this listener is executed too early in the "chain" of kernel requests, thus causing the error.
          *
          * $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction is needed to ensure
          * profiler requests won't be modified by this listener.
@@ -101,7 +101,7 @@ class RedirectIfAuthenticated
         $baseWebsiteUrl = $this->request->getMasterRequest()->getSchemeAndHttpHost();
 
         // Base website url is removed from referer url so router can match result to existing route.
-        $lastUrl = substr($referer, strpos($referer, $baseWebsiteUrl) + strlen($baseWebsiteUrl));
+        $lastUrl = explode($baseWebsiteUrl, $referer)[1];
 
         // Removes potential query string
         $lastUrl = explode('?', $lastUrl)[0];
@@ -121,7 +121,8 @@ class RedirectIfAuthenticated
                 $url = $this->router->generate($redirectRoute);
             }
 
-        } catch (ResourceNotFoundException $resourceNotFoundException) {
+        // Must be able to catch at least ResourceNotFoundException and MissingMandatoryParametersException.
+        } catch (Exception $exception) {
             $url = $this->router->generate('home');
         }
 
