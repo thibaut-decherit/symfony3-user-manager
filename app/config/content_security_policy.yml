@@ -23,14 +23,21 @@ parameters:
         base-uri:
           - "'self'"
         default-src:
-          - "'self'"
+          - "'none'"
         connect-src:
           - "'self'"
           - https://api.pwnedpasswords.com
+        font-src:
+          - "'self'"
         form-action:
           - "'self'"
-        frame-ancestors:
-          - "'none'"
+        img-src:
+          - "'self'"
+          - 'data:' # Required for Symfony SVGs (e.g. times icon in form input with validation error)
+        script-src:
+          - "'self'"
+        style-src:
+          - "'self'"
 
       # OPTIONAL
       # MANDATORY if strict_routes is defined and not empty
@@ -38,11 +45,18 @@ parameters:
         base-uri:
           - "'self'"
         default-src:
-          - "'self'"
+          - "'none'"
         connect-src:
           - "'self'"
           - https://api.pwnedpasswords.com
+        font-src:
+          - "'self'"
         form-action:
           - "'self'"
-        frame-ancestors:
-          - "'none'"
+        img-src:
+          - "'self'"
+          - 'data:' # Required for Symfony SVGs (e.g. times icon in form input with validation error)
+        script-src:
+          - "'self'"
+        style-src:
+          - "'self'"

@@ -232,11 +232,11 @@ class CspHeaderSetter
          */
         $baseUrl = $this->requestStack->getMasterRequest()->getSchemeAndHttpHost();
 
-        $directives['default-src'][] = $baseUrl;
         $directives['connect-src'][] = $baseUrl;
+        $directives['font-src'][] = $baseUrl;
         $directives['form-action'][] = $baseUrl;
-        $directives['script-src'][] = "$baseUrl 'self' 'unsafe-eval' 'unsafe-inline'";
-        $directives['style-src'][] = "$baseUrl 'self' 'unsafe-inline'";
+        $directives['script-src'][] = "$baseUrl 'unsafe-eval' 'unsafe-inline'";
+        $directives['style-src'][] = "$baseUrl 'unsafe-inline'";
 
         $this->setDirectives($directives);
     }
