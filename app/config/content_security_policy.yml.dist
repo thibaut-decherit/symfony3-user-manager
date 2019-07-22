@@ -7,8 +7,9 @@ parameters:
       data: # route_name|http://example.com/csp-report-uri-endpoint
 
     # OPTIONAL
+    # MANDATORY if directives.strict is defined and not empty
     # Routes where directives.strict will be applied instead of directives.lax
-    strict_routes: # []
+    strict_routes: []
 
     # Either lax or strict
     # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#Directives
@@ -36,4 +37,4 @@ parameters:
 
       # OPTIONAL
       # MANDATORY if strict_routes is defined and not empty
-      strict: # []
+      strict: []

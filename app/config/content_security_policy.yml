@@ -7,6 +7,7 @@ parameters:
       data: http://127.0.0.1:8001/csp-violation-logger/new
 
     # OPTIONAL
+    # MANDATORY if directives.strict is defined and not empty
     # Routes where directives.strict will be applied instead of directives.lax
     strict_routes:
       - login
@@ -16,7 +17,6 @@ parameters:
 
     # Either lax or strict
     # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#Directives
-    # Settings below are a good base setup.
     directives:
 
       lax:

@@ -241,6 +241,8 @@ class CspHeaderSetter
         $directives['connect-src'][] = $baseUrl;
         $directives['font-src'][] = $baseUrl;
         $directives['form-action'][] = $baseUrl;
+
+        // Allows Symfony Profiler to work properly as it relies on inline JS and CSS.
         $directives['script-src'][] = "$baseUrl 'unsafe-eval' 'unsafe-inline'";
         $directives['style-src'][] = "$baseUrl 'unsafe-inline'";
 
