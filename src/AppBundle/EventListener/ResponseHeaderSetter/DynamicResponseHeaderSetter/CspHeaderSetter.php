@@ -142,6 +142,12 @@ class CspHeaderSetter
             $hasStrictPolicy = true;
         }
 
+        if (empty($this->cspConfig['strict_routes']) && !empty($this->cspConfig['directives']['strict'])) {
+            throw new Exception(
+                'content_security_policy.directives.strict: strict_routes must be defined and contain at least one route because directives.strict is defined and not empty'
+            );
+        }
+
         switch ($hasStrictPolicy) {
             case false:
                 if (empty($this->cspConfig['directives']['lax'])) {
