@@ -100,19 +100,28 @@ class RedirectIfAuthenticated
         $referer = $this->request->getMasterRequest()->headers->get('referer');
         $baseWebsiteUrl = $this->request->getMasterRequest()->getSchemeAndHttpHost();
 
-        // Base website url is removed from referer url so router can match result to existing route.
-        $lastUrl = explode($baseWebsiteUrl, $referer)[1];
-
-        // Removes potential query string
-        $lastUrl = explode('?', $lastUrl)[0];
+        $previousUrl = '';
 
         /*
-         * Tries to redirect to route matching $lastUrl. If no match is found (most likely because $referer url
+         * IF refer url starts with base website url, the latter is removed from referer url so router can match result
+         * to existing route.
+         */
+        if (mb_substr($referer, 0, mb_strlen($baseWebsiteUrl, 'UTF-8'), 'UTF-8') === $baseWebsiteUrl) {
+            $previousUrl = explode($baseWebsiteUrl, $referer)[1];
+
+            // Removes potential query string
+            $previousUrl = explode('?', $previousUrl)[0];
+        }
+
+        /*
+         * Tries to redirect to route matching $previousUrl. If no match is found (most likely because $referer url
          * comes from another website), it will throw ResourceNotFoundException.
+         * If $referer url comes from our website but contains mandatory parameter(s), it will throw
+         * MissingMandatoryParametersException.
          * If no match is found, it redirects to home.
          */
         try {
-            $redirectRoute = $this->router->getMatcher()->match($lastUrl)['_route'];
+            $redirectRoute = $this->router->getMatcher()->match($previousUrl)['_route'];
 
             // If referer url matches one of the blacklisted routes, redirect to home to prevent redirect loop.
             if (in_array($redirectRoute, $blacklistedRoutes)) {
@@ -121,7 +130,7 @@ class RedirectIfAuthenticated
                 $url = $this->router->generate($redirectRoute);
             }
 
-        // Must be able to catch at least ResourceNotFoundException and MissingMandatoryParametersException.
+            // Must be able to catch at least ResourceNotFoundException and MissingMandatoryParametersException.
         } catch (Exception $exception) {
             $url = $this->router->generate('home');
         }
