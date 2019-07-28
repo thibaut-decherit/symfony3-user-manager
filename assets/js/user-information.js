@@ -1,6 +1,4 @@
-// Registration form ajax
 body.on('submit', '#ajax-form-user-information-edit', function (e) {
-
     const USER_INFORMATION_EDIT_FORM = $('#ajax-form-user-information-edit');
 
     // Prevents submit button default behaviour

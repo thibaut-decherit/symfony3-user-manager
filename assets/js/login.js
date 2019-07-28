@@ -1,6 +1,4 @@
-// Login form ajax
 body.on('submit', '#ajax-form-login', function (e) {
-
     const LOGIN_FORM = $('#ajax-form-login');
 
     // Prevents submit button default behaviour

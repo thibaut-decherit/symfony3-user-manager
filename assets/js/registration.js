@@ -1,6 +1,4 @@
-// Registration form ajax
 body.on('submit', '#ajax-form-registration', function (e) {
-
     const REGISTRATION_FORM = $('#ajax-form-registration');
 
     // Prevents submit button default behaviour
