@@ -51,7 +51,7 @@ services:
       - '%kernel.environment%'
       - '%response_headers%'
       - '@request_stack'
-      - '%csp_report_uri%'
+      - '%content_security_policy%'
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 

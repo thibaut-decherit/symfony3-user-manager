@@ -2,8 +2,10 @@
 
 namespace AppBundle\EventListener\ResponseHeaderSetter\DynamicResponseHeaderSetter;
 
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class CspHeaderSetter
@@ -31,79 +33,48 @@ class CspHeaderSetter
     private $responseHeaders;
 
     /**
-     * @var string|null
-     */
-    private $cspReportUri;
-
-    /**
-     * @var bool
-     */
-    private $strictPolicy;
-
-    /**
-     * Whitelist added to every directive
      * @var array
      */
-    private $mainWhitelist;
+    private $cspConfig;
 
     /**
-     * Whitelist for connect-src directive
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src
-     * @var array
+     * @var RouterInterface
      */
-    private $connectWhitelist;
+    private $router;
 
     /**
-     * Whitelist for form-action directive
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/form-action
      * @var array
      */
-    private $formActionWhitelist;
-
-
-    /**
-     * Whitelist for frame-ancestors directive
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
-     * @var array
-     */
-    private $frameAncestorsWhitelist;
-
-    /**
-     * Whitelist for script-src directive
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
-     * @var array
-     */
-    private $scriptWhitelist;
-
-    /**
-     * Whitelist for style-src directive
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
-     * @var array
-     */
-    private $styleWhitelist;
+    private $directives;
 
     /**
      * CspHeaderSetter constructor.
      * @param string $kernelEnvironment
      * @param RequestStack $requestStack
      * @param ResponseHeaderBag $responseHeaders
-     * @param string|null $cspReportUri
+     * @param array $cspConfig
+     * @param RouterInterface $router
      */
     public function __construct(
         string $kernelEnvironment,
         RequestStack $requestStack,
         ResponseHeaderBag $responseHeaders,
-        ?string $cspReportUri
+        array $cspConfig,
+        RouterInterface $router
     )
     {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->requestStack = $requestStack;
         $this->responseHeaders = $responseHeaders;
-        $this->cspReportUri = $cspReportUri;
-        $this->strictPolicy = false;
+        $this->cspConfig = $cspConfig;
+        $this->router = $router;
+        $this->directives = [];
     }
 
-    public function set()
+    /**
+     * @throws Exception
+     */
+    public function set(): void
     {
         $this->responseHeaders->set('Content-Security-Policy', $this->generate());
     }
@@ -111,299 +82,188 @@ class CspHeaderSetter
     /**
      * Generates Content Security Policy header value.
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+     * @return string
+     * @throws Exception
      */
-    private function generate()
+    private function generate(): string
     {
-        // Routes where strict policy must be used.
-        $protectedRoutes = [
-            "login",
-            "password_reset",
-            "password_reset_request",
-            "registration",
-        ];
+        $this->parseDirectivesConfig();
 
-        $requestStackedRoute = $this->requestStack->getMasterRequest()->get('_route');
-
-        if (in_array($requestStackedRoute, $protectedRoutes)) {
-            $this->setStrictPolicy(true);
-        }
-
-        switch ($this->isStrictPolicy()) {
-
-            // Directives applied to every route except protected ones.
-            case false:
-                $this->setMainWhitelist([
-                    "'self'",
-                ]);
-
-                $this->setConnectWhitelist([
-                    "https://api.pwnedpasswords.com",
-                ]);
-
-                $this->setFormActionWhitelist([
-                    // Add sources here
-                ]);
-
-                $this->setFrameAncestorsWhitelist([
-                    "'none'",
-                ]);
-
-                $this->setScriptWhitelist([
-                    // Add sources here
-                ]);
-
-                $this->setStyleWhitelist([
-                    // Add sources here
-                ]);
-
-                break;
-
-            // Directives applied to protected routes.
-            case true:
-                $this->setMainWhitelist([
-                    "'self'",
-                ]);
-
-                $this->setConnectWhitelist([
-                    "https://api.pwnedpasswords.com",
-                ]);
-
-                $this->setFormActionWhitelist([
-                    // Add sources here
-                ]);
-
-                $this->setFrameAncestorsWhitelist([
-                    "'none'",
-                ]);
-
-                $this->setScriptWhitelist([
-                    // Add sources here
-                ]);
-
-                $this->setStyleWhitelist([
-                    // Add sources here
-                ]);
-
-                break;
-        }
+        $this->addReportUri();
 
         $this->addDevDirectivesIfDevEnvironment();
 
-        $mainWhitelist = implode(" ", $this->getMainWhitelist());
-        $connectWhitelist = implode(" ", $this->getConnectWhitelist());
-        $formActionWhitelist = implode(" ", $this->getFormActionWhitelist());
-        $frameAncestorsWhitelist = implode(" ", $this->getFrameAncestorsWhitelist());
-        $scriptWhitelist = implode(" ", $this->getScriptWhitelist());
-        $styleWhitelist = implode(" ", $this->getStyleWhitelist());
-
-        $policies = [
-            'base-uri' => "base-uri 'self'",
-            'default' => "default-src $mainWhitelist",
-            'connect' => "connect-src $mainWhitelist $connectWhitelist",
-            'form-action' => "form-action $mainWhitelist $formActionWhitelist",
-            'frame-ancestors' => "frame-ancestors $frameAncestorsWhitelist",
-            'script' => "script-src $mainWhitelist $scriptWhitelist",
-            'style' => "style-src $mainWhitelist $styleWhitelist",
-        ];
-
         $headerValue = '';
 
-        foreach ($policies as $policy) {
-            $headerValue .= "$policy; ";
-        }
+        $directives = $this->getDirectives();
 
-        // Adds violation report URI if csp_report_uri parameter is specified in config.yml.
-        if (!empty($this->cspReportUri)) {
-            $headerValue .= "report-uri $this->cspReportUri;";
+        foreach ($directives as $directiveName => $directiveContent) {
+
+            if (empty($directiveContent)) {
+                throw new Exception("$directiveName: Directives cannot be empty");
+            } elseif (!is_array($directiveContent)) {
+                throw new Exception("$directiveName: Directives must be of type array");
+            } elseif (in_array(null, $directiveContent) || in_array("", $directiveContent)) {
+                throw new Exception("$directiveName: Directives cannot contain null or empty values");
+            }
+
+            $directiveContentString = implode(" ", $directiveContent);
+
+            $directive = "$directiveName $directiveContentString; ";
+
+            $headerValue .= $directive;
         }
 
         return $headerValue;
     }
 
-    // Adds dev only directives if the app runs in dev environment.
-    private function addDevDirectivesIfDevEnvironment()
+    /**
+     * Sets $this->directives with lax or strict directives, depending on strict_routes contents and requested route.
+     * @throws Exception
+     */
+    private function parseDirectivesConfig(): void
+    {
+        // Routes where strict policy must be used.
+        $strictRoutes = [];
+
+        $hasStrictPolicy = false;
+
+        if (!empty($this->cspConfig['strict_routes'])) {
+
+            if (!is_array($this->cspConfig['strict_routes'])) {
+                throw new Exception('content_security_policy.strict_routes parameter must be of type array');
+            } elseif (empty($this->cspConfig['directives']['strict'])) {
+                throw new Exception(
+                    'content_security_policy.directives.strict: At least one strict directive must be defined'
+                );
+            }
+
+            $strictRoutes = $this->cspConfig['strict_routes'];
+            $hasStrictPolicy = true;
+        }
+
+        if (empty($this->cspConfig['strict_routes']) && !empty($this->cspConfig['directives']['strict'])) {
+            throw new Exception(
+                'content_security_policy.directives.strict: strict_routes must be defined and contain at least one route because directives.strict is defined and not empty'
+            );
+        }
+
+        switch ($hasStrictPolicy) {
+            case false:
+                if (empty($this->cspConfig['directives']['lax'])) {
+                    throw new Exception(
+                        'content_security_policy.directives.lax: At least one lax directive must be defined'
+                    );
+                }
+
+                $this->setDirectives($this->cspConfig['directives']['lax']);
+
+                break;
+
+            case true:
+                $requestedRoute = $this->requestStack->getMasterRequest()->get('_route');
+
+                if (in_array($requestedRoute, $strictRoutes)) {
+                    $this->setDirectives($this->cspConfig['directives']['strict']);
+                } else {
+
+                    if (empty($this->cspConfig['directives']['lax'])) {
+                        throw new Exception(
+                            'content_security_policy.directives.lax: At least one lax directive must be defined'
+                        );
+                    }
+
+                    $this->setDirectives($this->cspConfig['directives']['lax']);
+                }
+
+                break;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addReportUri(): void
+    {
+        if (!isset($this->cspConfig['report_uri'])) {
+            return;
+        }
+
+        if (empty($this->cspConfig['report_uri']['mode'])) {
+            throw new Exception('report_uri.mode is undefined or empty');
+        } elseif (empty($this->cspConfig['report_uri']['data'])) {
+            throw new Exception('report_uri.data is undefined or empty');
+        }
+
+        $reportUri = '';
+
+        switch ($this->cspConfig['report_uri']['mode']) {
+            case 'plain':
+                $reportUri = $this->cspConfig['report_uri']['data'];
+
+                break;
+
+            case 'match':
+                $reportUri = $this->router->generate($this->cspConfig['report_uri']['data']);
+
+                break;
+
+            default:
+                throw new Exception("report_uri.mode must be of type string and contain 'plain' or 'match'");
+
+                break;
+        }
+
+        $directives = $this->getDirectives();
+
+        $directives['report-uri'][] = $reportUri;
+
+        $this->setDirectives($directives);
+    }
+
+    /**
+     * Adds dev only directives if the app runs in dev environment.
+     */
+    private function addDevDirectivesIfDevEnvironment(): void
     {
         if ($this->kernelEnvironment !== 'dev') {
             return;
         }
 
+        $directives = $this->getDirectives();
+
         /*
-         * In dev env 'self' === localhost, NOT 127.0.0.1. You need to whitelist this IP if you dev at 127.0.0.1
-         * and not at localhost.
+         * In dev env 'self' === http://localhost:port, NOT 127.0.0.1. You need to whitelist this IP if you dev at
+         * http://127.0.0.1:port and not at http://localhost:port.
          */
-        $mainWhitelistDevDirectives = [
-            "127.0.0.1:8000",
-        ];
+        $baseUrl = $this->requestStack->getMasterRequest()->getSchemeAndHttpHost();
 
-        $connectWhitelistDevDirectives = [
-            // Add sources here
-        ];
+        $directives['connect-src'][] = $baseUrl;
+        $directives['font-src'][] = $baseUrl;
+        $directives['form-action'][] = $baseUrl;
 
-        $formActionWhitelistDevDirectives = [
-            // Add sources here
-        ];
+        // Allows Symfony Profiler to work properly as it relies on inline JS and CSS.
+        $directives['script-src'][] = "$baseUrl 'unsafe-eval' 'unsafe-inline'";
+        $directives['style-src'][] = "$baseUrl 'unsafe-inline'";
 
-        $frameAncestorsWhitelistDevDirectives = [
-            // Add sources here
-        ];
-
-        $scriptWhitelistDevDirectives = [
-            "'unsafe-eval'",
-            "'unsafe-inline'",
-        ];
-
-        $styleWhitelistDevDirectives = [
-            "'unsafe-inline'",
-        ];
-
-        $this->setMainWhitelist(
-            array_merge($this->getMainWhitelist(), $mainWhitelistDevDirectives)
-        );
-
-        $this->setConnectWhitelist(
-            array_merge($this->getConnectWhitelist(), $connectWhitelistDevDirectives)
-        );
-
-        $this->setFormActionWhitelist(
-            array_merge($this->getFormActionWhitelist(), $formActionWhitelistDevDirectives)
-        );
-
-        $this->setFrameAncestorsWhitelist(
-            array_merge($this->getFrameAncestorsWhitelist(), $frameAncestorsWhitelistDevDirectives)
-        );
-
-        $this->setScriptWhitelist(
-            array_merge($this->getScriptWhitelist(), $scriptWhitelistDevDirectives)
-        );
-
-        $this->setStyleWhitelist(
-            array_merge($this->getStyleWhitelist(), $styleWhitelistDevDirectives)
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    private function isStrictPolicy(): bool
-    {
-        return $this->strictPolicy;
-    }
-
-    /**
-     * @param bool $strictPolicy
-     * @return CspHeaderSetter
-     */
-    private function setStrictPolicy(bool $strictPolicy): CspHeaderSetter
-    {
-        $this->strictPolicy = $strictPolicy;
-        return $this;
+        $this->setDirectives($directives);
     }
 
     /**
      * @return array
      */
-    private function getMainWhitelist(): array
+    private function getDirectives(): array
     {
-        return $this->mainWhitelist;
+        return $this->directives;
     }
 
     /**
-     * @param array $mainWhitelist
+     * @param array $directives
      * @return CspHeaderSetter
      */
-    private function setMainWhitelist(array $mainWhitelist): CspHeaderSetter
+    private function setDirectives(array $directives): CspHeaderSetter
     {
-        $this->mainWhitelist = $mainWhitelist;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getConnectWhitelist(): array
-    {
-        return $this->connectWhitelist;
-    }
-
-    /**
-     * @param array $connectWhitelist
-     * @return CspHeaderSetter
-     */
-    private function setConnectWhitelist(array $connectWhitelist): CspHeaderSetter
-    {
-        $this->connectWhitelist = $connectWhitelist;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getFormActionWhitelist(): array
-    {
-        return $this->formActionWhitelist;
-    }
-
-    /**
-     * @param array $formActionWhitelist
-     * @return CspHeaderSetter
-     */
-    private function setFormActionWhitelist(array $formActionWhitelist): CspHeaderSetter
-    {
-        $this->formActionWhitelist = $formActionWhitelist;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getFrameAncestorsWhitelist(): array
-    {
-        return $this->frameAncestorsWhitelist;
-    }
-
-    /**
-     * @param array $frameAncestorsWhitelist
-     * @return CspHeaderSetter
-     */
-    private function setFrameAncestorsWhitelist(array $frameAncestorsWhitelist): CspHeaderSetter
-    {
-        $this->frameAncestorsWhitelist = $frameAncestorsWhitelist;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getScriptWhitelist(): array
-    {
-        return $this->scriptWhitelist;
-    }
-
-    /**
-     * @param array $scriptWhitelist
-     * @return CspHeaderSetter
-     */
-    private function setScriptWhitelist(array $scriptWhitelist): CspHeaderSetter
-    {
-        $this->scriptWhitelist = $scriptWhitelist;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getStyleWhitelist(): array
-    {
-        return $this->styleWhitelist;
-    }
-
-    /**
-     * @param array $styleWhitelist
-     * @return CspHeaderSetter
-     */
-    private function setStyleWhitelist(array $styleWhitelist): CspHeaderSetter
-    {
-        $this->styleWhitelist = $styleWhitelist;
+        $this->directives = $directives;
         return $this;
     }
 }

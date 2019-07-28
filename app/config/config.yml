@@ -1,6 +1,7 @@
 imports:
   - { resource: parameters.yml }
   - { resource: response_headers.yml }
+  - { resource: content_security_policy.yml }
   - { resource: security.yml }
   - { resource: services.yml }
 

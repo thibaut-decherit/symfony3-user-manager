@@ -86,7 +86,7 @@ Feel free to tailor each feature to your needs.
   - This listener prevents all that by working seamlessly in the backgroup while your users log in
 - Password checked through `password_needs_rehash`  method
 - Bcrypt implementation
-- Modify listener and config files to implement another algorithm. If you need to switch algorithm on an existing database, see [here](https://gist.github.com/thibaut-decherit/fb041311b6e387132a8077062acd6ded#the-following-is-optional-needed-if-you-have-passwords-hashed-with-legacy-algorithms-eg-sha-1-you-have-two-options).
+- Modify listener and config files to implement another algorithm. If you need to switch algorithm on an existing database, see [here](https://gist.github.com/thibaut-decherit/fb041311b6e387132a8077062acd6ded#the-following-is-optional-needed-if-you-have-passwords-hashed-with-legacy-algorithms-eg-sha-1-you-have-two-options)
 
 ### Haveibeenpwned API password validator:
 - Prevents your users from choosing a password compromised in known data breaches
@@ -117,7 +117,9 @@ Feel free to tailor each feature to your needs.
 - Support for "dynamic" headers generated according to specific parameters (app environment, requested route...)
   - Currently includes a Content Security Policy header generator and setter:
     - Allows you to protect your users from malicious resources (e.g. malicious JavaScript code that could end up in your dependencies, like [this one](https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident))
-    - Two level policy, normal & strict, in case you want to make sure critical routes are better protected (e.g. your website consumes an API with Ajax/fetch or requires a CDN for specific features, but you want to make sure this API or CDN cannot compromise your most critical routes, like login or checkout, if they ever become compromised [themselves](https://www.troyhunt.com/the-javascript-supply-chain-paradox-sri-csp-and-trust-in-third-party-libraries/))
-    - Add your own routes to the list of those requiring strict policy
-    - Customizable directives for each policy level (modify existing ones, add your own)
+    - Two level policy, lax & strict, in case you want to make sure critical routes are better protected (e.g. your website consumes an API with Ajax/fetch or requires a CDN for specific features, but you want to make sure this API or CDN cannot compromise your most critical routes, like login or checkout, if they ever become compromised [themselves](https://www.troyhunt.com/the-javascript-supply-chain-paradox-sri-csp-and-trust-in-third-party-libraries/))
+    - Customizable directives for each policy level through a config file (modify existing ones, add your own)
+    - Supports `report-uri`, two modes:
+      - `plain`: specify the URL of your report-uri logger endpoint
+      - `match`: specify the route name, router will handle URL generation. Can only be used if your report-uri logger is part of the same application
     - Dev environment directives to generate (less secure) directives allowing Symfony Profiler to work properly. The Profiler relies on inline JS and CSS, which you are strongly advised to block in production environment to counter XSS. Current whitelists block these by default in production environment.
