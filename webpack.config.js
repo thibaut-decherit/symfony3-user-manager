@@ -18,11 +18,11 @@ Encore
      Entries for JS tied to a specific page/feature.
      Each file can optionally include a reference to a CSS file tied to the same page/feature.
      */
-    .addEntry('login', './assets/js/login.js')
-    .addEntry('password-change', './assets/js/password-change.js')
+    .addEntry('login', './assets/js/views/user/login.js')
+    .addEntry('password-change', './assets/js/components/user/password-change.js')
     .addEntry('password-strength-meter', './assets/js/components/password-strength-meter.js')
-    .addEntry('registration', './assets/js/registration.js')
-    .addEntry('user-information', './assets/js/user-information.js')
+    .addEntry('registration', './assets/js/views/user/registration.js')
+    .addEntry('user-information', './assets/js/components/user/user-information.js')
 
     // Splits entries into chunks to avoid code duplication (e.g. two page-tied JS files both importing jQuery).
     .splitEntryChunks()

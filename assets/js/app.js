@@ -1,4 +1,5 @@
-require('../css/app.scss');
+import '../css/app.scss';
+
+global.$ = global.jQuery = require('jquery');
 import 'bootstrap';
-require('./components/helper');
 global.body = $('body');
