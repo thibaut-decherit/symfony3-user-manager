@@ -1,4 +1,4 @@
-import {body} from '../helpers/jquery';
+import {body} from '../helpers/jquery/selectors';
 
 body.on('submit', '#ajax-form-user-information-edit', function (e) {
     const USER_INFORMATION_EDIT_FORM = $('#ajax-form-user-information-edit');

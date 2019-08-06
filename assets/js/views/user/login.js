@@ -1,4 +1,4 @@
-import {body} from '../../components/helpers/jquery';
+import {body} from '../../components/helpers/jquery/selectors';
 
 body.on('submit', '#ajax-form-login', function (e) {
     const LOGIN_FORM = $('#ajax-form-login');
