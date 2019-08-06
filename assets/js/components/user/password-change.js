@@ -1,3 +1,5 @@
+import {body} from '../helpers/jquery';
+
 body.on('submit', '#ajax-form-change-password', function (e) {
     const CHANGE_PASSWORD_FORM = $('#ajax-form-change-password');
 

@@ -1,3 +1,5 @@
+import {body} from '../../components/helpers/jquery';
+
 body.on('submit', '#ajax-form-login', function (e) {
     const LOGIN_FORM = $('#ajax-form-login');
 

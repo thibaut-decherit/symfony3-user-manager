@@ -1,3 +1,5 @@
+import {body} from '../../components/helpers/jquery';
+
 body.on('submit', '#ajax-form-registration', function (e) {
     const REGISTRATION_FORM = $('#ajax-form-registration');
 
