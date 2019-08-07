@@ -7,15 +7,23 @@ global:
     save_changes: Save Changes
 
 
+# Mailer
+
+mailer:
+  subjects:
+    login_attempt: Login Attempt
+    password_reset: Password Reset
+    welcome: Welcome
+
 # User
 
 user:
-  account_not_activated: You haven't activated your account yet.
   current_password: Current password
   email_address: Email address
   information_updated: Account information successfully updated.
-  invalid_credentials: Wrong username or password.
+  invalid_credentials: Wrong username or password
   login: Login
+  login_attempt: Login attempt
   new_password: New password
   new_password_repeat: Repeat new password
   password: Password

@@ -31,6 +31,8 @@ services:
 
   app.security.login_form_authenticator:
     class: AppBundle\Security\LoginFormAuthenticator
+    arguments:
+      - '@mailer.service'
 
   mailer.service:
     class: AppBundle\Service\MailerService

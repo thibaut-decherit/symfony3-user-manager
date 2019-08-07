@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use Swift_Message;
 use Symfony\Component\Templating\EngineInterface;
 use Swift_Mailer;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class MailerService
@@ -34,23 +35,52 @@ class MailerService
     private $swiftMailer;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translatorInterface;
+
+    /**
      * MailerService constructor.
      * @param string $autoMailerAddress
      * @param string $replyTo
      * @param EngineInterface $twigEngine
      * @param Swift_Mailer $swiftMailer
+     * @param TranslatorInterface $translatorInterface
      */
     public function __construct(
         string $autoMailerAddress,
         string $replyTo,
         EngineInterface $twigEngine,
-        Swift_Mailer $swiftMailer
+        Swift_Mailer $swiftMailer,
+        TranslatorInterface $translatorInterface
     )
     {
         $this->autoMailerAddress = $autoMailerAddress;
         $this->replyTo = $replyTo;
         $this->twigEngine = $twigEngine;
         $this->swiftMailer = $swiftMailer;
+        $this->translatorInterface = $translatorInterface;
+    }
+
+    /**
+     * @param User $user
+     * @param string $activationUrl
+     */
+    public function loginAttemptOnNonActivatedAccount(User $user, string $activationUrl) {
+        $emailBody = $this->twigEngine->render(
+            'Email/login-attempt-on-non-activated-account.twig', [
+                'user' => $user,
+                'activationUrl' => $activationUrl
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.login_attempt'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
     }
 
     /**
@@ -73,7 +103,7 @@ class MailerService
         );
 
         $this->sendEmail(
-            'Password Reset',
+            $this->translatorInterface->trans('mailer.subjects.password_reset'),
             [$this->autoMailerAddress => 'UserManager'],
             $user->getEmail(),
             $this->replyTo,
@@ -97,7 +127,7 @@ class MailerService
         );
 
         $this->sendEmail(
-            'Welcome',
+            $this->translatorInterface->trans('mailer.subjects.welcome'),
             [$this->autoMailerAddress => 'UserManager'],
             $user->getEmail(),
             $this->replyTo,
