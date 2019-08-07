@@ -1,6 +1,6 @@
-// Login form ajax
-body.on('submit', '#ajax-form-login', function (e) {
+import {body} from '../../components/helpers/jquery/selectors';
 
+body.on('submit', '#ajax-form-login', function (e) {
     const LOGIN_FORM = $('#ajax-form-login');
 
     // Prevents submit button default behaviour
