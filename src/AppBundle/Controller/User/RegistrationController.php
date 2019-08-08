@@ -139,15 +139,7 @@ class RegistrationController extends DefaultController
             }
         }
 
-        $activationUrl = $this->generateUrl(
-            'activate_account',
-            [
-                'activationToken' => $user->getActivationToken()
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $this->container->get('mailer.service')->registrationSuccess($user, $activationUrl);
+        $this->container->get('mailer.service')->registrationSuccess($user);
 
         $em->persist($user);
         $em->flush();
