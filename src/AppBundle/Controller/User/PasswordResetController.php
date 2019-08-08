@@ -108,7 +108,16 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('password_reset_request');
         }
 
-        if ($user->isPasswordResetTokenExpired($passwordResetTokenLifetime) === true) {
+        /*
+         * User just clicked a password reset link sent by email, so we consider the email address has successfully
+         * been verified, even if user never actually clicked on the dedicated link sent in the activation email.
+         */
+        if ($user->isActivated() === false) {
+            $user->setActivated(true);
+        }
+        $em->flush();
+
+        if ($user->isPasswordResetTokenExpired($passwordResetTokenLifetime)) {
             $user->setPasswordResetRequestedAt(null);
             $user->setPasswordResetToken(null);
 
@@ -132,14 +141,6 @@ class PasswordResetController extends DefaultController
             $user->setPassword($hashedPassword);
             $user->setPasswordResetRequestedAt(null);
             $user->setPasswordResetToken(null);
-
-            /*
-             * User just clicked a password reset link sent by email, so we consider the email address has successfully
-             * been verified, even if user never actually clicked on the dedicated link sent in the activation email.
-             */
-            if ($user->isActivated() === false) {
-                $user->setActivated(true);
-            }
 
             $em->flush();
 
