@@ -45,38 +45,20 @@ class PasswordResetController extends DefaultController
                 $user = $em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
             }
 
+            $this->addFlash(
+                "success",
+                $this->get('translator')->trans('flash.password_reset_email_sent')
+            );
+
             if ($user === null) {
-                $this->addFlash(
-                    "error",
-                    $this->get('translator')->trans('flash.user_not_found')
-                );
-
-                return $this->redirectToRoute('password_reset_request');
-            }
-
-            if ($user->isActivated() === false) {
-                $this->addFlash(
-                    "error",
-                    $this->get('translator')->trans('flash.account_not_yet_activated')
-                );
-
-                return $this->redirectToRoute('password_reset_request');
+                return $this->render(':User:password-reset-request.html.twig');
             }
 
             $passwordResettingRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
 
             if ($user->getPasswordResetRequestedAt() !== null
                 && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
-                // Displays a flash message informing user that he/she has to wait $limit minutes between each request
-                $limit = ceil($passwordResettingRequestRetryDelay / 60);
-                $this->addFlash(
-                    "error",
-                    $this->get('translator')->trans('flash.password_reset_request_retry_delay_non_expired', [
-                        '%limit%' => $limit
-                    ])
-                );
-
-                return $this->redirectToRoute('password_reset_request');
+                return $this->render(':User:password-reset-request.html.twig');
             }
 
             // Generates password reset token and retries if token already exists.
@@ -110,11 +92,6 @@ class PasswordResetController extends DefaultController
             $this->get('mailer.service')->passwordReset($user, $passwordResetUrl, $passwordResetTokenLifetime);
 
             $em->flush();
-
-            $this->addFlash(
-                "success",
-                $this->get('translator')->trans('flash.password_reset_email_send')
-            );
         }
 
         return $this->render(':User:password-reset-request.html.twig');
@@ -167,6 +144,14 @@ class PasswordResetController extends DefaultController
             $user->setPassword($hashedPassword);
             $user->setPasswordResetRequestedAt(null);
             $user->setPasswordResetToken(null);
+
+            /*
+             * User just clicked a password reset link sent by email, so we consider the email address has successfully
+             * been verified, even if user never actually clicked on the dedicated link sent in the activation email.
+             */
+            if ($user->isActivated() === false) {
+                $user->setActivated(true);
+            }
 
             $em->flush();
 

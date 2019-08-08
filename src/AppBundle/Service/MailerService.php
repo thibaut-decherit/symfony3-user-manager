@@ -66,7 +66,8 @@ class MailerService
      * @param User $user
      * @param string $activationUrl
      */
-    public function loginAttemptOnNonActivatedAccount(User $user, string $activationUrl) {
+    public function loginAttemptOnNonActivatedAccount(User $user, string $activationUrl)
+    {
         $emailBody = $this->twigEngine->render(
             'Email/login-attempt-on-non-activated-account.twig', [
                 'user' => $user,

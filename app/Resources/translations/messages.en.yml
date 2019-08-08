@@ -15,6 +15,7 @@ mailer:
     password_reset: Password Reset
     welcome: Welcome
 
+
 # User
 
 user:
@@ -41,11 +42,8 @@ user:
 
 flash:
   account_activated_successfully: Your account has been activated successfully, you can log in below.
-  account_already_activated: You have already activated your account, you can log in below.
-  account_not_yet_activated: You have to activate your account to access this feature.
   login_required: You must login to access this page.
-  password_reset_email_send: An email with a reset link has been sent to you.
+  password_reset_email_sent: An email with a reset link has been sent to you
   password_reset_request_retry_delay_non_expired: You have to wait %limit% minutes before requesting another email.
   password_reset_success: Your password has been updated, you can now use it to log in below.
   password_reset_token_expired: Your password reset request has expired, please make a new one below.
-  user_not_found: This user does not exist.
