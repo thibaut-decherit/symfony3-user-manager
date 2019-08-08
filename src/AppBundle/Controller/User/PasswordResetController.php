@@ -76,20 +76,8 @@ class PasswordResetController extends DefaultController
 
             $user->setPasswordResetRequestedAt(new DateTime());
 
-            /*
-             * Parameter (referenceType) UrlGeneratorInterface::ABSOLUTE_URL is needed to generate an url
-             * containing the website's root url. Otherwise generated url will be broken.
-             */
-            $passwordResetUrl = $this->generateUrl(
-                'password_reset',
-                [
-                    'passwordResetToken' => $user->getPasswordResetToken()
-                ],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-
-            $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
-            $this->get('mailer.service')->passwordReset($user, $passwordResetUrl, $passwordResetTokenLifetime);
+            $passwordResetTokenLifetimeInMinutes = ceil($this->getParameter('password_reset_token_lifetime') / 60);
+            $this->get('mailer.service')->passwordReset($user, $passwordResetTokenLifetimeInMinutes);
 
             $em->flush();
         }

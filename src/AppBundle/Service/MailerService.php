@@ -88,17 +88,13 @@ class MailerService
      * Email sent when user requests password reset.
      *
      * @param User $user
-     * @param string $passwordResetUrl
-     * @param int $passwordResetTokenLifetime
+     * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordReset(User $user, string $passwordResetUrl, int $passwordResetTokenLifetime)
+    public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
-        $passwordResetTokenLifetimeInMinutes = ceil($passwordResetTokenLifetime / 60);
-
         $emailBody = $this->twigEngine->render(
             'Email/password-reset-email.html.twig', [
                 'user' => $user,
-                'passwordResetUrl' => $passwordResetUrl,
                 'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
             ]
         );
