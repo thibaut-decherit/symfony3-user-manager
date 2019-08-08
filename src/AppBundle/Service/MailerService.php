@@ -113,6 +113,46 @@ class MailerService
     }
 
     /**
+     * @param User $user
+     */
+    public function registrationAttemptOnExistingActivatedAccount(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/registration-attempt-on-existing-activated-account.twig', [
+                'user' => $user
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * @param User $user
+     */
+    public function registrationAttemptOnExistingNonActivatedAccount(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/registration-attempt-on-existing-non-activated-account.twig', [
+                'user' => $user
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * Email sent after user registration.
      *
      * @param User $user

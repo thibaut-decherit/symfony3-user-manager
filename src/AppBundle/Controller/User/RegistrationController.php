@@ -52,36 +52,16 @@ class RegistrationController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+            $userRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
 
-            $em = $this->getDoctrine()->getManager();
-            $user->setPassword($hashedPassword);
+            $duplicateUserByUsername = $userRepository->findOneBy(['username' => $user->getUsername()]);
+            $duplicateUserByEmail = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
-            // Generates activation token and retries if token already exists.
-            $loop = true;
-            while ($loop) {
-                $token = $user->generateSecureToken();
-
-                $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['activationToken' => $token]);
-
-                if (empty($duplicate)) {
-                    $loop = false;
-                    $user->setActivationToken($token);
-                }
+            if (empty($duplicateUserByUsername) && empty($duplicateUserByEmail)) {
+                $this->handleSuccessfulRegistration($user, $passwordEncoder);
+            } else {
+                $this->handleDuplicateUserRegistration($duplicateUserByUsername, $duplicateUserByEmail);
             }
-
-            $activationUrl = $this->generateUrl(
-                'activate_account',
-                [
-                    'activationToken' => $user->getActivationToken()
-                ],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-
-            $this->container->get('mailer.service')->registrationSuccess($user, $activationUrl);
-
-            $em->persist($user);
-            $em->flush();
 
             // Renders and json encode the original form (needed to empty form fields)
             $user = new User();
@@ -107,5 +87,69 @@ class RegistrationController extends DefaultController
         return new JsonResponse([
             'template' => $jsonTemplate
         ], 400);
+    }
+
+    /**
+     * Sends an email to existing user if registration attempt with already registered email address or username.
+     *
+     * @param User $duplicateUserByUsername
+     * @param User $duplicateUserByEmail
+     */
+    private function handleDuplicateUserRegistration(User $duplicateUserByUsername, User $duplicateUserByEmail)
+    {
+        $duplicateUsers = [
+            $duplicateUserByUsername,
+            $duplicateUserByEmail
+        ];
+
+        // Prevent sending two emails if duplicate username and email both belong to the same user
+        $duplicateUsers = array_unique($duplicateUsers, SORT_REGULAR);
+
+        foreach ($duplicateUsers as $duplicateUser) {
+            if ($duplicateUser->isActivated()) {
+                $this->container->get('mailer.service')->registrationAttemptOnExistingActivatedAccount($duplicateUser);
+            } else {
+                $this->container->get('mailer.service')->registrationAttemptOnExistingNonActivatedAccount($duplicateUser);
+            }
+        }
+    }
+
+    /**
+     * @param User $user
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @throws Exception
+     */
+    private function handleSuccessfulRegistration(User $user, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+
+        $em = $this->getDoctrine()->getManager();
+        $user->setPassword($hashedPassword);
+
+        // Generates activation token and retries if token already exists.
+        $loop = true;
+        while ($loop) {
+            $token = $user->generateSecureToken();
+
+            $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['activationToken' => $token]);
+
+            if (empty($duplicate)) {
+                $loop = false;
+                $user->setActivationToken($token);
+            }
+        }
+
+        $activationUrl = $this->generateUrl(
+            'activate_account',
+            [
+                'activationToken' => $user->getActivationToken()
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $this->container->get('mailer.service')->registrationSuccess($user, $activationUrl);
+
+        $em->persist($user);
+        $em->flush();
     }
 }
