@@ -111,10 +111,10 @@ class MailerService
     /**
      * @param User $user
      */
-    public function registrationAttemptOnExistingActivatedAccount(User $user)
+    public function registrationAttemptOnExistingVerifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-activated-account.twig', [
+            'Email/registration-attempt-on-existing-verified-email-address.html.twig', [
                 'user' => $user
             ]
         );
@@ -131,10 +131,10 @@ class MailerService
     /**
      * @param User $user
      */
-    public function registrationAttemptOnExistingNonActivatedAccount(User $user)
+    public function registrationAttemptOnExistingUnverifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-non-activated-account.twig', [
+            'Email/registration-attempt-on-existing-unverified-email-address.html.twig', [
                 'user' => $user
             ]
         );

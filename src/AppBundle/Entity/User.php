@@ -18,6 +18,11 @@ use AppBundle\Validator\Constraints as CustomAssert;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  *
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="form_errors.unique_username",
+ *     groups={"Registration", "User_Information"}
+ * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
 {

@@ -54,13 +54,12 @@ class RegistrationController extends DefaultController
         if ($form->isSubmitted() && $form->isValid()) {
             $userRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
 
-            $duplicateUserByUsername = $userRepository->findOneBy(['username' => $user->getUsername()]);
-            $duplicateUserByEmail = $userRepository->findOneBy(['email' => $user->getEmail()]);
+            $duplicateUser = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
-            if (empty($duplicateUserByUsername) && empty($duplicateUserByEmail)) {
+            if (empty($duplicateUser)) {
                 $this->handleSuccessfulRegistration($user, $passwordEncoder);
             } else {
-                $this->handleDuplicateUserRegistration($duplicateUserByUsername, $duplicateUserByEmail);
+                $this->handleDuplicateUserRegistration($duplicateUser);
             }
 
             // Renders and json encode the original form (needed to empty form fields)
@@ -90,27 +89,16 @@ class RegistrationController extends DefaultController
     }
 
     /**
-     * Sends an email to existing user if registration attempt with already registered email address or username.
+     * Sends an email to existing user if registration attempt with already registered email address.
      *
-     * @param User $duplicateUserByUsername
-     * @param User $duplicateUserByEmail
+     * @param User $duplicateUser
      */
-    private function handleDuplicateUserRegistration(User $duplicateUserByUsername, User $duplicateUserByEmail)
+    private function handleDuplicateUserRegistration(User $duplicateUser)
     {
-        $duplicateUsers = [
-            $duplicateUserByUsername,
-            $duplicateUserByEmail
-        ];
-
-        // Prevent sending two emails if duplicate username and email both belong to the same user
-        $duplicateUsers = array_unique($duplicateUsers, SORT_REGULAR);
-
-        foreach ($duplicateUsers as $duplicateUser) {
-            if ($duplicateUser->isActivated()) {
-                $this->container->get('mailer.service')->registrationAttemptOnExistingActivatedAccount($duplicateUser);
-            } else {
-                $this->container->get('mailer.service')->registrationAttemptOnExistingNonActivatedAccount($duplicateUser);
-            }
+        if ($duplicateUser->isActivated()) {
+            $this->container->get('mailer.service')->registrationAttemptOnExistingVerifiedEmailAddress($duplicateUser);
+        } else {
+            $this->container->get('mailer.service')->registrationAttemptOnExistingUnverifiedEmailAddress($duplicateUser);
         }
     }
 
