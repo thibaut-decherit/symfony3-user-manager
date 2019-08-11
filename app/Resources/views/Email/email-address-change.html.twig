@@ -1,0 +1,10 @@
+<p>Hey {{ user.username }}!</p>
+<p>
+    You have a requested to change the email address linked to your account from {{ user.email }}
+    to {{ user.emailChangePending }}.
+</p>
+<p>
+    Click <a href="{{ url('email_change', {'emailChangeToken' : user.emailChangeToken}) }}">here</a> to confirm this
+    change.
+    (This link will expire in {{ emailChangeTokenLifetimeInMinutes }} minutes)
+</p>

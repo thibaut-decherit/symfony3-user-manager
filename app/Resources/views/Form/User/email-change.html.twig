@@ -1,11 +1,12 @@
 {{ form_start(form, {
-    'action': path('user_information_edit_ajax'),
+    'action': path('email_change_request_ajax'),
     'attr': {
-        'id': 'ajax-form-user-information-edit',
+        'id': 'ajax-form-change-email',
         'class': 'col p-0'
     }
 }) }}
 
+{# TODO: change alert color if success or error #}
 <div class="alert alert-dismissible d-none alert-success" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -15,8 +16,8 @@
 
 <div class="row">
     <div class="col mt-3">
-        {{ form_label(form.username) }}
-        {{ form_widget(form.username) }}
+        {{ form_label(form.emailChangePending) }}
+        {{ form_widget(form.emailChangePending) }}
     </div>
 </div>
 

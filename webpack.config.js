@@ -18,6 +18,7 @@ Encore
      Entries for JS tied to a specific page/feature.
      Each file can optionally include a reference to a CSS file tied to the same page/feature.
      */
+    .addEntry('email-change', './assets/js/components/user/email-change.js')
     .addEntry('login', './assets/js/views/user/login.js')
     .addEntry('password-change', './assets/js/components/user/password-change.js')
     .addEntry('password-strength-meter', './assets/js/components/password-strength-meter.js')
