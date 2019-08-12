@@ -152,7 +152,9 @@ class ManageAccountController extends DefaultController
 
                 return new JsonResponse([
                     'template' => $jsonTemplate,
-                    'successMessage' => $this->get('translator')->trans('user.email_address_change_request_sent')
+                    'successMessage' => $this->get('translator')->trans(
+                        'user.email_address_change_request_sent', ['email_address' => $user->getEmailChangePending()]
+                    )
                 ], 200);
             }
 
@@ -185,7 +187,9 @@ class ManageAccountController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'successMessage' => $this->get('translator')->trans('user.email_address_change_request_sent')
+                'successMessage' => $this->get('translator')->trans(
+                    'user.email_address_change_request_sent', ['email_address' => $user->getEmailChangePending()]
+                )
             ], 200);
         }
 
@@ -202,6 +206,58 @@ class ManageAccountController extends DefaultController
             'template' => $jsonTemplate
         ], 400);
     }
+
+    /**
+     * Handles the email address change when user clicks on verification link sent by email.
+     *
+     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
+     * @Route("/email-change/{emailChangeToken}", name="email_change", methods="GET")
+     * @return Response
+     * @throws Exception
+     */
+    public function emailChangeAction(User $user = null)
+    {
+        if ($user === null) {
+            $this->addFlash(
+                "error",
+                $this->get('translator')->trans('flash.email_change_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $emailChangeTokenLifetime = $this->getParameter('email_change_token_lifetime');
+
+        if ($user->isEmailChangeTokenExpired($emailChangeTokenLifetime)) {
+            $user->setEmailChangePending(null);
+            $user->setEmailChangeRequestedAt(null);
+            $user->setEmailChangeToken(null);
+
+            $em->flush();
+
+            $this->addFlash(
+                "error",
+                $this->get('translator')->trans('flash.email_change_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $user->setEmailChangeToken(null);
+        $user->setEmailChangeRequestedAt(null);
+        $user->setEmail($user->getEmailChangePending());
+        $user->setEmailChangePending(null);
+        $em->flush();
+
+        $this->addFlash(
+            "success",
+            $this->get('translator')->trans('flash.email_change_success', ['email_address' => $user->getEmail()])
+        );
+
+        return $this->redirectToRoute('home');
+    }
+
     /**
      * Renders the password change form.
      *

@@ -588,6 +588,15 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
+     * @param int $emailChangeTokenLifetime
+     * @return bool
+     */
+    public function isEmailChangeTokenExpired(int $emailChangeTokenLifetime): bool
+    {
+        return $this->getEmailChangeRequestedAt()->getTimestamp() + $emailChangeTokenLifetime < time();
+    }
+
+    /**
      * @param int $passwordResetRequestRetryDelay
      * @return bool
      */

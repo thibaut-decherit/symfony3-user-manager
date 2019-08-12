@@ -91,15 +91,12 @@ class PasswordResetController extends DefaultController
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param User|null $user (default null so param converter doesn't throw 404 if no user found)
+     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
      * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
      * @return RedirectResponse|Response
      */
     public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
-        $em = $this->getDoctrine()->getManager();
-        $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
-
         if ($user === null) {
             $this->addFlash(
                 "error",
@@ -116,7 +113,10 @@ class PasswordResetController extends DefaultController
         if ($user->isActivated() === false) {
             $user->setActivated(true);
         }
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
+
+        $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
         if ($user->isPasswordResetTokenExpired($passwordResetTokenLifetime)) {
             $user->setPasswordResetRequestedAt(null);
