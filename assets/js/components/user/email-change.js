@@ -17,8 +17,9 @@ body.on('submit', '#ajax-form-change-email', function (e) {
             const TEMPLATE = JSON.parse(response.template);
 
             CHANGE_EMAIL_FORM.html(TEMPLATE);
-            CHANGE_EMAIL_FORM.find('.alert').removeClass('d-none');
-            CHANGE_EMAIL_FORM.find('#success-message').html(response.successMessage);
+
+            CHANGE_EMAIL_FORM.find('.alert').removeClass('d-none alert-danger').addClass('alert-success');
+            CHANGE_EMAIL_FORM.find('#alert-message').html(response.successMessage);
         })
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {
@@ -27,5 +28,10 @@ body.on('submit', '#ajax-form-change-email', function (e) {
             //  Replaces html content of html element with updated form
             // (with errors and input values)
             CHANGE_EMAIL_FORM.html(TEMPLATE);
+
+            if (response.responseJSON.errorMessage !== undefined) {
+                CHANGE_EMAIL_FORM.find('.alert').removeClass('d-none alert-success').addClass('alert-danger');
+                CHANGE_EMAIL_FORM.find('#alert-message').html(response.responseJSON.errorMessage);
+            }
         });
 });
