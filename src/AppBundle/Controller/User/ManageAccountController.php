@@ -175,8 +175,12 @@ class ManageAccountController extends DefaultController
 
             $user->setEmailChangeRequestedAt(new DateTime());
 
-            $emailChangeTokenLifetimeInMinutes = ceil($this->getParameter('email_change_token_lifetime') / 60);
-            $this->get('mailer.service')->emailChange($user, $emailChangeTokenLifetimeInMinutes);
+            // IF email address is not already registered to another account, sends verification email.
+            $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['email' => $user->getEmailChangePending()]);
+            if (is_null($duplicate)) {
+                $emailChangeTokenLifetimeInMinutes = ceil($this->getParameter('email_change_token_lifetime') / 60);
+                $this->get('mailer.service')->emailChange($user, $emailChangeTokenLifetimeInMinutes);
+            }
 
             $em->flush();
 
@@ -217,7 +221,7 @@ class ManageAccountController extends DefaultController
      */
     public function emailChangeAction(User $user = null)
     {
-        if ($user === null) {
+        if (is_null($user)) {
             $this->addFlash(
                 "error",
                 $this->get('translator')->trans('flash.email_change_token_expired')
@@ -244,9 +248,14 @@ class ManageAccountController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
+        $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['email' => $user->getEmailChangePending()]);
+
+        if (is_null($duplicate)) {
+            $user->setEmail($user->getEmailChangePending());
+        }
+
         $user->setEmailChangeToken(null);
         $user->setEmailChangeRequestedAt(null);
-        $user->setEmail($user->getEmailChangePending());
         $user->setEmailChangePending(null);
         $em->flush();
 

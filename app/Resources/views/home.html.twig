@@ -16,8 +16,8 @@
 
     {% if is_granted("ROLE_USER") %}
         <div class="d-flex">
-            <p class="my-2 pr-2">Hi {{ app.user.username }}!</p>
-            <a href="{{ path('account') }}" class="my-2 pr-2">My Account</a>
+            <p class="my-2 mr-2">Hi {{ app.user.username }}!</p>
+            <a href="{{ path('account') }}" class="my-2 mr-2">My Account</a>
             <a href="{{ path('logout') }}" class="align-self-center">Logout</a>
         </div>
     {% else %}
