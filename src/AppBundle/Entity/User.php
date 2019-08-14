@@ -70,7 +70,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * Used for model validation. Must not be persisted. Needed to avoid raw password overwriting
      * current user $user->getPassword() when being tested by UserPasswordValidator
      *
-     * @var string
+     * @var null|string
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
@@ -268,10 +268,10 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @param string $plainPassword
+     * @param string|null $plainPassword
      * @return User
      */
-    public function setPlainPassword(string $plainPassword): User
+    public function setPlainPassword(?string $plainPassword): User
     {
         $this->plainPassword = $plainPassword;
         return $this;
