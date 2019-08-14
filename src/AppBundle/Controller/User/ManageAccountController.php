@@ -125,8 +125,6 @@ class ManageAccountController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $emailChangeRequestRetryDelay = $this->getParameter('email_change_request_send_email_again_delay');
-
             $template = $this->render(':Form/User:email-change.html.twig', array(
                 'form' => $form->createView()
             ));
@@ -144,6 +142,8 @@ class ManageAccountController extends DefaultController
                     'errorMessage' => $this->get('translator')->trans('user.already_current_email_address')
                 ], 400);
             }
+
+            $emailChangeRequestRetryDelay = $this->getParameter('email_change_request_send_email_again_delay');
 
             // IF retry delay is not expired, only show success message without sending email and writing in database.
             if ($user->getEmailChangeRequestedAt() !== null
@@ -166,8 +166,7 @@ class ManageAccountController extends DefaultController
                 $token = $user->generateSecureToken();
 
                 $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['emailChangeToken' => $token]);
-
-                if (empty($duplicate)) {
+                if (is_null($duplicate)) {
                     $loop = false;
                     $user->setEmailChangeToken($token);
                 }

@@ -120,8 +120,7 @@ class RegistrationController extends DefaultController
             $token = $user->generateSecureToken();
 
             $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['activationToken' => $token]);
-
-            if (empty($duplicate)) {
+            if (is_null($duplicate)) {
                 $loop = false;
                 $user->setActivationToken($token);
             }

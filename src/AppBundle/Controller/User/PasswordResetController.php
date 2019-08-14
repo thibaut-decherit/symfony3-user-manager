@@ -68,8 +68,7 @@ class PasswordResetController extends DefaultController
                 $token = $user->generateSecureToken();
 
                 $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['passwordResetToken' => $token]);
-
-                if (empty($duplicate)) {
+                if (is_null($duplicate)) {
                     $loop = false;
                     $user->setPasswordResetToken($token);
                 }
