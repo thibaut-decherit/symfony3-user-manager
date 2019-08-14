@@ -70,6 +70,7 @@ Feel free to tailor each feature to your needs.
 - Customizable reset link lifetime
   - Custom flash message with Bootstrap alert danger if reset link has expired
 - Email with reset link and expiration delay sent to user
+- On reset link click, email address is considered to be verified if it wasn't already
 - On reset success, redirect to login page and custom flash message with Bootstrap alert success
 
 ### Redirect if authenticated:
@@ -104,6 +105,26 @@ Feel free to tailor each feature to your needs.
 - Removes accounts that will most probably never be used
 - Modify time between registration and removal as needed
 - Execute `php bin/console app:remove-unactivated-accounts-older-than d` command (e.g. through a cron job)
+
+### User enumeration prevention:
+- Registration
+  - If form is valid, shows success message even if email address is already registered to another account
+  - If email address is already registered to another account and is:
+    - verified: sends an email to the existing user, suggesting to reset his password (we assume user is trying to create a new account because he forgot the password)
+    - unverified: sends an email to the existing user with a verification link (similar logic)
+- Login
+  - Same error message if wrong password or if user doesn't exist
+  - If email address is not yet verified a new verification email is sent
+- Password reset
+  - If form is valid, shows success message even if email address or username is not registered to any account or if retry delay has not yet expired
+  - If email address or username is registered to an account and retry delay is expired or inexistant (first try), sends the email
+- Email address change
+  - If form is valid and new email address is not the same than current email address, shows success message
+  - If form is valid but new email address is the same than current email address, shows error message
+  - If new email address is not already registered to another account and retry delay is expired or inexistant (first try), sends a verification email
+  - if new email address is already registered to another account, shows success message but doesn't send verification email
+
+**Important:** Spool emails should be enabled in production environment or the delay between form submission and server response could hint that an email has been sent.
 
 ### Response header setter:
 - Event listener triggered on each response through `onKernelResponse()` method
