@@ -89,14 +89,12 @@ class MailerService
 
     /**
      * @param User $user
-     * @param string $activationUrl
      */
-    public function loginAttemptOnNonActivatedAccount(User $user, string $activationUrl)
+    public function loginAttemptOnNonActivatedAccount(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/login-attempt-on-non-activated-account.twig', [
-                'user' => $user,
-                'activationUrl' => $activationUrl
+            'Email/login-attempt-on-non-activated-account.html.twig', [
+                'user' => $user
             ]
         );
 
@@ -118,7 +116,7 @@ class MailerService
     public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/password-reset-email.html.twig', [
+            'Email/password-reset.html.twig', [
                 'user' => $user,
                 'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
             ]
@@ -181,7 +179,7 @@ class MailerService
     public function registrationSuccess(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-success-email.html.twig', [
+            'Email/registration-success.html.twig', [
                 'user' => $user
             ]
         );

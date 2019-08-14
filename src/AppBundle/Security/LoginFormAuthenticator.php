@@ -180,15 +180,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
                 $user = $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
             }
 
-            $activationUrl = $this->router->generate(
-                'activate_account',
-                [
-                    'activationToken' => $user->getActivationToken()
-                ],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-
-            $this->mailer->loginAttemptOnNonActivatedAccount($user, $activationUrl);
+            $this->mailer->loginAttemptOnNonActivatedAccount($user);
         }
 
         $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');

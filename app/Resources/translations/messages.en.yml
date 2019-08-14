@@ -45,7 +45,7 @@ user:
 # Flash
 
 flash:
-  account_activated_successfully: Your account has been activated successfully, you can log in below
+  account_activated_successfully: Your email address has been verified successfully, you can log in below
   email_change_success: 'email_address is now registered as your email address'
   email_change_token_expired: Your email address change request has expired
   login_required: You must login to access this page
