@@ -24,8 +24,7 @@ body.on('submit', '#ajax-form-change-password', function (e) {
         .fail(function (response) {
             // Parses the JSON response to "unescape" the html code within
             const TEMPLATE = JSON.parse(response.responseJSON.template);
-            //  Replaces html content of html element id 'ajax-form-fos-user-registration' with updated form
-            // (with errors and input values)
+            //  Replaces html content of html element with updated form (with errors and input values)
             CHANGE_PASSWORD_FORM.html(TEMPLATE);
         });
 });

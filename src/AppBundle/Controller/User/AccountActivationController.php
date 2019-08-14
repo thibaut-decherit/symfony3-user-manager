@@ -23,29 +23,16 @@ class AccountActivationController extends DefaultController
      */
     public function activateAccountAction(User $user)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        if ($user === null) {
-            return $this->redirectToRoute('home');
-        }
-
-        if ($user->isActivated() === true) {
-            $this->addFlash(
-                "login-flash-success",
-                $this->get('translator')->trans('flash.account_already_activated')
-            );
-
-            return $this->redirectToRoute('login');
-        }
-
-        $user->setActivated(true);
-
-        $em->flush();
-
         $this->addFlash(
             "login-flash-success",
             $this->get('translator')->trans('flash.account_activated_successfully')
         );
+
+        if ($user !== null && $user->isActivated() === false) {
+            $user->setActivated(true);
+
+            $this->getDoctrine()->getManager()->flush();
+        }
 
         return $this->redirectToRoute('login');
     }

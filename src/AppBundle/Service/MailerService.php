@@ -4,8 +4,10 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use Swift_Message;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Swift_Mailer;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class MailerService
@@ -34,46 +36,134 @@ class MailerService
     private $swiftMailer;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translatorInterface;
+
+    /**
      * MailerService constructor.
      * @param string $autoMailerAddress
      * @param string $replyTo
      * @param EngineInterface $twigEngine
      * @param Swift_Mailer $swiftMailer
+     * @param TranslatorInterface $translatorInterface
      */
     public function __construct(
         string $autoMailerAddress,
         string $replyTo,
         EngineInterface $twigEngine,
-        Swift_Mailer $swiftMailer
+        Swift_Mailer $swiftMailer,
+        TranslatorInterface $translatorInterface
     )
     {
         $this->autoMailerAddress = $autoMailerAddress;
         $this->replyTo = $replyTo;
         $this->twigEngine = $twigEngine;
         $this->swiftMailer = $swiftMailer;
+        $this->translatorInterface = $translatorInterface;
+    }
+
+    /**
+     * Email sent when user requests email address change.
+     *
+     * @param UserInterface $user
+     * @param int $emailChangeTokenLifetimeInMinutes
+     */
+    public function emailChange(UserInterface $user, int $emailChangeTokenLifetimeInMinutes)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/email-address-change.html.twig', [
+                'user' => $user,
+                'emailChangeTokenLifetimeInMinutes' => $emailChangeTokenLifetimeInMinutes
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.email_address_change'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmailChangePending(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * @param User $user
+     */
+    public function loginAttemptOnNonActivatedAccount(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/login-attempt-on-non-activated-account.html.twig', [
+                'user' => $user
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.login_attempt'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
     }
 
     /**
      * Email sent when user requests password reset.
      *
      * @param User $user
-     * @param string $passwordResetUrl
-     * @param int $passwordResetTokenLifetime
+     * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordReset(User $user, string $passwordResetUrl, int $passwordResetTokenLifetime)
+    public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
-        $passwordResetTokenLifetimeInMinutes = ceil($passwordResetTokenLifetime / 60);
-
         $emailBody = $this->twigEngine->render(
-            'Email/password-reset-email.html.twig', [
+            'Email/password-reset.html.twig', [
                 'user' => $user,
-                'passwordResetUrl' => $passwordResetUrl,
                 'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
             ]
         );
 
         $this->sendEmail(
-            'Password Reset',
+            $this->translatorInterface->trans('mailer.subjects.password_reset'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * @param User $user
+     */
+    public function registrationAttemptOnExistingVerifiedEmailAddress(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/registration-attempt-on-existing-verified-email-address.html.twig', [
+                'user' => $user
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * @param User $user
+     */
+    public function registrationAttemptOnExistingUnverifiedEmailAddress(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/registration-attempt-on-existing-unverified-email-address.html.twig', [
+                'user' => $user
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
             [$this->autoMailerAddress => 'UserManager'],
             $user->getEmail(),
             $this->replyTo,
@@ -85,19 +175,17 @@ class MailerService
      * Email sent after user registration.
      *
      * @param User $user
-     * @param string $activationUrl
      */
-    public function registrationSuccess(User $user, string $activationUrl)
+    public function registrationSuccess(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-email.html.twig', [
-                'user' => $user,
-                'activationUrl' => $activationUrl
+            'Email/registration-success.html.twig', [
+                'user' => $user
             ]
         );
 
         $this->sendEmail(
-            'Welcome',
+            $this->translatorInterface->trans('mailer.subjects.welcome'),
             [$this->autoMailerAddress => 'UserManager'],
             $user->getEmail(),
             $this->replyTo,

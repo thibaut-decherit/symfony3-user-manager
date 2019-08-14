@@ -12,13 +12,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class UserInformationType
  * @package AppBundle\Form\User
  */
-class UserInformationType extends AbstractType
+class EmailChangeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
-                'label' => 'user.username',
+            ->add('emailChangePending', EmailType::class, [
+                'label' => 'user.email_address',
+                'data' => '',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $builder->getData()->getEmail(),
+                ]
             ]);
     }
 
@@ -26,7 +31,7 @@ class UserInformationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('User_Information')
+            'validation_groups' => array('Email_Change')
         ));
     }
 

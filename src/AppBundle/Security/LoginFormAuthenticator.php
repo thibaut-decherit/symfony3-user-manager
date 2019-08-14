@@ -3,10 +3,12 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\MailerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -40,6 +42,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     private $csrfTokenManager;
     private $translatorInterface;
     private $sessionInterface;
+    private $mailer;
 
     /**
      * LoginFormAuthenticator constructor.
@@ -49,8 +52,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param TranslatorInterface $translatorInterface
      * @param SessionInterface $sessionInterface
+     * @param MailerService $mailer
      */
     public function __construct(
+        MailerService $mailer,
         EntityManagerInterface $em,
         RouterInterface $router,
         UserPasswordEncoderInterface $passwordEncoder,
@@ -65,6 +70,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->csrfTokenManager = $csrfTokenManager;
         $this->translatorInterface = $translatorInterface;
         $this->sessionInterface = $sessionInterface;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -163,11 +169,21 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        // IF account is not yet activated, send a reminder email with an activation link
         if ($exception instanceof DisabledException) {
-            $errorMessage = $this->translatorInterface->trans('user.account_not_activated');
-        } else {
-            $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');
+            $usernameOrEmail = $request->request->get('_username');
+            $user = null;
+
+            if (preg_match('/^.+\@\S+\.\S+$/', $usernameOrEmail)) {
+                $user = $this->em->getRepository('AppBundle:User')->findOneBy(['email' => $usernameOrEmail]);
+            } else {
+                $user = $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);
+            }
+
+            $this->mailer->loginAttemptOnNonActivatedAccount($user);
         }
+
+        $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');
 
         return new JsonResponse([
             'errorMessage' => $errorMessage

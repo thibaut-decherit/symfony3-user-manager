@@ -7,22 +7,35 @@ global:
     save_changes: Save Changes
 
 
+# Mailer
+
+mailer:
+  subjects:
+    email_address_change: Email Address Change
+    login_attempt: Login Attempt
+    password_reset: Password Reset
+    registration_attempt: Registration Attempt
+    welcome: Welcome
+
+
 # User
 
 user:
-  account_not_activated: You haven't activated your account yet.
+  already_current_email_address: This email address is already registered to your account
   current_password: Current password
   email_address: Email address
-  information_updated: Account information successfully updated.
-  invalid_credentials: Wrong username or password.
+  email_address_change_request_sent: 'A verification email has been sent to email_address'
+  information_updated: Account information successfully updated
+  invalid_credentials: Wrong username or password
   login: Login
+  login_attempt: Login attempt
   new_password: New password
   new_password_repeat: Repeat new password
   password: Password
   password_repeat: Repeat Password
-  password_updated: Your password has been updated successfully.
+  password_updated: Your password has been updated successfully
   register: Register
-  registration_success: Registration successful, check your email address, you will receive an activation link shortly.
+  registration_success: Registration successful, check your email address, you will receive an activation link shortly
   remember_me: Remember Me
   send_email: Send Email
   username: Username
@@ -32,12 +45,10 @@ user:
 # Flash
 
 flash:
-  account_activated_successfully: Your account has been activated successfully, you can log in below.
-  account_already_activated: You have already activated your account, you can log in below.
-  account_not_yet_activated: You have to activate your account to access this feature.
-  login_required: You must login to access this page.
-  password_reset_email_send: An email with a reset link has been sent to you.
-  password_reset_request_retry_delay_non_expired: You have to wait %limit% minutes before requesting another email.
-  password_reset_success: Your password has been updated, you can now use it to log in below.
-  password_reset_token_expired: Your password reset request has expired, please make a new one below.
-  user_not_found: This user does not exist.
+  account_activated_successfully: Your email address has been verified successfully, you can log in below
+  email_change_success: 'email_address is now registered as your email address'
+  email_change_token_expired: Your email address change request has expired
+  login_required: You must login to access this page
+  password_reset_email_sent: An email with a reset link has been sent to you
+  password_reset_success: Your password has been updated, you can now use it to log in below
+  password_reset_token_expired: Your password reset request has expired, please make a new one below

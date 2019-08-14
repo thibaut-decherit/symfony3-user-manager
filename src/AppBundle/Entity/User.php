@@ -19,11 +19,6 @@ use AppBundle\Validator\Constraints as CustomAssert;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  *
  * @UniqueEntity(
- *     fields={"email"},
- *     message="form_errors.unique_email",
- *     groups={"Registration", "User_Information"}
- * )
- * @UniqueEntity(
  *     fields={"username"},
  *     message="form_errors.unique_username",
  *     groups={"Registration", "User_Information"}
@@ -116,6 +111,44 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $email;
 
     /**
+     * @var null|string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @Assert\NotBlank(
+     *     message="form_errors.not_blank",
+     *     groups={"Email_Change"}
+     * )
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 255,
+     *      minMessage = "form_errors.min_length",
+     *      maxMessage = "form_errors.max_length",
+     *      groups={"Email_Change"}
+     * )
+     * @Assert\Email(
+     *      message = "form_errors.valid_email",
+     *      checkMX = true,
+     *      groups={"Email_Change"}
+     * )
+     */
+    private $emailChangePending;
+
+    /**
+     * @var null|string
+     *
+     * @ORM\Column(type="string", length=86, nullable=true, unique=true)
+     */
+    private $emailChangeToken;
+
+    /**
+     * @var null|DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $emailChangeRequestedAt;
+
+    /**
      * ORM mapping not needed if password hash algorithm generates it's own salt (e.g bcrypt)
      *
      * @var string
@@ -152,14 +185,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $activationToken;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @ORM\Column(type="string", length=86, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
     /**
-     * @var DateTime
+     * @var null|DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -263,6 +296,60 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getEmailChangePending(): ?string
+    {
+        return $this->emailChangePending;
+    }
+
+    /**
+     * @param string|null $emailChangePending
+     * @return User
+     */
+    public function setEmailChangePending(?string $emailChangePending): User
+    {
+        $this->emailChangePending = $emailChangePending;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmailChangeToken(): ?string
+    {
+        return $this->emailChangeToken;
+    }
+
+    /**
+     * @param string|null $emailChangeToken
+     * @return User
+     */
+    public function setEmailChangeToken(?string $emailChangeToken): User
+    {
+        $this->emailChangeToken = $emailChangeToken;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getEmailChangeRequestedAt(): ?DateTime
+    {
+        return $this->emailChangeRequestedAt;
+    }
+
+    /**
+     * @param DateTime|null $emailChangeRequestedAt
+     * @return User
+     */
+    public function setEmailChangeRequestedAt(?DateTime $emailChangeRequestedAt): User
+    {
+        $this->emailChangeRequestedAt = $emailChangeRequestedAt;
+        return $this;
+    }
+
+    /**
      * @return null|string
      */
     public function getSalt(): ?string
@@ -335,7 +422,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getActivationToken(): ?string
     {
@@ -353,7 +440,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getPasswordResetToken(): ?string
     {
@@ -361,7 +448,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @param null|string $passwordResetToken
+     * @param string|null $passwordResetToken
      * @return User
      */
     public function setPasswordResetToken(?string $passwordResetToken): User
@@ -479,7 +566,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * encoded and make URLs unnecessarily longer.
      * With 512 bits of entropy this method will return a string of 86 characters, with 256 bits of entropy it will
      * return 43 characters, and so on.
-     * 
+     *
      * @param int $entropy
      * @return string
      * @throws Exception
@@ -489,6 +576,24 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
         $bytes = random_bytes($entropy / 8);
 
         return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
+    }
+
+    /**
+     * @param int $emailChangeRequestRetryDelay
+     * @return bool
+     */
+    public function isEmailChangeRequestRetryDelayExpired(int $emailChangeRequestRetryDelay): bool
+    {
+        return $this->getEmailChangeRequestedAt()->getTimestamp() + $emailChangeRequestRetryDelay < time();
+    }
+
+    /**
+     * @param int $emailChangeTokenLifetime
+     * @return bool
+     */
+    public function isEmailChangeTokenExpired(int $emailChangeTokenLifetime): bool
+    {
+        return $this->getEmailChangeRequestedAt()->getTimestamp() + $emailChangeTokenLifetime < time();
     }
 
     /**
