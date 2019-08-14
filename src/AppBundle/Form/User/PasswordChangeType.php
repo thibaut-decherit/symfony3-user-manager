@@ -40,6 +40,7 @@ class PasswordChangeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
+            'validation_groups' => array('Password_Change')
         ));
     }
 

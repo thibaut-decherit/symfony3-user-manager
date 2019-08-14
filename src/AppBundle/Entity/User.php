@@ -74,14 +74,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
+     *     groups={"Registration", "Password_Change"}
      * )
      * @Assert\Length(
      *     min=8,
      *     max=150,
      *     minMessage="form_errors.password_length",
      *     maxMessage="form_errors.password_length",
+     *     groups={"Registration", "Password_Change"}
      * )
-     * @CustomAssert\BreachedPassword()
+     * @CustomAssert\BreachedPassword(
+     *     groups={"Registration", "Password_Change"}
+     * )
      *
      */
     protected $plainPassword;
@@ -93,19 +97,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *      groups={"Registration", "User_Information"}
+     *     groups={"Registration"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
      *      minMessage = "form_errors.min_length",
      *      maxMessage = "form_errors.max_length",
-     *      groups={"Registration", "User_Information"}
+     *      groups={"Registration"}
      * )
      * @Assert\Email(
      *      message = "form_errors.valid_email",
      *      checkMX = true,
-     *      groups={"Registration", "User_Information"}
+     *      groups={"Registration"}
      * )
      */
     private $email;

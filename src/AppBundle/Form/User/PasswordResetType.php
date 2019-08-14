@@ -30,7 +30,8 @@ class PasswordResetType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\User'
+            'data_class' => 'AppBundle\Entity\User',
+            'validation_groups' => array('Password_Change')
         ));
     }
 
