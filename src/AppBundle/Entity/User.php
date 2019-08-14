@@ -70,7 +70,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * Used for model validation. Must not be persisted. Needed to avoid raw password overwriting
      * current user $user->getPassword() when being tested by UserPasswordValidator
      *
-     * @var null|string
+     * @var string|null
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
@@ -115,7 +115,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $email;
 
     /**
-     * @var null|string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      *
@@ -139,14 +139,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $emailChangePending;
 
     /**
-     * @var null|string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=86, nullable=true, unique=true)
      */
     private $emailChangeToken;
 
     /**
-     * @var null|DateTime
+     * @var DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -189,14 +189,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     private $activationToken;
 
     /**
-     * @var null|string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=86, nullable=true, unique=true)
      */
     private $passwordResetToken;
 
     /**
-     * @var null|DateTime
+     * @var DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -210,25 +210,15 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return User
-     */
-    public function setId(int $id): User
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return null|string
+     * @return string|null
      */
     public function getUsername(): ?string
     {
@@ -246,9 +236,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -264,7 +254,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getPlainPassword(): ?string
     {
@@ -282,7 +272,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getEmail(): ?string
     {
@@ -354,7 +344,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getSalt(): ?string
     {
@@ -362,19 +352,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @param string $salt
+     * @param string|null $salt
      * @return User
      */
-    public function setSalt(string $salt): User
+    public function setSalt(?string $salt): User
     {
         $this->salt = $salt;
         return $this;
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getRoles(): ?array
+    public function getRoles(): array
     {
         return $this->roles;
     }
@@ -390,9 +380,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTime
      */
-    public function getRegisteredAt(): ?DateTime
+    public function getRegisteredAt(): DateTime
     {
         return $this->registeredAt;
     }
@@ -408,9 +398,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function isActivated(): ?bool
+    public function isActivated(): bool
     {
         return $this->activated;
     }
@@ -426,9 +416,9 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getActivationToken(): ?string
+    public function getActivationToken(): string
     {
         return $this->activationToken;
     }
