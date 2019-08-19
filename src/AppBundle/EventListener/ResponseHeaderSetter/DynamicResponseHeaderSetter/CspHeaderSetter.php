@@ -222,7 +222,7 @@ class CspHeaderSetter
     }
 
     /**
-     * Adds dev only directives if the app runs in dev environment.
+     * Adds dev only directives if app is running in dev environment.
      */
     private function addDevDirectivesIfDevEnvironment(): void
     {
@@ -238,13 +238,28 @@ class CspHeaderSetter
          */
         $baseUrl = $this->requestStack->getMasterRequest()->getSchemeAndHttpHost();
 
+        $scriptSrcDevDirectiveContent = [
+            $baseUrl,
+            "'unsafe-eval'",
+            "'unsafe-inline'"
+        ];
+
+        $styleSrcDevDirectiveContent = [
+            $baseUrl,
+            "'unsafe-inline'"
+        ];
+
         $directives['connect-src'][] = $baseUrl;
         $directives['font-src'][] = $baseUrl;
         $directives['form-action'][] = $baseUrl;
 
-        // Allows Symfony Profiler to work properly as it relies on inline JS and CSS.
-        $directives['script-src'][] = "$baseUrl 'unsafe-eval' 'unsafe-inline'";
-        $directives['style-src'][] = "$baseUrl 'unsafe-inline'";
+        /*
+         * Allows Symfony Profiler to work properly as it relies on inline JS and CSS.
+         * array_unique() prevents CSP duplicate source (e.g. 'unsafe-inline' is already in your script-src policy)
+         * error on certain browsers (e.g. Firefox).
+         */
+        $directives['script-src'] = array_unique(array_merge($directives['script-src'], $scriptSrcDevDirectiveContent));
+        $directives['style-src'] = array_unique(array_merge($directives['style-src'], $styleSrcDevDirectiveContent));
 
         $this->setDirectives($directives);
     }
