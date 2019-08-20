@@ -21,21 +21,15 @@ mailer:
 # User
 
 user:
-  already_current_email_address: This email address is already registered to your account
   current_password: Current password
   email_address: Email address
-  email_address_change_request_sent: 'A verification email has been sent to email_address'
-  information_updated: Account information successfully updated
-  invalid_credentials: Wrong username or password
   login: Login
   login_attempt: Login attempt
   new_password: New password
   new_password_repeat: Repeat new password
   password: Password
   password_repeat: Repeat Password
-  password_updated: Your password has been updated successfully
   register: Register
-  registration_success: Registration successful, check your email address, you will receive an activation link shortly
   remember_me: Remember Me
   send_email: Send Email
   username: Username
@@ -45,10 +39,18 @@ user:
 # Flash
 
 flash:
-  account_activated_successfully: Your email address has been verified successfully, you can log in below
-  email_change_success: 'email_address is now registered as your email address'
-  email_change_token_expired: Your email address change request has expired
-  login_required: You must login to access this page
-  password_reset_email_sent: An email with a reset link has been sent to you
-  password_reset_success: Your password has been updated, you can now use it to log in below
-  password_reset_token_expired: Your password reset request has expired, please make a new one below
+  user:
+    account_activated_successfully: Your email address has been verified successfully, you can log in below
+    already_current_email_address: This email address is already registered to your account
+    email_address_change_request_sent_1/2: A verification link has been sent to
+    email_address_change_request_sent_2/2: , please click on it to confirm this change
+    email_change_success: <span class='font-weight-bold'>%email_address%</span> is now registered as your email address
+    email_change_token_expired: Your email address change request has expired
+    information_updated: Account information successfully updated
+    invalid_credentials: Wrong username or password
+    login_required: You must login to access this page
+    password_reset_email_sent: An email with a reset link has been sent to you
+    password_reset_success: Your password has been updated, you can now use it to log in below
+    password_reset_token_expired: Your password reset request has expired, please make a new one below
+    password_updated: Password successfully updated
+    registration_success: Registration successful, check your email address, you will receive an activation link shortly

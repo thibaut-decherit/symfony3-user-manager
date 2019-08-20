@@ -183,7 +183,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             $this->mailer->loginAttemptOnNonActivatedAccount($user);
         }
 
-        $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');
+        $errorMessage = $this->translatorInterface->trans('flash.user.invalid_credentials');
 
         return new JsonResponse([
             'errorMessage' => $errorMessage
@@ -209,7 +209,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         $this->sessionInterface->getFlashBag()->add(
             "error",
-            $this->translatorInterface->trans('flash.login_required')
+            $this->translatorInterface->trans('flash.user.login_required')
         );
         $url = $this->router->generate('login');
 

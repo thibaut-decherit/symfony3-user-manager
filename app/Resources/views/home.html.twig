@@ -3,12 +3,12 @@
 {% block body %}
     <h1>User Manager</h1>
 
-    {% include 'flash-message-template.html.twig' with {
+    {% include ':FlashAlert:flash-alert.html.twig' with {
         'alertType': 'error',
         'alertStyle': 'danger',
         'textAlign': 'center'
     } %}
-    {% include 'flash-message-template.html.twig' with {
+    {% include ':FlashAlert:flash-alert.html.twig' with {
         'alertType': 'success',
         'alertStyle': 'success',
         'textAlign': 'center'

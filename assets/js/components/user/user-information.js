@@ -17,8 +17,6 @@ body.on('submit', '#ajax-form-user-information-edit', function (e) {
             const TEMPLATE = JSON.parse(response.template);
 
             USER_INFORMATION_EDIT_FORM.html(TEMPLATE);
-            USER_INFORMATION_EDIT_FORM.find('.alert').removeClass('d-none');
-            USER_INFORMATION_EDIT_FORM.find('#success-message').html(response.successMessage);
         })
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {

@@ -62,9 +62,15 @@ class RegistrationController extends DefaultController
                 $this->handleDuplicateUserRegistration($duplicateUser);
             }
 
-            // Renders and json encode the original form (needed to empty form fields)
+            // Renders and json encode the original form (required to empty form fields)
             $user = new User();
             $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
+
+            $this->addFlash(
+                "success",
+                $this->get('translator')->trans('flash.user.registration_success')
+            );
+
             $template = $this->render(':Form/User:registration.html.twig', array(
                 'form' => $form->createView(),
             ));
@@ -72,7 +78,6 @@ class RegistrationController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'successMessage' => $this->get('translator')->trans('user.registration_success')
             ], 200);
         }
 

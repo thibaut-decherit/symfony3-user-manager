@@ -65,6 +65,11 @@ class ManageAccountController extends DefaultController
 
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash(
+                "success",
+                $this->get('translator')->trans('flash.user.information_updated')
+            );
+
             $template = $this->render(':Form/User:user-information.html.twig', array(
                 'form' => $form->createView()
             ));
@@ -72,7 +77,6 @@ class ManageAccountController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'successMessage' => $this->get('translator')->trans('user.information_updated')
             ], 200);
         }
 

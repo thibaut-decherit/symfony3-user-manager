@@ -54,6 +54,11 @@ class PasswordChangeController extends DefaultController
             $user->setPassword($hashedPassword);
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash(
+                "success",
+                $this->get('translator')->trans('falsh.user.password_updated')
+            );
+
             $template = $this->render(':Form/User:password-change.html.twig', array(
                 'form' => $form->createView()
             ));
@@ -61,7 +66,6 @@ class PasswordChangeController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'successMessage' => $this->get('translator')->trans('user.password_updated')
             ], 200);
         }
 

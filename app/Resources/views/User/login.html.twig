@@ -3,7 +3,7 @@
 {% block body %}
     <div class="alert alert-danger mb-3 p-1 text-center d-none" id="login-error-alert"></div>
 
-    {% include 'flash-message-template.html.twig' with {
+    {% include ':FlashAlert:flash-alert.html.twig' with {
         'alertId': 'login-flash-success',
         'alertStyle': 'success',
         'alertType': 'login-flash-success',

@@ -17,8 +17,6 @@ body.on('submit', '#ajax-form-registration', function (e) {
             const TEMPLATE = JSON.parse(response.template);
 
             REGISTRATION_FORM.html(TEMPLATE);
-            REGISTRATION_FORM.find('.alert').removeClass('d-none');
-            REGISTRATION_FORM.find('#success-message').html(response.successMessage);
         })
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {

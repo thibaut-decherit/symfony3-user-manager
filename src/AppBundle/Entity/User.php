@@ -74,17 +74,17 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *     groups={"Registration", "Password_Change"}
+     *     groups={"Password_Change", "Registration"}
      * )
      * @Assert\Length(
      *     min=8,
      *     max=150,
      *     minMessage="form_errors.password_length",
      *     maxMessage="form_errors.password_length",
-     *     groups={"Registration", "Password_Change"}
+     *     groups={"Password_Change", "Registration"}
      * )
      * @CustomAssert\BreachedPassword(
-     *     groups={"Registration", "Password_Change"}
+     *     groups={"Password_Change", "Registration"}
      * )
      *
      */

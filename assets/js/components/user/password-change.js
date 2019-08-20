@@ -17,8 +17,6 @@ body.on('submit', '#ajax-form-change-password', function (e) {
             const TEMPLATE = JSON.parse(response.template);
 
             CHANGE_PASSWORD_FORM.html(TEMPLATE);
-            CHANGE_PASSWORD_FORM.find('.alert').removeClass('d-none');
-            CHANGE_PASSWORD_FORM.find('#success-message').html(response.successMessage);
         })
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {

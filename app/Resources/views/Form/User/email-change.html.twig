@@ -6,13 +6,18 @@
     }
 }) }}
 
-{# TODO: change alert color if success or error #}
-<div class="alert alert-dismissible d-none" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <p id="alert-message" class="text-center m-0"></p>
-</div>
+{% include ':FlashAlert:flash-alert.html.twig' with {
+    'rawMessage': true,
+    'alertType': 'successRaw',
+    'alertStyle': 'success',
+    'textAlign': 'center'
+} %}
+
+{% include ':FlashAlert:flash-alert.html.twig' with {
+    'alertType': 'error',
+    'alertStyle': 'danger',
+    'textAlign': 'center'
+} %}
 
 <div class="row">
     <div class="col mt-3">

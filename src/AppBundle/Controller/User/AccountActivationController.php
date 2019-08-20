@@ -25,7 +25,7 @@ class AccountActivationController extends DefaultController
     {
         $this->addFlash(
             "login-flash-success",
-            $this->get('translator')->trans('flash.account_activated_successfully')
+            $this->get('translator')->trans('flash.user.account_activated_successfully')
         );
 
         if ($user !== null && $user->isActivated() === false) {

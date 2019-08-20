@@ -51,11 +51,6 @@ class EmailChangeController extends DefaultController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $template = $this->render(':Form/User:email-change.html.twig', array(
-                'form' => $form->createView()
-            ));
-            $jsonTemplate = json_encode($template->getContent());
-
             if ($user->getEmailChangePending() === $user->getEmail()) {
                 /*
                  * $user must be refreshed or invalid POST data will conflict with logged-in user and crash the session,
@@ -63,9 +58,18 @@ class EmailChangeController extends DefaultController
                  */
                 $this->getDoctrine()->getManager()->refresh($user);
 
+                $this->addFlash(
+                    "error",
+                    $this->get('translator')->trans('flash.user.already_current_email_address')
+                );
+
+                $template = $this->render(':Form/User:email-change.html.twig', array(
+                    'form' => $form->createView()
+                ));
+                $jsonTemplate = json_encode($template->getContent());
+
                 return new JsonResponse([
                     'template' => $jsonTemplate,
-                    'errorMessage' => $this->get('translator')->trans('user.already_current_email_address')
                 ], 400);
             }
 
@@ -76,11 +80,21 @@ class EmailChangeController extends DefaultController
                 && $user->isEmailChangeRequestRetryDelayExpired($emailChangeRequestRetryDelay) === false) {
                 $this->getDoctrine()->getManager()->refresh($user);
 
+                $successMessage = $this->render(':FlashAlert/Message/User:email-change-success.html.twig', [
+                    'user' => $user
+                ]);
+                $this->addFlash(
+                    "successRaw",
+                    $successMessage->getContent()
+                );
+
+                $template = $this->render(':Form/User:email-change.html.twig', array(
+                    'form' => $form->createView()
+                ));
+                $jsonTemplate = json_encode($template->getContent());
+
                 return new JsonResponse([
                     'template' => $jsonTemplate,
-                    'successMessage' => $this->get('translator')->trans(
-                        'user.email_address_change_request_sent', ['email_address' => $user->getEmailChangePending()]
-                    )
                 ], 200);
             }
 
@@ -109,6 +123,14 @@ class EmailChangeController extends DefaultController
 
             $em->flush();
 
+            $successMessage = $this->render(':FlashAlert/Message/User:email-change-success.html.twig', [
+                'user' => $user
+            ]);
+            $this->addFlash(
+                "successRaw",
+                $successMessage->getContent()
+            );
+
             $template = $this->render(':Form/User:email-change.html.twig', array(
                 'form' => $form->createView()
             ));
@@ -116,9 +138,6 @@ class EmailChangeController extends DefaultController
 
             return new JsonResponse([
                 'template' => $jsonTemplate,
-                'successMessage' => $this->get('translator')->trans(
-                    'user.email_address_change_request_sent', ['email_address' => $user->getEmailChangePending()]
-                )
             ], 200);
         }
 
@@ -149,7 +168,7 @@ class EmailChangeController extends DefaultController
         if (is_null($user)) {
             $this->addFlash(
                 "error",
-                $this->get('translator')->trans('flash.email_change_token_expired')
+                $this->get('translator')->trans('flash.user.email_change_token_expired')
             );
 
             return $this->redirectToRoute('home');
@@ -167,7 +186,7 @@ class EmailChangeController extends DefaultController
 
             $this->addFlash(
                 "error",
-                $this->get('translator')->trans('flash.email_change_token_expired')
+                $this->get('translator')->trans('flash.user.email_change_token_expired')
             );
 
             return $this->redirectToRoute('home');
@@ -186,7 +205,7 @@ class EmailChangeController extends DefaultController
 
         $this->addFlash(
             "success",
-            $this->get('translator')->trans('flash.email_change_success', ['email_address' => $user->getEmail()])
+            $this->get('translator')->trans('flash.user.email_change_success', ['%email_address%' => $user->getEmail()])
         );
 
         return $this->redirectToRoute('home');
