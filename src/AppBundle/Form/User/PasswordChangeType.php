@@ -23,7 +23,10 @@ class PasswordChangeType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => array(
-                    new UserPassword(['message' => 'form_errors.wrong_password']),
+                    new UserPassword([
+                        'message' => 'form_errors.wrong_password',
+                        'groups' => ['Password_Change']
+                    ]),
                 ),
             ])
             ->add('plainPassword', RepeatedType::class, [
