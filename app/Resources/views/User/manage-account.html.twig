@@ -10,7 +10,7 @@
         <h1 class="col">My Account</h1>
     </div>
 
-    {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::emailChangeFormAction')) }}
+    {{ render(controller('AppBundle\\Controller\\User\\EmailChangeController::changeFormAction')) }}
     {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::accountInformationFormAction')) }}
     {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::passwordChangeFormAction')) }}
 {% endblock %}
