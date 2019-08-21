@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class PasswordChangeController
@@ -21,11 +20,12 @@ class PasswordChangeController extends DefaultController
     /**
      * Renders the password change form.
      *
-     * @param UserInterface $user
      * @return Response
      */
-    public function changeFormAction(UserInterface $user)
+    public function changeFormAction()
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\PasswordChangeType', $user);
 
         return $this->render(':Form/User:password-change.html.twig', array(
@@ -37,13 +37,14 @@ class PasswordChangeController extends DefaultController
      * Handles the password change form submitted with ajax.
      *
      * @param Request $request
-     * @param UserInterface $user
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @Route("/ajax", name="password_change_ajax", methods="POST")
      * @return JsonResponse
      */
-    public function changeAction(Request $request, UserInterface $user, UserPasswordEncoderInterface $passwordEncoder)
+    public function changeAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\PasswordChangeType', $user);
 
         $form->handleRequest($request);

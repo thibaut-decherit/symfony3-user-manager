@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class EmailChangeController
@@ -23,11 +22,12 @@ class EmailChangeController extends DefaultController
     /**
      * Renders the email address change form.
      *
-     * @param UserInterface $user
      * @return Response
      */
-    public function changeFormAction(UserInterface $user)
+    public function changeFormAction()
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\EmailChangeType', $user);
 
         return $this->render(':Form/User:email-change.html.twig', array(
@@ -39,13 +39,14 @@ class EmailChangeController extends DefaultController
      * Handles the email address change form submitted with ajax.
      *
      * @param Request $request
-     * @param UserInterface $user
      * @Route("/request-ajax", name="email_change_request_ajax", methods="POST")
      * @return JsonResponse
      * @throws Exception
      */
-    public function changeRequestAction(Request $request, UserInterface $user)
+    public function changeRequestAction(Request $request)
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\EmailChangeType', $user);
 
         $form->handleRequest($request);

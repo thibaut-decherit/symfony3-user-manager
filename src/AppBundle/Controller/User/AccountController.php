@@ -3,15 +3,10 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use AppBundle\Entity\User;
-use DateTime;
-use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class ManageAccountController
@@ -35,11 +30,12 @@ class AccountController extends DefaultController
     /**
      * Renders the account information edit form
      *
-     * @param UserInterface $user
      * @return Response
      */
-    public function accountInformationFormAction(UserInterface $user)
+    public function accountInformationFormAction()
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\UserInformationType', $user);
 
         return $this->render(':Form/User:account-information.html.twig', array(
@@ -51,12 +47,13 @@ class AccountController extends DefaultController
      * Handles the account information edit form submitted with ajax.
      *
      * @param Request $request
-     * @param UserInterface $user
      * @Route("/account-information-edit-ajax", name="account_information_edit_ajax", methods="POST")
      * @return JsonResponse
      */
-    public function accountInformationEditAction(Request $request, UserInterface $user)
+    public function accountInformationEditAction(Request $request)
     {
+        $user = $this->getUser();
+
         $form = $this->createForm('AppBundle\Form\User\UserInformationType', $user);
 
         $form->handleRequest($request);

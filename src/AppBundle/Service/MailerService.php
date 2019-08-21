@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 use Swift_Message;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Swift_Mailer;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -66,10 +65,10 @@ class MailerService
     /**
      * Email sent when user requests email address change.
      *
-     * @param UserInterface $user
+     * @param User $user
      * @param int $emailChangeTokenLifetimeInMinutes
      */
-    public function emailChange(UserInterface $user, int $emailChangeTokenLifetimeInMinutes)
+    public function emailChange(User $user, int $emailChangeTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
             'Email/email-address-change.html.twig', [
