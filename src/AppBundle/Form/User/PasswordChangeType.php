@@ -24,14 +24,14 @@ class PasswordChangeType extends AbstractType
                 'required' => false,
                 'constraints' => array(
                     new UserPassword([
-                        'message' => 'form_errors.wrong_password',
+                        'message' => 'form_errors.user.wrong_password',
                         'groups' => ['Password_Change']
                     ]),
                 ),
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'form_errors.repeat_password',
+                'invalid_message' => 'form_errors.user.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => false,
                 'first_options' => array('label' => 'user.new_password'),

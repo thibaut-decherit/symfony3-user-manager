@@ -20,7 +20,7 @@ use AppBundle\Validator\Constraints as CustomAssert;
  *
  * @UniqueEntity(
  *     fields={"username"},
- *     message="form_errors.unique_username",
+ *     message="form_errors.user.unique_username",
  *     groups={"Registration", "Account_Information"}
  * )
  */
@@ -41,19 +41,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank",
+     *     message="form_errors.global.not_blank",
      *     groups={"Registration", "Account_Information"}
      * )
      * @Assert\Length(
      *     min=2,
      *     max=255,
-     *     minMessage="form_errors.min_length",
-     *     maxMessage="form_errors.max_length",
+     *     minMessage="form_errors.global.min_length",
+     *     maxMessage="form_errors.global.max_length",
      *     groups={"Registration", "Account_Information"}
      * )
      * @Assert\Regex(
      *     pattern="/^[a-zA-Z0-9]*$/",
-     *     message="form_errors.alphanumeric_only_username",
+     *     message="form_errors.user.alphanumeric_only_username",
      *     groups={"Registration", "Account_Information"}
      * )
      */
@@ -73,14 +73,14 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @var string|null
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank",
+     *     message="form_errors.global.not_blank",
      *     groups={"Password_Change", "Registration"}
      * )
      * @Assert\Length(
      *     min=8,
      *     max=150,
-     *     minMessage="form_errors.password_length",
-     *     maxMessage="form_errors.password_length",
+     *     minMessage="form_errors.user.password_length",
+     *     maxMessage="form_errors.user.password_length",
      *     groups={"Password_Change", "Registration"}
      * )
      * @CustomAssert\BreachedPassword(
@@ -96,18 +96,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @ORM\Column(type="string", length=255, unique=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank",
+     *     message="form_errors.global.not_blank",
      *     groups={"Registration"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
-     *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length",
+     *      minMessage = "form_errors.global.min_length",
+     *      maxMessage = "form_errors.global.max_length",
      *      groups={"Registration"}
      * )
      * @Assert\Email(
-     *      message = "form_errors.valid_email",
+     *      message = "form_errors.user.valid_email",
      *      checkMX = true,
      *      groups={"Registration"}
      * )
@@ -120,18 +120,18 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(
-     *     message="form_errors.not_blank",
+     *     message="form_errors.global.not_blank",
      *     groups={"Email_Change"}
      * )
      * @Assert\Length(
      *      min = 2,
      *      max = 255,
-     *      minMessage = "form_errors.min_length",
-     *      maxMessage = "form_errors.max_length",
+     *      minMessage = "form_errors.global.min_length",
+     *      maxMessage = "form_errors.global.max_length",
      *      groups={"Email_Change"}
      * )
      * @Assert\Email(
-     *      message = "form_errors.valid_email",
+     *      message = "form_errors.user.valid_email",
      *      checkMX = true,
      *      groups={"Email_Change"}
      * )
