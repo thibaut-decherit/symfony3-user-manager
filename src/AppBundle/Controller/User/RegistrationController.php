@@ -67,7 +67,7 @@ class RegistrationController extends DefaultController
             $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
 
             $this->addFlash(
-                "success",
+                'registration-success',
                 $this->get('translator')->trans('flash.user.registration_success')
             );
 

@@ -55,8 +55,8 @@ class PasswordChangeController extends DefaultController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash(
-                "success",
-                $this->get('translator')->trans('falsh.user.password_updated')
+                'password-change-success',
+                $this->get('translator')->trans('flash.user.password_updated')
             );
 
             $template = $this->render(':Form/User:password-change.html.twig', array(

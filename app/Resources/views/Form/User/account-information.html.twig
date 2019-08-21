@@ -1,13 +1,13 @@
 {{ form_start(form, {
-    'action': path('user_information_edit_ajax'),
+    'action': path('account_information_edit_ajax'),
     'attr': {
-        'id': 'ajax-form-user-information-edit',
+        'id': 'ajax-form-account-information-edit',
         'class': 'col p-0'
     }
 }) }}
 
 {% include ':FlashAlert:flash-alert.html.twig' with {
-    'alertType': 'success',
+    'alertType': 'account-information-edit-success',
     'alertStyle': 'success',
     'textAlign': 'center'
 } %}

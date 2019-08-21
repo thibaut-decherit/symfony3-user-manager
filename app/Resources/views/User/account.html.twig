@@ -10,15 +10,17 @@
         <h1 class="col">My Account</h1>
     </div>
 
+    <a href="{{ path('home') }}">Homepage</a>
+
     {{ render(controller('AppBundle\\Controller\\User\\EmailChangeController::changeFormAction')) }}
-    {{ render(controller('AppBundle\\Controller\\User\\ManageAccountController::accountInformationFormAction')) }}
+    {{ render(controller('AppBundle\\Controller\\User\\AccountController::accountInformationFormAction')) }}
     {{ render(controller('AppBundle\\Controller\\User\\PasswordChangeController::changeFormAction')) }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('email-change') }}
-    {{ encore_entry_script_tags('user-information') }}
+    {{ encore_entry_script_tags('account-information') }}
     {{ encore_entry_script_tags('password-change') }}
     {{ encore_entry_script_tags('password-strength-meter') }}
 {% endblock %}

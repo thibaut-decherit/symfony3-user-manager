@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @Route("/account")
  */
-class ManageAccountController extends DefaultController
+class AccountController extends DefaultController
 {
     /**
      * Renders user account view.
@@ -27,13 +27,13 @@ class ManageAccountController extends DefaultController
      * @Route(name="account", methods="GET")
      * @return Response
      */
-    public function manageAccountAction()
+    public function manageAction()
     {
-        return $this->render(':User:manage-account.html.twig');
+        return $this->render(':User:account.html.twig');
     }
 
     /**
-     * Renders the account information edit form.
+     * Renders the account information edit form
      *
      * @param UserInterface $user
      * @return Response
@@ -42,7 +42,7 @@ class ManageAccountController extends DefaultController
     {
         $form = $this->createForm('AppBundle\Form\User\UserInformationType', $user);
 
-        return $this->render(':Form/User:user-information.html.twig', array(
+        return $this->render(':Form/User:account-information.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -52,7 +52,7 @@ class ManageAccountController extends DefaultController
      *
      * @param Request $request
      * @param UserInterface $user
-     * @Route("/user-information-edit-ajax", name="user_information_edit_ajax", methods="POST")
+     * @Route("/account-information-edit-ajax", name="account_information_edit_ajax", methods="POST")
      * @return JsonResponse
      */
     public function accountInformationEditAction(Request $request, UserInterface $user)
@@ -66,11 +66,11 @@ class ManageAccountController extends DefaultController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash(
-                "success",
+                'account-information-edit-success',
                 $this->get('translator')->trans('flash.user.information_updated')
             );
 
-            $template = $this->render(':Form/User:user-information.html.twig', array(
+            $template = $this->render(':Form/User:account-information.html.twig', array(
                 'form' => $form->createView()
             ));
             $jsonTemplate = json_encode($template->getContent());
@@ -87,7 +87,7 @@ class ManageAccountController extends DefaultController
         $this->getDoctrine()->getManager()->refresh($user);
 
         // Renders and json encode the updated form (with errors and input values)
-        $template = $this->render(':Form/User:user-information.html.twig', array(
+        $template = $this->render(':Form/User:account-information.html.twig', array(
             'form' => $form->createView(),
         ));
         $jsonTemplate = json_encode($template->getContent());

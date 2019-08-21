@@ -17,14 +17,14 @@ class AccountActivationController extends DefaultController
     /**
      * Handles account activation.
      *
-     * @param User $user
-     * @Route("/activate-account/{activationToken}", name="activate_account", methods="GET")
+     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
+     * @Route("/activate-account/{activationToken}", name="account_activation", methods="GET")
      * @return RedirectResponse|Response
      */
-    public function activateAccountAction(User $user)
+    public function activateAccountAction(User $user = null)
     {
         $this->addFlash(
-            "login-flash-success",
+            'account-activation-success',
             $this->get('translator')->trans('flash.user.account_activated_successfully')
         );
 

@@ -46,7 +46,7 @@ class PasswordResetController extends DefaultController
             }
 
             $this->addFlash(
-                "success",
+                'password-reset-request-success',
                 $this->get('translator')->trans('flash.user.password_reset_email_sent')
             );
 
@@ -98,7 +98,7 @@ class PasswordResetController extends DefaultController
     {
         if ($user === null) {
             $this->addFlash(
-                "error",
+                'password-reset-error',
                 $this->get('translator')->trans('flash.user.password_reset_token_expired')
             );
 
@@ -124,7 +124,7 @@ class PasswordResetController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "error",
+                'password-reset-error',
                 $this->get('translator')->trans('flash.user.password_reset_token_expired')
             );
 
@@ -145,7 +145,7 @@ class PasswordResetController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "login-flash-success",
+                'password-reset-success',
                 $this->get('translator')->trans('flash.user.password_reset_success')
             );
 

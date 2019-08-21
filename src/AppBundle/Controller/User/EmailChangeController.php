@@ -59,7 +59,7 @@ class EmailChangeController extends DefaultController
                 $this->getDoctrine()->getManager()->refresh($user);
 
                 $this->addFlash(
-                    "error",
+                    'email-change-request-error',
                     $this->get('translator')->trans('flash.user.already_current_email_address')
                 );
 
@@ -80,11 +80,11 @@ class EmailChangeController extends DefaultController
                 && $user->isEmailChangeRequestRetryDelayExpired($emailChangeRequestRetryDelay) === false) {
                 $this->getDoctrine()->getManager()->refresh($user);
 
-                $successMessage = $this->render(':FlashAlert/Message/User:email-change-success.html.twig', [
+                $successMessage = $this->render(':FlashAlert/Message/User:email-change-request-success.html.twig', [
                     'user' => $user
                 ]);
                 $this->addFlash(
-                    "successRaw",
+                    'email-change-request-success-raw',
                     $successMessage->getContent()
                 );
 
@@ -123,11 +123,11 @@ class EmailChangeController extends DefaultController
 
             $em->flush();
 
-            $successMessage = $this->render(':FlashAlert/Message/User:email-change-success.html.twig', [
+            $successMessage = $this->render(':FlashAlert/Message/User:email-change-request-success.html.twig', [
                 'user' => $user
             ]);
             $this->addFlash(
-                "successRaw",
+                'email-change-request-success-raw',
                 $successMessage->getContent()
             );
 
@@ -167,7 +167,7 @@ class EmailChangeController extends DefaultController
     {
         if (is_null($user)) {
             $this->addFlash(
-                "error",
+                'email-change-error',
                 $this->get('translator')->trans('flash.user.email_change_token_expired')
             );
 
@@ -185,7 +185,7 @@ class EmailChangeController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "error",
+                'email-change-error',
                 $this->get('translator')->trans('flash.user.email_change_token_expired')
             );
 
@@ -203,9 +203,12 @@ class EmailChangeController extends DefaultController
         $user->setEmailChangePending(null);
         $em->flush();
 
+        $successMessage = $this->render(':FlashAlert/Message/User:email-change-success.html.twig', [
+            'user' => $user
+        ]);
         $this->addFlash(
-            "success",
-            $this->get('translator')->trans('flash.user.email_change_success', ['%email_address%' => $user->getEmail()])
+            'email-change-success-raw',
+            $successMessage->getContent()
         );
 
         return $this->redirectToRoute('home');

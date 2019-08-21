@@ -4,12 +4,13 @@
     <h1>User Manager</h1>
 
     {% include ':FlashAlert:flash-alert.html.twig' with {
-        'alertType': 'error',
+        'alertType': 'email-change-error',
         'alertStyle': 'danger',
         'textAlign': 'center'
     } %}
     {% include ':FlashAlert:flash-alert.html.twig' with {
-        'alertType': 'success',
+        'rawMessage': true,
+        'alertType': 'email-change-success-raw',
         'alertStyle': 'success',
         'textAlign': 'center'
     } %}

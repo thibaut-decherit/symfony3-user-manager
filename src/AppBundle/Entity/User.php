@@ -21,7 +21,7 @@ use AppBundle\Validator\Constraints as CustomAssert;
  * @UniqueEntity(
  *     fields={"username"},
  *     message="form_errors.unique_username",
- *     groups={"Registration", "User_Information"}
+ *     groups={"Registration", "Account_Information"}
  * )
  */
 class User implements UserInterface, AdvancedUserInterface, EquatableInterface
@@ -42,19 +42,19 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
      *
      * @Assert\NotBlank(
      *     message="form_errors.not_blank",
-     *     groups={"Registration", "User_Information"}
+     *     groups={"Registration", "Account_Information"}
      * )
      * @Assert\Length(
      *     min=2,
      *     max=255,
      *     minMessage="form_errors.min_length",
      *     maxMessage="form_errors.max_length",
-     *     groups={"Registration", "User_Information"}
+     *     groups={"Registration", "Account_Information"}
      * )
      * @Assert\Regex(
      *     pattern="/^[a-zA-Z0-9]*$/",
      *     message="form_errors.alphanumeric_only_username",
-     *     groups={"Registration", "User_Information"}
+     *     groups={"Registration", "Account_Information"}
      * )
      */
     private $username;
@@ -519,7 +519,7 @@ class User implements UserInterface, AdvancedUserInterface, EquatableInterface
     }
 
     /**
-     * Checks whether the user has activated his/her account.
+     * Checks if user has activated his account.
      *
      * @return bool true if the user is enabled, false otherwise
      *

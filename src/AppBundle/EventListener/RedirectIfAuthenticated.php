@@ -83,6 +83,7 @@ class RedirectIfAuthenticated
         }
 
         $blacklistedRoutes = [
+            "account_activation",
             "login",
             "password_reset",
             "password_reset_request",

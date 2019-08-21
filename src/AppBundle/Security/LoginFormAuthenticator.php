@@ -208,7 +208,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function start(Request $request, AuthenticationException $exception = null)
     {
         $this->sessionInterface->getFlashBag()->add(
-            "error",
+            'login-required-error',
             $this->translatorInterface->trans('flash.user.login_required')
         );
         $url = $this->router->generate('login');

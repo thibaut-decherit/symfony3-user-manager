@@ -44,7 +44,7 @@ flash:
     already_current_email_address: This email address is already registered to your account
     email_address_change_request_sent_1/2: A verification link has been sent to
     email_address_change_request_sent_2/2: , please click on it to confirm this change
-    email_change_success: <span class='font-weight-bold'>%email_address%</span> is now registered as your email address
+    email_address_change_success: is now registered as your email address
     email_change_token_expired: Your email address change request has expired
     information_updated: Account information successfully updated
     invalid_credentials: Wrong username or password

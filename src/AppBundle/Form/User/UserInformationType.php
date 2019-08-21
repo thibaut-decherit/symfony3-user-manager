@@ -26,7 +26,7 @@ class UserInformationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('User_Information')
+            'validation_groups' => array('Account_Information')
         ));
     }
 
