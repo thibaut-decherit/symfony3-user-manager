@@ -19,15 +19,15 @@
     'textAlign': 'center'
 } %}
 
-<div class="row">
-    <div class="col mt-3">
+<div class="row mt-3">
+    <div class="col">
         {{ form_label(form.emailChangePending) }}
         {{ form_widget(form.emailChangePending) }}
     </div>
 </div>
 
-<div class="row">
-    <div class="col mt-3">
+<div class="row mt-3">
+    <div class="col">
         <input type="submit" value="{{ 'global.form.save_changes'|trans }}"/>
     </div>
 </div>

@@ -10,7 +10,11 @@
         <h1 class="col">My Account</h1>
     </div>
 
-    <a href="{{ path('home') }}">Homepage</a>
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{{ path('home') }}">Homepage</a>
+        </div>
+    </div>
 
     {{ render(controller('AppBundle\\Controller\\User\\EmailChangeController::changeFormAction')) }}
     {{ render(controller('AppBundle\\Controller\\User\\AccountController::accountInformationFormAction')) }}

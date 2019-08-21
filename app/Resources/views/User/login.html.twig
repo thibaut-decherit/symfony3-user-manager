@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="row">
+        <h1 class="col">Login</h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{{ path('home') }}">Homepage</a>
+        </div>
+    </div>
+
     <div class="alert alert-danger mb-3 text-center d-none" id="login-error-alert"></div>
 
     {% include ':FlashAlert:flash-alert.html.twig' with {
