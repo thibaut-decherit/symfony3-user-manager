@@ -54,3 +54,7 @@ flash:
     password_reset_token_expired: Your password reset request has expired, please make a new one below
     password_updated: Password successfully updated
     registration_success: Registration successful, check your email address, you will receive an activation link shortly
+    verification_link_retry_delay_not_expired_plural: 'You have to wait %delay% minutes before requesting another
+    verification link.'
+    verification_link_retry_delay_not_expired_singular: 'You have to wait 1 minute before requesting another
+    verification link.'

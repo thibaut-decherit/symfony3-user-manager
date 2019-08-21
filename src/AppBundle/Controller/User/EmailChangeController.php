@@ -75,17 +75,28 @@ class EmailChangeController extends DefaultController
 
             $emailChangeRequestRetryDelay = $this->getParameter('email_change_request_send_email_again_delay');
 
-            // IF retry delay is not expired, only show success message without sending email and writing in database.
+            // IF retry delay is not expired, displays error message.
             if ($user->getEmailChangeRequestedAt() !== null
                 && $user->isEmailChangeRequestRetryDelayExpired($emailChangeRequestRetryDelay) === false) {
                 $this->getDoctrine()->getManager()->refresh($user);
 
-                $successMessage = $this->render(':FlashAlert/Message/User:email-change-request-success.html.twig', [
-                    'user' => $user
-                ]);
+                // Displays a flash message informing user that he has to wait $limit minutes between each attempt
+                $limit = ceil($emailChangeRequestRetryDelay / 60);
+                $errorMessage = '';
+
+                if ($limit < 2) {
+                    $errorMessage = $this->get('translator')->trans(
+                        'flash.user.verification_link_retry_delay_not_expired_singular'
+                    );
+                } else {
+                    $errorMessage = $this->get('translator')->trans('flash.user.verification_link_retry_delay_not_expired_plural', [
+                        '%delay%' => $limit
+                    ]);
+                }
+
                 $this->addFlash(
-                    'email-change-request-success-raw',
-                    $successMessage->getContent()
+                    'email-change-request-error',
+                    $errorMessage
                 );
 
                 $template = $this->render(':Form/User:email-change.html.twig', array(
