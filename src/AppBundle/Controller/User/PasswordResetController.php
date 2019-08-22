@@ -91,7 +91,7 @@ class PasswordResetController extends DefaultController
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
+     * @Route("/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
      * @return RedirectResponse|Response
      */
     public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
