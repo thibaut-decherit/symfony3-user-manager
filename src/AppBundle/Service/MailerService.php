@@ -3,9 +3,9 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
+use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\Templating\EngineInterface;
-use Swift_Mailer;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

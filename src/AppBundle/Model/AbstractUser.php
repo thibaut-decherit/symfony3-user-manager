@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Validator\Constraints as CustomAssert;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -10,7 +11,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints as CustomAssert;
 
 /**
  * Class AbstractUser
