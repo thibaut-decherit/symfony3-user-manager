@@ -23,12 +23,15 @@ class PasswordChangeType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => array(
-                    new UserPassword(['message' => 'form_errors.wrong_password']),
+                    new UserPassword([
+                        'message' => 'form_errors.user.wrong_password',
+                        'groups' => ['Password_Change']
+                    ]),
                 ),
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'form_errors.repeat_password',
+                'invalid_message' => 'form_errors.user.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => false,
                 'first_options' => array('label' => 'user.new_password'),
@@ -40,6 +43,7 @@ class PasswordChangeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
+            'validation_groups' => array('Password_Change')
         ));
     }
 

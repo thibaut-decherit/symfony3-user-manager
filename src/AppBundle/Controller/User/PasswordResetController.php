@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -46,8 +45,8 @@ class PasswordResetController extends DefaultController
             }
 
             $this->addFlash(
-                "success",
-                $this->get('translator')->trans('flash.password_reset_email_sent')
+                'password-reset-request-success',
+                $this->get('translator')->trans('flash.user.password_reset_email_sent')
             );
 
             if ($user === null) {
@@ -91,15 +90,15 @@ class PasswordResetController extends DefaultController
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/reset/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
+     * @Route("/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
      * @return RedirectResponse|Response
      */
     public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
         if ($user === null) {
             $this->addFlash(
-                "error",
-                $this->get('translator')->trans('flash.password_reset_token_expired')
+                'password-reset-error',
+                $this->get('translator')->trans('flash.user.password_reset_token_expired')
             );
 
             return $this->redirectToRoute('password_reset_request');
@@ -124,8 +123,8 @@ class PasswordResetController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "error",
-                $this->get('translator')->trans('flash.password_reset_token_expired')
+                'password-reset-error',
+                $this->get('translator')->trans('flash.user.password_reset_token_expired')
             );
 
             return $this->redirectToRoute('password_reset_request');
@@ -145,8 +144,8 @@ class PasswordResetController extends DefaultController
             $em->flush();
 
             $this->addFlash(
-                "login-flash-success",
-                $this->get('translator')->trans('flash.password_reset_success')
+                'password-reset-success',
+                $this->get('translator')->trans('flash.user.password_reset_success')
             );
 
             return $this->redirectToRoute('login');

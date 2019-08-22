@@ -29,7 +29,7 @@ class RegistrationType extends AbstractType
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'form_errors.repeat_password',
+                'invalid_message' => 'form_errors.user.repeat_password',
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => false,
                 'first_options' => array('label' => 'user.password'),
@@ -41,7 +41,7 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Default', 'Registration')
+            'validation_groups' => array('Registration')
         ));
     }
 

@@ -4,14 +4,15 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\MailerService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Security;
@@ -21,8 +22,6 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -183,7 +182,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             $this->mailer->loginAttemptOnNonActivatedAccount($user);
         }
 
-        $errorMessage = $this->translatorInterface->trans('user.invalid_credentials');
+        $errorMessage = $this->translatorInterface->trans('flash.user.invalid_credentials');
 
         return new JsonResponse([
             'errorMessage' => $errorMessage
@@ -208,8 +207,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function start(Request $request, AuthenticationException $exception = null)
     {
         $this->sessionInterface->getFlashBag()->add(
-            "error",
-            $this->translatorInterface->trans('flash.login_required')
+            'login-required-error',
+            $this->translatorInterface->trans('flash.user.login_required')
         );
         $url = $this->router->generate('login');
 

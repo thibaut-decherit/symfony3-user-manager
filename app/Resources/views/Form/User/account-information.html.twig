@@ -1,0 +1,27 @@
+{{ form_start(form, {
+    'action': path('account_information_edit_ajax'),
+    'attr': {
+        'id': 'ajax-form-account-information-edit',
+        'class': 'col p-0'
+    }
+}) }}
+
+{% include ':FlashAlert:flash-alert.html.twig' with {
+    'alertType': 'account-information-edit-success',
+    'alertStyle': 'success',
+    'textAlign': 'center'
+} %}
+
+<div class="row mt-3">
+    <div class="col">
+        {{ form_label(form.username) }}
+        {{ form_widget(form.username) }}
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <input type="submit" value="{{ 'global.form.save_changes'|trans }}"/>
+    </div>
+</div>
+{{ form_end(form) }}

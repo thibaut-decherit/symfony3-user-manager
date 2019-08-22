@@ -6,23 +6,28 @@
     }
 }) }}
 
-{# TODO: change alert color if success or error #}
-<div class="alert alert-dismissible d-none" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <p id="alert-message" class="text-center m-0"></p>
-</div>
+{% include ':FlashAlert:flash-alert.html.twig' with {
+    'rawMessage': true,
+    'alertType': 'email-change-request-success-raw',
+    'alertStyle': 'success',
+    'textAlign': 'center'
+} %}
 
-<div class="row">
-    <div class="col mt-3">
+{% include ':FlashAlert:flash-alert.html.twig' with {
+    'alertType': 'email-change-request-error',
+    'alertStyle': 'danger',
+    'textAlign': 'center'
+} %}
+
+<div class="row mt-3">
+    <div class="col">
         {{ form_label(form.emailChangePending) }}
         {{ form_widget(form.emailChangePending) }}
     </div>
 </div>
 
-<div class="row">
-    <div class="col mt-3">
+<div class="row mt-3">
+    <div class="col">
         <input type="submit" value="{{ 'global.form.save_changes'|trans }}"/>
     </div>
 </div>

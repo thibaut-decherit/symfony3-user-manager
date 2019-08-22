@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('password-strength-meter') }}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <h1 class="col">My Account</h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{{ path('home') }}">Homepage</a>
+        </div>
+    </div>
+
+    {{ render(controller('AppBundle\\Controller\\User\\EmailChangeController::changeFormAction')) }}
+    {{ render(controller('AppBundle\\Controller\\User\\AccountController::accountInformationFormAction')) }}
+    {{ render(controller('AppBundle\\Controller\\User\\PasswordChangeController::changeFormAction')) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('email-change') }}
+    {{ encore_entry_script_tags('account-information') }}
+    {{ encore_entry_script_tags('password-change') }}
+    {{ encore_entry_script_tags('password-strength-meter') }}
+{% endblock %}

@@ -1,7 +1,7 @@
 import {body} from '../helpers/jquery/selectors';
 
-body.on('submit', '#ajax-form-user-information-edit', function (e) {
-    const USER_INFORMATION_EDIT_FORM = $('#ajax-form-user-information-edit');
+body.on('submit', '#ajax-form-account-information-edit', function (e) {
+    const ACCOUNT_INFORMATION_EDIT_FORM = $('#ajax-form-account-information-edit');
 
     // Prevents submit button default behaviour
     e.preventDefault();
@@ -16,15 +16,13 @@ body.on('submit', '#ajax-form-user-information-edit', function (e) {
             // Parses the JSON response to "unescape" the html code within
             const TEMPLATE = JSON.parse(response.template);
 
-            USER_INFORMATION_EDIT_FORM.html(TEMPLATE);
-            USER_INFORMATION_EDIT_FORM.find('.alert').removeClass('d-none');
-            USER_INFORMATION_EDIT_FORM.find('#success-message').html(response.successMessage);
+            ACCOUNT_INFORMATION_EDIT_FORM.html(TEMPLATE);
         })
         // Triggered if response status == 400 (form has errors)
         .fail(function (response) {
             // Parses the JSON response to "unescape" the html code within
             const TEMPLATE = JSON.parse(response.responseJSON.template);
             //  Replaces html content of html element with updated form (with errors and input values)
-            USER_INFORMATION_EDIT_FORM.html(TEMPLATE);
+            ACCOUNT_INFORMATION_EDIT_FORM.html(TEMPLATE);
         });
 });

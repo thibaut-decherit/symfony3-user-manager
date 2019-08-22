@@ -34,8 +34,8 @@ security:
   # list with the most critical path
   #
   # Warning : If in the future the website supports locale prefixes (e.g. "en" or "pt", ALL paths MUST be updated
-  # (e.g. with [a-z]{2} pattern) or if it supports locales with country specified (e.g. "pt_BR" or "en_US", then
-  # [a-z]{2} pattern won't match)
+  # (e.g. with [a-z]{2} pattern, like so: ^/[a-z]{2}/account) or if it supports locales with country specified
+  # (e.g. "pt_BR" or "en_US", then [a-z]{2} pattern won't match)
   #
   # If access control is also controller side via @Security annotation, the strictest control will prevail, like so:
   # IS_AUTHENTICATED_ANONYMOUSLY < IS_AUTHENTICATED_FULLY < ROLE_SOMETHING < ROLE_SOMETHING_2 inheriting of ROLE_SOMETHING
