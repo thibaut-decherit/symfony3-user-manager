@@ -112,7 +112,7 @@ class MailerService
      * @param User $user
      * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
+    public function passwordResetRequest(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/password-reset-request.html.twig', [
