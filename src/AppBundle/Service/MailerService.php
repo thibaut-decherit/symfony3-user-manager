@@ -63,6 +63,52 @@ class MailerService
     }
 
     /**
+     * Email sent when user requests account deletion.
+     *
+     * @param User $user
+     * @param int $accountDeletionTokenLifetimeInMinutes
+     */
+    public function accountDeletionRequest(User $user, int $accountDeletionTokenLifetimeInMinutes)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/User/account-deletion-request.html.twig', [
+                'user' => $user,
+                'accountDeletionTokenLifetimeInMinutes' => $accountDeletionTokenLifetimeInMinutes
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.account_deletion_request'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * Email sent when user requests account deletion.
+     *
+     * @param User $user
+     */
+    public function accountDeletionSuccess(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/User/account-deletion-success.html.twig', [
+                'user' => $user,
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.account_deletion_success'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * Email sent when user requests email address change.
      *
      * @param User $user
