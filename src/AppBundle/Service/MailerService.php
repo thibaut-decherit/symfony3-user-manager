@@ -71,7 +71,7 @@ class MailerService
     public function emailChange(User $user, int $emailChangeTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/email-address-change.html.twig', [
+            'Email/User/email-address-change.html.twig', [
                 'user' => $user,
                 'emailChangeTokenLifetimeInMinutes' => $emailChangeTokenLifetimeInMinutes
             ]
@@ -92,7 +92,7 @@ class MailerService
     public function loginAttemptOnNonActivatedAccount(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/login-attempt-on-non-activated-account.html.twig', [
+            'Email/User/login-attempt-on-non-activated-account.html.twig', [
                 'user' => $user
             ]
         );
@@ -115,7 +115,7 @@ class MailerService
     public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/password-reset.html.twig', [
+            'Email/User/password-reset-request.html.twig', [
                 'user' => $user,
                 'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
             ]
@@ -136,7 +136,7 @@ class MailerService
     public function registrationAttemptOnExistingVerifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-verified-email-address.html.twig', [
+            'Email/User/registration-attempt-on-existing-verified-email-address.html.twig', [
                 'user' => $user
             ]
         );
@@ -156,7 +156,7 @@ class MailerService
     public function registrationAttemptOnExistingUnverifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-unverified-email-address.html.twig', [
+            'Email/User/registration-attempt-on-existing-unverified-email-address.html.twig', [
                 'user' => $user
             ]
         );
@@ -178,7 +178,7 @@ class MailerService
     public function registrationSuccess(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-success.html.twig', [
+            'Email/User/registration-success.html.twig', [
                 'user' => $user
             ]
         );
