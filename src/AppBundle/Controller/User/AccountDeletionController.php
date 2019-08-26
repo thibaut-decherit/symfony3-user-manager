@@ -4,6 +4,7 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
+use AppBundle\Model\AbstractUser;
 use DateTime;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,7 +37,7 @@ class AccountDeletionController extends DefaultController
     public function requestAction()
     {
         /**
-         * @var User
+         * @var AbstractUser
          */
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -60,31 +61,9 @@ class AccountDeletionController extends DefaultController
 
         $em->flush();
 
-        /*
-         * User is logged out now to prevent flash message from being added to logged in session and never being
-         * displayed because user is logged out by return $this->redirectToRoute('logout'); before the flash message
-         * has a chance to show up.
-         *
-         * Warning: If a logout success handler or a logout handler interface is implemented
-         * (see https://symfony.com/doc/current/security.html#logging-out) you will have to call it manually here as
-         * it will not be triggered
-         */
-        $this->get('security.token_storage')->setToken(null);
-        $this->get('session')->invalidate();
+        $this->get('session')->set('account-deletion-request', true);
 
-        /*
-         * User is now logged-out so flash message will be added to anon session and properly displayed when anon
-         * is redirected to home.
-         */
-        $successMessage = $this->render(':FlashAlert/Message/User:account-deletion-request-success.html.twig', [
-            'user' => $user
-        ]);
-        $this->addFlash(
-            'account-deletion-request-success-raw',
-            $successMessage->getContent()
-        );
-
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('logout');
     }
 
     /**
@@ -107,19 +86,11 @@ class AccountDeletionController extends DefaultController
 
         $currentUser = $this->getUser();
 
-        /*
-         * If user as logged in again before clicking on deletion link, he is logged out to prevent 500 error
-         * $user must be an instanceof UserInterface, an object implementing a __toString method, or a primitive string.
-         *
-         * This crash is maybe caused by a mismatch between session and database.
-         *
-         * Warning: If a logout success handler or a logout handler interface is implemented
-         * (see https://symfony.com/doc/current/security.html#logging-out) you will have to call it manually here as
-         * it will not be triggered
-         */
+        // See src/AppBundle/EventListener/AccountDeletionLogoutHandler.php for details
         if ($currentUser !== null && $currentUser === $user) {
-            $this->get('security.token_storage')->setToken(null);
-            $this->get('session')->invalidate();
+            $this->get('session')->set('account-deletion-confirmation', $user->getAccountDeletionToken());
+
+            return $this->redirectToRoute('logout');
         }
 
         $em = $this->getDoctrine()->getManager();

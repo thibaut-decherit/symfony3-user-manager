@@ -27,6 +27,9 @@ security:
       logout:
         path: /logout
         target: /
+        invalidate_session: false
+        handlers:
+          - security.logout.handler.account_deletion
       remember_me:
         secret: '%secret%'
 
