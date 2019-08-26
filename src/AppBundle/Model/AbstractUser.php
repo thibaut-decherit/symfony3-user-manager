@@ -84,7 +84,7 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
      * )
      * @Assert\Length(
      *     min=8,
-     *     max=150,
+     *     max=50,
      *     minMessage="form_errors.user.password_length",
      *     maxMessage="form_errors.user.password_length",
      *     groups={"Password_Change", "Registration"}
