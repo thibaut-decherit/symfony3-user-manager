@@ -162,12 +162,12 @@ class User extends AbstractUser
     }
 
     /**
-     * @param string $activationToken
+     * @param string|null $accountActivationToken
      * @return User
      */
-    public function setActivationToken(string $activationToken): self
+    public function setAccountActivationToken(?string $accountActivationToken): self
     {
-        $this->activationToken = $activationToken;
+        $this->accountActivationToken = $accountActivationToken;
 
         return $this;
     }

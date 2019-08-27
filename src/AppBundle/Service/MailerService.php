@@ -87,7 +87,7 @@ class MailerService
     }
 
     /**
-     * Email sent when user requests account deletion.
+     * Email sent when user confirms account deletion.
      *
      * @param AbstractUser $user
      */
@@ -217,7 +217,7 @@ class MailerService
     }
 
     /**
-     * Email sent after user registration.
+     * Email sent after user registration, it contains an activation link.
      *
      * @param AbstractUser $user
      */

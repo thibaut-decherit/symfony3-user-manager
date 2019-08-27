@@ -18,7 +18,7 @@ class AccountActivationController extends DefaultController
      * Handles account activation.
      *
      * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/activate-account/{activationToken}", name="account_activation", methods="GET")
+     * @Route("/activate-account/{accountActivationToken}", name="account_activation", methods="GET")
      * @return RedirectResponse|Response
      */
     public function activateAction(User $user = null)

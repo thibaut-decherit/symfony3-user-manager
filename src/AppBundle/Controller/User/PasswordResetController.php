@@ -155,8 +155,7 @@ class PasswordResetController extends DefaultController
         $passwordBlacklist = [
             $user->getUsername(),
             $user->getEmail(),
-            $user->getPasswordResetToken(),
-            $user->getActivationToken(),
+            $user->getPasswordResetToken()
         ];
 
         return $this->render(':User:password-reset-reset.html.twig', array(

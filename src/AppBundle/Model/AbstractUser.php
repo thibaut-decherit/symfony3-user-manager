@@ -203,11 +203,11 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
     protected $activated;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="string", length=86, unique=true)
+     * @ORM\Column(type="string", length=86, unique=true, nullable=true)
      */
-    protected $activationToken;
+    protected $accountActivationToken;
 
     /**
      * @var string|null
@@ -486,20 +486,20 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getActivationToken(): string
+    public function getAccountActivationToken(): ?string
     {
-        return $this->activationToken;
+        return $this->accountActivationToken;
     }
 
     /**
-     * @param string $activationToken
+     * @param string|null $accountActivationToken
      * @return $this
      */
-    public function setActivationToken(string $activationToken)
+    public function setAccountActivationToken(?string $accountActivationToken)
     {
-        $this->activationToken = $activationToken;
+        $this->accountActivationToken = $accountActivationToken;
 
         return $this;
     }
