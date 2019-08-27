@@ -7,10 +7,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
- * Class OnAuthPasswordRehashIfNeeded
+ * Class OnAuthPasswordRehashIfCostChange
  * @package AppBundle\EventListener
  */
-class OnAuthPasswordRehashIfNeeded
+class OnAuthPasswordRehashIfCostChange
 {
     /**
      * @var int
