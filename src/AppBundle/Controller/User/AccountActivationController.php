@@ -21,7 +21,7 @@ class AccountActivationController extends DefaultController
      * @Route("/activate-account/{activationToken}", name="account_activation", methods="GET")
      * @return RedirectResponse|Response
      */
-    public function activateAccountAction(User $user = null)
+    public function activateAction(User $user = null)
     {
         $this->addFlash(
             'account-activation-success',
