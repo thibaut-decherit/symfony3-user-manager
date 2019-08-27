@@ -5,7 +5,6 @@ namespace AppBundle\Controller\User;
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -19,9 +18,9 @@ class AccountActivationController extends DefaultController
      *
      * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
      * @Route("/activate-account/{accountActivationToken}", name="account_activation", methods="GET")
-     * @return RedirectResponse|Response
+     * @return RedirectResponse
      */
-    public function activateAction(User $user = null)
+    public function activateAction(User $user = null): RedirectResponse
     {
         $this->addFlash(
             'account-activation-success',

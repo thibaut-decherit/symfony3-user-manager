@@ -23,7 +23,7 @@ class RegistrationController extends DefaultController
      * @Route("/register", name="registration", methods="GET")
      * @return Response
      */
-    public function registerFormAction()
+    public function registerFormAction(): Response
     {
         $user = new User();
         $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
@@ -43,7 +43,7 @@ class RegistrationController extends DefaultController
      * @return JsonResponse
      * @throws Exception
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         $user = new User();
         $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
@@ -97,7 +97,7 @@ class RegistrationController extends DefaultController
      *
      * @param User $duplicateUser
      */
-    private function handleDuplicateUserRegistration(User $duplicateUser)
+    private function handleDuplicateUserRegistration(User $duplicateUser): void
     {
         if ($duplicateUser->isActivated()) {
             $this->container->get('mailer.service')->registrationAttemptOnExistingVerifiedEmailAddress($duplicateUser);
@@ -111,7 +111,7 @@ class RegistrationController extends DefaultController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @throws Exception
      */
-    private function handleSuccessfulRegistration(User $user, UserPasswordEncoderInterface $passwordEncoder)
+    private function handleSuccessfulRegistration(User $user, UserPasswordEncoderInterface $passwordEncoder): void
     {
         $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
 

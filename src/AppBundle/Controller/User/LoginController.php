@@ -18,7 +18,7 @@ class LoginController extends DefaultController
      * @Route("/login", name="login", methods={"GET", "POST"})
      * @return Response
      */
-    public function loginAction()
+    public function loginAction(): Response
     {
         return $this->render('User/login.html.twig');
     }

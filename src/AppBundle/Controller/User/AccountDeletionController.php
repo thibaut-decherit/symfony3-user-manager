@@ -21,7 +21,7 @@ class AccountDeletionController extends DefaultController
      *
      * @return Response
      */
-    public function showAction()
+    public function showAction(): Response
     {
         return $this->render(':User:account-deletion.html.twig');
     }
@@ -33,7 +33,7 @@ class AccountDeletionController extends DefaultController
      * @return RedirectResponse
      * @throws Exception
      */
-    public function requestAction()
+    public function requestAction(): RedirectResponse
     {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -73,7 +73,7 @@ class AccountDeletionController extends DefaultController
      * @Route("/delete-account/{accountDeletionToken}", name="account_deletion", methods="GET")
      * @return RedirectResponse
      */
-    public function deleteAction(User $user = null)
+    public function deleteAction(User $user = null): RedirectResponse
     {
         if ($user === null) {
             $this->addFlash(

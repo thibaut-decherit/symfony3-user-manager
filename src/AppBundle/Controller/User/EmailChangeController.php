@@ -24,7 +24,7 @@ class EmailChangeController extends DefaultController
      *
      * @return Response
      */
-    public function changeFormAction()
+    public function changeFormAction(): Response
     {
         $user = $this->getUser();
 
@@ -43,7 +43,7 @@ class EmailChangeController extends DefaultController
      * @return JsonResponse
      * @throws Exception
      */
-    public function changeRequestAction(Request $request)
+    public function changeRequestAction(Request $request): JsonResponse
     {
         $user = $this->getUser();
 
@@ -175,7 +175,7 @@ class EmailChangeController extends DefaultController
      * @return Response
      * @throws Exception
      */
-    public function changeAction(User $user = null)
+    public function changeAction(User $user = null): Response
     {
         if (is_null($user)) {
             $this->addFlash(
