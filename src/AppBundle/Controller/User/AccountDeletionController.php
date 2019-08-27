@@ -61,6 +61,10 @@ class AccountDeletionController extends DefaultController
 
         $em->flush();
 
+        /*
+         * Confirmation flash alert is handled by AppBundle/Security/AccountDeletionLogoutHandler which will retrieve
+         * the following session attribute to know it has to do so.
+         */
         $this->get('session')->set('account-deletion-request', true);
 
         return $this->redirectToRoute('logout');
@@ -86,7 +90,11 @@ class AccountDeletionController extends DefaultController
 
         $currentUser = $this->getUser();
 
-        // See src/AppBundle/EventListener/AccountDeletionLogoutHandler.php for details
+        /*
+         * If user requesting deletion is logged in, he is logged out and account deletion is handled to
+         * AppBundle/EventListener/AccountDeletionLogoutHandler to prevent 500 error "$user must be an instanceof
+         * UserInterface, an object implementing a __toString method, or a primitive string."
+         */
         if ($currentUser !== null && $currentUser === $user) {
             $this->get('session')->set('account-deletion-confirmation', $user->getAccountDeletionToken());
 
