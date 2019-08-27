@@ -4,7 +4,6 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
-use AppBundle\Model\AbstractUser;
 use DateTime;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,9 +35,6 @@ class AccountDeletionController extends DefaultController
      */
     public function requestAction()
     {
-        /**
-         * @var AbstractUser
-         */
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 

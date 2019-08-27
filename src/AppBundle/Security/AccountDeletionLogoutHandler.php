@@ -2,7 +2,6 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Model\AbstractUser;
 use AppBundle\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,9 +136,6 @@ class AccountDeletionLogoutHandler implements LogoutHandlerInterface
      */
     private function userRequestedAccountDeletion(Request $request, Response $response, TokenInterface $token)
     {
-        /**
-         * @var AbstractUser
-         */
         $user = $token->getUser();
 
         $successMessage = $this->twigEngine->render(
