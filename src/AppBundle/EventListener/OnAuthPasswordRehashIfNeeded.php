@@ -50,7 +50,7 @@ class OnAuthPasswordRehashIfNeeded
      *
      * @param InteractiveLoginEvent $event
      */
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();
         $options = ["cost" => $this->cost];

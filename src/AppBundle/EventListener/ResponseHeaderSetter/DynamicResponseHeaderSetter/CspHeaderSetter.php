@@ -279,6 +279,7 @@ class CspHeaderSetter
     private function setDirectives(array $directives): CspHeaderSetter
     {
         $this->directives = $directives;
+
         return $this;
     }
 }
