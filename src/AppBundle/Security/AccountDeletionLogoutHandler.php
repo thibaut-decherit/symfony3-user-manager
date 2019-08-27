@@ -16,11 +16,14 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class AccountDeletionLogoutHandler
  *
- * Note that this handler requires logout.invalidate_session to false in firewall settings to work properly.
+ * This class is called on logout and will do extra tasks if specific conditions are met. See supports() method for
+ * details.
+ *
+ * Note that this handler requires logout.invalidate_session set to false in firewall settings to work properly.
  * This setting will disable SessionLogoutHandler->logout() which is normally called automatically on logout to
  * invalidate the session.
- * To compensate that, this handler must call SessionLogoutHandler->logout() manually to ensure the session is still
- * properly invalidated.
+ * To compensate that, this handler MUST call SessionLogoutHandler->logout() manually to ensure the session is still
+ * properly invalidated during the logout process.
  *
  * @package AppBundle\Security
  */
@@ -183,6 +186,14 @@ class AccountDeletionLogoutHandler implements LogoutHandlerInterface
         $user = $em->getRepository('AppBundle:User')->findOneBy([
             'accountDeletionToken' => $accountDeletionToken
         ]);
+
+        /*
+         * Safety, in case something goes wrong with the account-deletion-confirmation data in session. E.g. if the
+         * findOneBy returned the first user with accountDeletionToken to null (in most cases, the admin)
+         */
+        if (empty($accountDeletionToken) || empty($user) || empty($user->getAccountDeletionToken())) {
+            return;
+        }
 
         $em->remove($user);
         $em->flush();
