@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\Security;
 
 use AppBundle\Model\AbstractUser;
 use AppBundle\Service\MailerService;
@@ -22,7 +22,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * To compensate that, this handler must call SessionLogoutHandler->logout() manually to ensure the session is still
  * properly invalidated.
  *
- * @package AppBundle\EventListener
+ * @package AppBundle\Security
  */
 class AccountDeletionLogoutHandler implements LogoutHandlerInterface
 {

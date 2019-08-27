@@ -65,7 +65,7 @@ services:
       - { name: kernel.event_listener, event: security.interactive_login, lazy: true }
 
   security.logout.handler.account_deletion:
-    class: AppBundle\EventListener\AccountDeletionLogoutHandler
+    class: AppBundle\Security\AccountDeletionLogoutHandler
     arguments:
       - '@security.logout.handler.session'
       - '@mailer.service'
