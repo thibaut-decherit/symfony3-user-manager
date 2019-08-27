@@ -30,6 +30,7 @@ class AccountActivationController extends DefaultController
 
         if ($user !== null && $user->isActivated() === false) {
             $user->setActivated(true);
+            $user->setAccountActivationToken(null);
 
             $this->getDoctrine()->getManager()->flush();
         }
