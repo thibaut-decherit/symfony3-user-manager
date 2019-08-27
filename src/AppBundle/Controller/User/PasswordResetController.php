@@ -76,7 +76,7 @@ class PasswordResetController extends DefaultController
             $user->setPasswordResetRequestedAt(new DateTime());
 
             $passwordResetTokenLifetimeInMinutes = ceil($this->getParameter('password_reset_token_lifetime') / 60);
-            $this->get('mailer.service')->passwordReset($user, $passwordResetTokenLifetimeInMinutes);
+            $this->get('mailer.service')->passwordResetRequest($user, $passwordResetTokenLifetimeInMinutes);
 
             $em->flush();
         }

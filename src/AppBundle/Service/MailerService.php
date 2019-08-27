@@ -63,6 +63,52 @@ class MailerService
     }
 
     /**
+     * Email sent when user requests account deletion.
+     *
+     * @param User $user
+     * @param int $accountDeletionTokenLifetimeInMinutes
+     */
+    public function accountDeletionRequest(User $user, int $accountDeletionTokenLifetimeInMinutes)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/User/account-deletion-request.html.twig', [
+                'user' => $user,
+                'accountDeletionTokenLifetimeInMinutes' => $accountDeletionTokenLifetimeInMinutes
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.account_deletion_request'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
+     * Email sent when user requests account deletion.
+     *
+     * @param User $user
+     */
+    public function accountDeletionSuccess(User $user)
+    {
+        $emailBody = $this->twigEngine->render(
+            'Email/User/account-deletion-success.html.twig', [
+                'user' => $user,
+            ]
+        );
+
+        $this->sendEmail(
+            $this->translatorInterface->trans('mailer.subjects.account_deletion_success'),
+            [$this->autoMailerAddress => 'UserManager'],
+            $user->getEmail(),
+            $this->replyTo,
+            $emailBody
+        );
+    }
+
+    /**
      * Email sent when user requests email address change.
      *
      * @param User $user
@@ -71,7 +117,7 @@ class MailerService
     public function emailChange(User $user, int $emailChangeTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/email-address-change.html.twig', [
+            'Email/User/email-address-change.html.twig', [
                 'user' => $user,
                 'emailChangeTokenLifetimeInMinutes' => $emailChangeTokenLifetimeInMinutes
             ]
@@ -92,7 +138,7 @@ class MailerService
     public function loginAttemptOnNonActivatedAccount(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/login-attempt-on-non-activated-account.html.twig', [
+            'Email/User/login-attempt-on-non-activated-account.html.twig', [
                 'user' => $user
             ]
         );
@@ -112,10 +158,10 @@ class MailerService
      * @param User $user
      * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordReset(User $user, int $passwordResetTokenLifetimeInMinutes)
+    public function passwordResetRequest(User $user, int $passwordResetTokenLifetimeInMinutes)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/password-reset.html.twig', [
+            'Email/User/password-reset-request.html.twig', [
                 'user' => $user,
                 'passwordResetTokenLifetimeInMinutes' => $passwordResetTokenLifetimeInMinutes
             ]
@@ -136,7 +182,7 @@ class MailerService
     public function registrationAttemptOnExistingVerifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-verified-email-address.html.twig', [
+            'Email/User/registration-attempt-on-existing-verified-email-address.html.twig', [
                 'user' => $user
             ]
         );
@@ -156,7 +202,7 @@ class MailerService
     public function registrationAttemptOnExistingUnverifiedEmailAddress(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-attempt-on-existing-unverified-email-address.html.twig', [
+            'Email/User/registration-attempt-on-existing-unverified-email-address.html.twig', [
                 'user' => $user
             ]
         );
@@ -178,7 +224,7 @@ class MailerService
     public function registrationSuccess(User $user)
     {
         $emailBody = $this->twigEngine->render(
-            'Email/registration-success.html.twig', [
+            'Email/User/registration-success.html.twig', [
                 'user' => $user
             ]
         );

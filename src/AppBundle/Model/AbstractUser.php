@@ -84,7 +84,7 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
      * )
      * @Assert\Length(
      *     min=8,
-     *     max=150,
+     *     max=50,
      *     minMessage="form_errors.user.password_length",
      *     maxMessage="form_errors.user.password_length",
      *     groups={"Password_Change", "Registration"}
@@ -157,6 +157,20 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $emailChangeRequestedAt;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=86, nullable=true, unique=true)
+     */
+    protected $accountDeletionToken;
+
+    /**
+     * @var DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $accountDeletionRequestedAt;
 
     /**
      * ORM mapping not needed if password hash algorithm generates it's own salt (e.g bcrypt)
@@ -346,6 +360,42 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
     public function setEmailChangeRequestedAt(?DateTime $emailChangeRequestedAt): AbstractUser
     {
         $this->emailChangeRequestedAt = $emailChangeRequestedAt;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccountDeletionToken(): ?string
+    {
+        return $this->accountDeletionToken;
+    }
+
+    /**
+     * @param string|null $accountDeletionToken
+     * @return AbstractUser
+     */
+    public function setAccountDeletionToken(?string $accountDeletionToken): AbstractUser
+    {
+        $this->accountDeletionToken = $accountDeletionToken;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getAccountDeletionRequestedAt(): ?DateTime
+    {
+        return $this->accountDeletionRequestedAt;
+    }
+
+    /**
+     * @param DateTime|null $accountDeletionRequestedAt
+     * @return AbstractUser
+     */
+    public function setAccountDeletionRequestedAt(?DateTime $accountDeletionRequestedAt): AbstractUser
+    {
+        $this->accountDeletionRequestedAt = $accountDeletionRequestedAt;
         return $this;
     }
 
@@ -576,6 +626,15 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
         $bytes = random_bytes($entropy / 8);
 
         return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
+    }
+
+    /**
+     * @param int $accountDeletionTokenLifetime
+     * @return bool
+     */
+    public function isAccountDeletionTokenExpired(int $accountDeletionTokenLifetime): bool
+    {
+        return $this->getAccountDeletionRequestedAt()->getTimestamp() + $accountDeletionTokenLifetime < time();
     }
 
     /**
