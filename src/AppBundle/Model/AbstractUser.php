@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  - password change
  *  - email address change with verification link sent by email
  *  - password reset
+ *  - account deletion with verification link sent by email
  *
  * @UniqueEntity(
  *     fields={"username"},
