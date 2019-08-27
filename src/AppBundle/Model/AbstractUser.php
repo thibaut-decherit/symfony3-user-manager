@@ -247,11 +247,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string $username
-     * @return AbstractUser
+     * @return $this
      */
-    public function setUsername(string $username): AbstractUser
+    public function setUsername(string $username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -265,11 +266,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string $password
-     * @return AbstractUser
+     * @return $this
      */
-    public function setPassword(string $password): AbstractUser
+    public function setPassword(string $password)
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -283,11 +285,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $plainPassword
-     * @return AbstractUser
+     * @return $this
      */
-    public function setPlainPassword(?string $plainPassword): AbstractUser
+    public function setPlainPassword(?string $plainPassword)
     {
         $this->plainPassword = $plainPassword;
+
         return $this;
     }
 
@@ -301,11 +304,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string $email
-     * @return AbstractUser
+     * @return $this
      */
-    public function setEmail(string $email): AbstractUser
+    public function setEmail(string $email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -319,11 +323,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $emailChangePending
-     * @return AbstractUser
+     * @return $this
      */
-    public function setEmailChangePending(?string $emailChangePending): AbstractUser
+    public function setEmailChangePending(?string $emailChangePending)
     {
         $this->emailChangePending = $emailChangePending;
+
         return $this;
     }
 
@@ -337,11 +342,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $emailChangeToken
-     * @return AbstractUser
+     * @return $this
      */
-    public function setEmailChangeToken(?string $emailChangeToken): AbstractUser
+    public function setEmailChangeToken(?string $emailChangeToken)
     {
         $this->emailChangeToken = $emailChangeToken;
+
         return $this;
     }
 
@@ -355,11 +361,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param DateTime|null $emailChangeRequestedAt
-     * @return AbstractUser
+     * @return $this
      */
-    public function setEmailChangeRequestedAt(?DateTime $emailChangeRequestedAt): AbstractUser
+    public function setEmailChangeRequestedAt(?DateTime $emailChangeRequestedAt)
     {
         $this->emailChangeRequestedAt = $emailChangeRequestedAt;
+
         return $this;
     }
 
@@ -373,11 +380,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $accountDeletionToken
-     * @return AbstractUser
+     * @return $this
      */
-    public function setAccountDeletionToken(?string $accountDeletionToken): AbstractUser
+    public function setAccountDeletionToken(?string $accountDeletionToken)
     {
         $this->accountDeletionToken = $accountDeletionToken;
+
         return $this;
     }
 
@@ -391,11 +399,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param DateTime|null $accountDeletionRequestedAt
-     * @return AbstractUser
+     * @return $this
      */
-    public function setAccountDeletionRequestedAt(?DateTime $accountDeletionRequestedAt): AbstractUser
+    public function setAccountDeletionRequestedAt(?DateTime $accountDeletionRequestedAt)
     {
         $this->accountDeletionRequestedAt = $accountDeletionRequestedAt;
+
         return $this;
     }
 
@@ -409,11 +418,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $salt
-     * @return AbstractUser
+     * @return $this
      */
-    public function setSalt(?string $salt): AbstractUser
+    public function setSalt(?string $salt)
     {
         $this->salt = $salt;
+
         return $this;
     }
 
@@ -427,11 +437,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param array $roles
-     * @return AbstractUser
+     * @return $this
      */
-    public function setRoles(array $roles): AbstractUser
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -445,11 +456,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param DateTime $registeredAt
-     * @return AbstractUser
+     * @return $this
      */
-    public function setRegisteredAt(DateTime $registeredAt): AbstractUser
+    public function setRegisteredAt(DateTime $registeredAt)
     {
         $this->registeredAt = $registeredAt;
+
         return $this;
     }
 
@@ -463,11 +475,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param bool $activated
-     * @return AbstractUser
+     * @return $this
      */
-    public function setActivated(bool $activated): AbstractUser
+    public function setActivated(bool $activated)
     {
         $this->activated = $activated;
+
         return $this;
     }
 
@@ -481,11 +494,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string $activationToken
-     * @return AbstractUser
+     * @return $this
      */
-    public function setActivationToken(string $activationToken): AbstractUser
+    public function setActivationToken(string $activationToken)
     {
         $this->activationToken = $activationToken;
+
         return $this;
     }
 
@@ -499,11 +513,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param string|null $passwordResetToken
-     * @return AbstractUser
+     * @return $this
      */
-    public function setPasswordResetToken(?string $passwordResetToken): AbstractUser
+    public function setPasswordResetToken(?string $passwordResetToken)
     {
         $this->passwordResetToken = $passwordResetToken;
+
         return $this;
     }
 
@@ -517,11 +532,12 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     /**
      * @param DateTime|null $passwordResetRequestedAt
-     * @return AbstractUser
+     * @return $this
      */
-    public function setPasswordResetRequestedAt(?DateTime $passwordResetRequestedAt): AbstractUser
+    public function setPasswordResetRequestedAt(?DateTime $passwordResetRequestedAt)
     {
         $this->passwordResetRequestedAt = $passwordResetRequestedAt;
+
         return $this;
     }
 
