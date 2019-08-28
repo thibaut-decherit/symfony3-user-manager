@@ -68,7 +68,7 @@ class MailerService
      * @param AbstractUser $user
      * @param int $accountDeletionTokenLifetimeInMinutes
      */
-    public function accountDeletionRequest(AbstractUser $user, int $accountDeletionTokenLifetimeInMinutes)
+    public function accountDeletionRequest(AbstractUser $user, int $accountDeletionTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/account-deletion-request.html.twig', [
@@ -91,7 +91,7 @@ class MailerService
      *
      * @param AbstractUser $user
      */
-    public function accountDeletionSuccess(AbstractUser $user)
+    public function accountDeletionSuccess(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/account-deletion-success.html.twig', [
@@ -114,7 +114,7 @@ class MailerService
      * @param AbstractUser $user
      * @param int $emailChangeTokenLifetimeInMinutes
      */
-    public function emailChange(AbstractUser $user, int $emailChangeTokenLifetimeInMinutes)
+    public function emailChange(AbstractUser $user, int $emailChangeTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/email-address-change.html.twig', [
@@ -135,7 +135,7 @@ class MailerService
     /**
      * @param AbstractUser $user
      */
-    public function loginAttemptOnNonActivatedAccount(AbstractUser $user)
+    public function loginAttemptOnNonActivatedAccount(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/login-attempt-on-non-activated-account.html.twig', [
@@ -158,7 +158,7 @@ class MailerService
      * @param AbstractUser $user
      * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordResetRequest(AbstractUser $user, int $passwordResetTokenLifetimeInMinutes)
+    public function passwordResetRequest(AbstractUser $user, int $passwordResetTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/password-reset-request.html.twig', [
@@ -179,7 +179,7 @@ class MailerService
     /**
      * @param AbstractUser $user
      */
-    public function registrationAttemptOnExistingVerifiedEmailAddress(AbstractUser $user)
+    public function registrationAttemptOnExistingVerifiedEmailAddress(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-attempt-on-existing-verified-email-address.html.twig', [
@@ -199,7 +199,7 @@ class MailerService
     /**
      * @param AbstractUser $user
      */
-    public function registrationAttemptOnExistingUnverifiedEmailAddress(AbstractUser $user)
+    public function registrationAttemptOnExistingUnverifiedEmailAddress(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-attempt-on-existing-unverified-email-address.html.twig', [
@@ -221,7 +221,7 @@ class MailerService
      *
      * @param AbstractUser $user
      */
-    public function registrationSuccess(AbstractUser $user)
+    public function registrationSuccess(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-success.html.twig', [
@@ -246,7 +246,7 @@ class MailerService
      * @param $body
      * @param null $attachment
      */
-    private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null)
+    private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null): void
     {
         $message = Swift_Message::newInstance()
             ->setSubject($subject)

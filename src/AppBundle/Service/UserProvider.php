@@ -31,9 +31,9 @@ class UserProvider implements UserProviderInterface
 
     /**
      * @param string $username
-     * @return null|object|UserInterface
+     * @return object|UserInterface|null
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): ?object
     {
         $user = $this->findUserByUsername($username);
 
@@ -46,9 +46,9 @@ class UserProvider implements UserProviderInterface
 
     /**
      * @param UserInterface $user
-     * @return null|object|UserInterface
+     * @return object|UserInterface|null
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): ?object
     {
         if (!$user instanceof User) {
             throw new UnsupportedUserException(
@@ -65,7 +65,7 @@ class UserProvider implements UserProviderInterface
      * @param string $class
      * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return User::class === $class;
     }
@@ -74,9 +74,9 @@ class UserProvider implements UserProviderInterface
      * Finds a user by username.
      *
      * @param string $username
-     * @return null|object
+     * @return object|null
      */
-    protected function findUserByUsername(string $username)
+    protected function findUserByUsername(string $username): ?object
     {
         return $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $username]);
     }
