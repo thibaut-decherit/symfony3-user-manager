@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <h1 class="col">Account Activation</h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <p>
+                Hey {{ user.username }}! Please click on the button below to activate your account.
+            </p>
+        </div>
+    </div>
+    {{ include(':Form/User/Button:account-activation-confirmation.html.twig') }}
+{% endblock %}
