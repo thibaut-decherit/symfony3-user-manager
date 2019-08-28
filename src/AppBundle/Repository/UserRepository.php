@@ -10,7 +10,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
-    public function findUnactivatedAccountsOlderThan($days, $limit)
+    /**
+     * @param $days
+     * @param $limit
+     * @return array
+     */
+    public function findUnactivatedAccountsOlderThan($days, $limit): array
     {
         $qb = $this->createQueryBuilder('user');
         $qb

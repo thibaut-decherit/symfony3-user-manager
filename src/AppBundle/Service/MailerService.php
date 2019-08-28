@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
+use AppBundle\Model\AbstractUser;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\Templating\EngineInterface;
@@ -17,12 +17,12 @@ class MailerService
     /**
      * @var string
      */
-    private $autoMailerAddress;
+    private $mailerAddress;
 
     /**
      * @var string
      */
-    private $replyTo;
+    private $replyToAddress;
 
     /**
      * @var EngineInterface
@@ -41,22 +41,22 @@ class MailerService
 
     /**
      * MailerService constructor.
-     * @param string $autoMailerAddress
-     * @param string $replyTo
+     * @param string $mailerAddress
+     * @param string $replyToAddress
      * @param EngineInterface $twigEngine
      * @param Swift_Mailer $swiftMailer
      * @param TranslatorInterface $translatorInterface
      */
     public function __construct(
-        string $autoMailerAddress,
-        string $replyTo,
+        string $mailerAddress,
+        string $replyToAddress,
         EngineInterface $twigEngine,
         Swift_Mailer $swiftMailer,
         TranslatorInterface $translatorInterface
     )
     {
-        $this->autoMailerAddress = $autoMailerAddress;
-        $this->replyTo = $replyTo;
+        $this->mailerAddress = $mailerAddress;
+        $this->replyToAddress = $replyToAddress;
         $this->twigEngine = $twigEngine;
         $this->swiftMailer = $swiftMailer;
         $this->translatorInterface = $translatorInterface;
@@ -65,10 +65,10 @@ class MailerService
     /**
      * Email sent when user requests account deletion.
      *
-     * @param User $user
+     * @param AbstractUser $user
      * @param int $accountDeletionTokenLifetimeInMinutes
      */
-    public function accountDeletionRequest(User $user, int $accountDeletionTokenLifetimeInMinutes)
+    public function accountDeletionRequest(AbstractUser $user, int $accountDeletionTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/account-deletion-request.html.twig', [
@@ -79,19 +79,19 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.account_deletion_request'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
 
     /**
-     * Email sent when user requests account deletion.
+     * Email sent when user confirms account deletion.
      *
-     * @param User $user
+     * @param AbstractUser $user
      */
-    public function accountDeletionSuccess(User $user)
+    public function accountDeletionSuccess(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/account-deletion-success.html.twig', [
@@ -101,9 +101,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.account_deletion_success'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -111,10 +111,10 @@ class MailerService
     /**
      * Email sent when user requests email address change.
      *
-     * @param User $user
+     * @param AbstractUser $user
      * @param int $emailChangeTokenLifetimeInMinutes
      */
-    public function emailChange(User $user, int $emailChangeTokenLifetimeInMinutes)
+    public function emailChange(AbstractUser $user, int $emailChangeTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/email-address-change.html.twig', [
@@ -125,29 +125,29 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.email_address_change'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmailChangePending(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
 
     /**
-     * @param User $user
+     * @param AbstractUser $user
      */
-    public function loginAttemptOnNonActivatedAccount(User $user)
+    public function loginAttemptOnNonActivatedAccount(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
-            'Email/User/login-attempt-on-non-activated-account.html.twig', [
+            ':Email/User:login-attempt-on-unactivated-account.html.twig', [
                 'user' => $user
             ]
         );
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.login_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -155,10 +155,10 @@ class MailerService
     /**
      * Email sent when user requests password reset.
      *
-     * @param User $user
+     * @param AbstractUser $user
      * @param int $passwordResetTokenLifetimeInMinutes
      */
-    public function passwordResetRequest(User $user, int $passwordResetTokenLifetimeInMinutes)
+    public function passwordResetRequest(AbstractUser $user, int $passwordResetTokenLifetimeInMinutes): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/password-reset-request.html.twig', [
@@ -169,17 +169,17 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.password_reset'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
 
     /**
-     * @param User $user
+     * @param AbstractUser $user
      */
-    public function registrationAttemptOnExistingVerifiedEmailAddress(User $user)
+    public function registrationAttemptOnExistingVerifiedEmailAddress(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-attempt-on-existing-verified-email-address.html.twig', [
@@ -189,17 +189,17 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
 
     /**
-     * @param User $user
+     * @param AbstractUser $user
      */
-    public function registrationAttemptOnExistingUnverifiedEmailAddress(User $user)
+    public function registrationAttemptOnExistingUnverifiedEmailAddress(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-attempt-on-existing-unverified-email-address.html.twig', [
@@ -209,19 +209,19 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
 
     /**
-     * Email sent after user registration.
+     * Email sent after user registration, it contains an activation link.
      *
-     * @param User $user
+     * @param AbstractUser $user
      */
-    public function registrationSuccess(User $user)
+    public function registrationSuccess(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
             'Email/User/registration-success.html.twig', [
@@ -231,9 +231,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.welcome'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -242,17 +242,17 @@ class MailerService
      * @param $subject
      * @param $from
      * @param $to
-     * @param $replyTo
+     * @param $replyToAddress
      * @param $body
      * @param null $attachment
      */
-    private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null)
+    private function sendEmail($subject, $from, $to, $replyToAddress, $body, $attachment = null): void
     {
         $message = Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setReplyTo($replyTo)
+            ->setReplyTo($replyToAddress)
             ->setBody($body, 'text/html');
         if ($attachment) {
             $message->attach($attachment);

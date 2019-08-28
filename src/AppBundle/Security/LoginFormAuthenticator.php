@@ -112,9 +112,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      *
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
-     * @return User|null|object|UserInterface
+     * @return User|object|UserInterface|null
      */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider): ?object
     {
         $usernameOrEmail = $credentials['username'];
 
@@ -130,7 +130,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param UserInterface $user
      * @return bool
      */
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         $password = $credentials['password'];
 
@@ -147,7 +147,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param string $providerKey
      * @return JsonResponse
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): JsonResponse
     {
         $targetPath = null;
         // if the user hits a secure page and start() was called, this was
@@ -166,7 +166,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param AuthenticationException $exception
      * @return JsonResponse
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): JsonResponse
     {
         // IF account is not yet activated, send a reminder email with an activation link
         if ($exception instanceof DisabledException) {
@@ -192,7 +192,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     /**
      * @return string
      */
-    protected function getLoginUrl()
+    protected function getLoginUrl(): string
     {
         return $this->router->generate('login');
     }
@@ -204,7 +204,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @param AuthenticationException|null $exception
      * @return RedirectResponse
      */
-    public function start(Request $request, AuthenticationException $exception = null)
+    public function start(Request $request, AuthenticationException $exception = null): RedirectResponse
     {
         $this->sessionInterface->getFlashBag()->add(
             'login-required-error',
@@ -220,7 +220,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      *
      * @return bool
      */
-    public function supportsRememberMe()
+    public function supportsRememberMe(): bool
     {
         return true;
     }

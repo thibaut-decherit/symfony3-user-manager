@@ -62,7 +62,7 @@ class RedirectIfAuthenticated
      *
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         /*
          * $this->security->getToken() === null is needed to prevent "AuthenticationCredentialsNotFoundException

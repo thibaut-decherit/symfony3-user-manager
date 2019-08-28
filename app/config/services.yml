@@ -57,8 +57,8 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
-  app.on_auth_password_rehash_if_needed:
-    class: AppBundle\EventListener\OnAuthPasswordRehashIfNeeded
+  app.on_auth_password_rehash_if_cost_change:
+    class: AppBundle\EventListener\OnAuthPasswordRehashIfCostChange
     arguments:
       - '%bcrypt_cost%'
     tags:

@@ -19,13 +19,17 @@ class RemoveUnactivatedAccountsCommand extends Command
      */
     private $em;
 
+    /**
+     * RemoveUnactivatedAccountsCommand constructor.
+     * @param EntityManagerInterface $em
+     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
         $this->em = $em;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('app:remove-unactivated-accounts-older-than')
@@ -33,6 +37,11 @@ class RemoveUnactivatedAccountsCommand extends Command
             ->addArgument('days', InputArgument::REQUIRED);
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void|null
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $limit = 100;

@@ -4,7 +4,6 @@ namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
 use AppBundle\Entity\User;
-use AppBundle\Model\AbstractUser;
 use DateTime;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,7 +21,7 @@ class AccountDeletionController extends DefaultController
      *
      * @return Response
      */
-    public function showAction()
+    public function showAction(): Response
     {
         return $this->render(':User:account-deletion.html.twig');
     }
@@ -34,11 +33,8 @@ class AccountDeletionController extends DefaultController
      * @return RedirectResponse
      * @throws Exception
      */
-    public function requestAction()
+    public function requestAction(): RedirectResponse
     {
-        /**
-         * @var AbstractUser
-         */
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -77,7 +73,7 @@ class AccountDeletionController extends DefaultController
      * @Route("/delete-account/{accountDeletionToken}", name="account_deletion", methods="GET")
      * @return RedirectResponse
      */
-    public function deleteAction(User $user = null)
+    public function deleteAction(User $user = null): RedirectResponse
     {
         if ($user === null) {
             $this->addFlash(

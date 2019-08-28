@@ -7,10 +7,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
- * Class OnAuthPasswordRehashIfNeeded
+ * Class OnAuthPasswordRehashIfCostChange
  * @package AppBundle\EventListener
  */
-class OnAuthPasswordRehashIfNeeded
+class OnAuthPasswordRehashIfCostChange
 {
     /**
      * @var int
@@ -50,7 +50,7 @@ class OnAuthPasswordRehashIfNeeded
      *
      * @param InteractiveLoginEvent $event
      */
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();
         $options = ["cost" => $this->cost];

@@ -11,8 +11,15 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class BreachedPasswordValidator extends ConstraintValidator
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translatorInterface;
 
+    /**
+     * BreachedPasswordValidator constructor.
+     * @param TranslatorInterface $translatorInterface
+     */
     public function __construct(TranslatorInterface $translatorInterface)
     {
         $this->translatorInterface = $translatorInterface;
@@ -33,7 +40,7 @@ class BreachedPasswordValidator extends ConstraintValidator
      * @param Constraint $constraint
      * @throws GuzzleException
      */
-    public function validate($plainPassword, Constraint $constraint)
+    public function validate($plainPassword, Constraint $constraint): void
     {
         $plainPasswordSHA1 = strtoupper(sha1($plainPassword));
         $plainPasswordSHA1Prefix = substr($plainPasswordSHA1, 0, 5);
@@ -57,8 +64,7 @@ class BreachedPasswordValidator extends ConstraintValidator
         // Constraint violation if hashes match (strpos returns an integer if there is a match and false otherwise)
         if (is_int(mb_strpos($breachedPasswordsSuffixes, $plainPasswordSHA1Suffix, 0, 'UTF-8'))) {
             $constraint->message = $this->translatorInterface->trans('form_errors.user.breached_password', [], 'validators');
-            $this->context->buildViolation($constraint->message)
-                ->addViolation();
+            $this->context->buildViolation($constraint->message)->addViolation();
         }
     }
 }

@@ -7,7 +7,6 @@ use AppBundle\Entity\User;
 use DateTime;
 use Exception;
 use SensioLabs\Security\Exception\HttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,10 +24,10 @@ class PasswordResetController extends DefaultController
      *
      * @param Request $request
      * @Route(name="password_reset_request", methods={"GET", "POST"})
-     * @return RedirectResponse|Response
+     * @return Response
      * @throws Exception
      */
-    public function requestAction(Request $request)
+    public function requestAction(Request $request): Response
     {
         if ($request->isMethod('POST')) {
             if ($this->isCsrfTokenValid('password_reset_request', $request->get('csrfToken')) === false) {
@@ -91,9 +90,9 @@ class PasswordResetController extends DefaultController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
      * @Route("/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
-     * @return RedirectResponse|Response
+     * @return Response
      */
-    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
+    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null): Response
     {
         if ($user === null) {
             $this->addFlash(
@@ -155,8 +154,7 @@ class PasswordResetController extends DefaultController
         $passwordBlacklist = [
             $user->getUsername(),
             $user->getEmail(),
-            $user->getPasswordResetToken(),
-            $user->getActivationToken(),
+            $user->getPasswordResetToken()
         ];
 
         return $this->render(':User:password-reset-reset.html.twig', array(
