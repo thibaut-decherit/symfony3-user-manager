@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use AppBundle\Helper\StringHelper;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -100,14 +101,13 @@ class RedirectIfAuthenticated
 
         $referer = $this->request->getMasterRequest()->headers->get('referer');
         $baseWebsiteUrl = $this->request->getMasterRequest()->getSchemeAndHttpHost();
-
         $previousUrl = '';
 
         /*
          * IF refer url starts with base website url, the latter is removed from referer url so router can match result
          * to existing route.
          */
-        if (mb_substr($referer, 0, mb_strlen($baseWebsiteUrl, 'UTF-8'), 'UTF-8') === $baseWebsiteUrl) {
+        if (StringHelper::startsWith($referer, $baseWebsiteUrl)) {
             $previousUrl = explode($baseWebsiteUrl, $referer)[1];
 
             // Removes potential query string
