@@ -17,12 +17,12 @@ class MailerService
     /**
      * @var string
      */
-    private $autoMailerAddress;
+    private $mailerAddress;
 
     /**
      * @var string
      */
-    private $replyTo;
+    private $replyToAddress;
 
     /**
      * @var EngineInterface
@@ -41,22 +41,22 @@ class MailerService
 
     /**
      * MailerService constructor.
-     * @param string $autoMailerAddress
-     * @param string $replyTo
+     * @param string $mailerAddress
+     * @param string $replyToAddress
      * @param EngineInterface $twigEngine
      * @param Swift_Mailer $swiftMailer
      * @param TranslatorInterface $translatorInterface
      */
     public function __construct(
-        string $autoMailerAddress,
-        string $replyTo,
+        string $mailerAddress,
+        string $replyToAddress,
         EngineInterface $twigEngine,
         Swift_Mailer $swiftMailer,
         TranslatorInterface $translatorInterface
     )
     {
-        $this->autoMailerAddress = $autoMailerAddress;
-        $this->replyTo = $replyTo;
+        $this->mailerAddress = $mailerAddress;
+        $this->replyToAddress = $replyToAddress;
         $this->twigEngine = $twigEngine;
         $this->swiftMailer = $swiftMailer;
         $this->translatorInterface = $translatorInterface;
@@ -79,9 +79,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.account_deletion_request'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -101,9 +101,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.account_deletion_success'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -125,9 +125,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.email_address_change'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmailChangePending(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -138,16 +138,16 @@ class MailerService
     public function loginAttemptOnNonActivatedAccount(AbstractUser $user): void
     {
         $emailBody = $this->twigEngine->render(
-            'Email/User/login-attempt-on-non-activated-account.html.twig', [
+            ':Email/User:login-attempt-on-unactivated-account.html.twig', [
                 'user' => $user
             ]
         );
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.login_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -169,9 +169,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.password_reset'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -189,9 +189,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -209,9 +209,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.registration_attempt'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -231,9 +231,9 @@ class MailerService
 
         $this->sendEmail(
             $this->translatorInterface->trans('mailer.subjects.welcome'),
-            [$this->autoMailerAddress => 'UserManager'],
+            [$this->mailerAddress => 'UserManager'],
             $user->getEmail(),
-            $this->replyTo,
+            $this->replyToAddress,
             $emailBody
         );
     }
@@ -242,17 +242,17 @@ class MailerService
      * @param $subject
      * @param $from
      * @param $to
-     * @param $replyTo
+     * @param $replyToAddress
      * @param $body
      * @param null $attachment
      */
-    private function sendEmail($subject, $from, $to, $replyTo, $body, $attachment = null): void
+    private function sendEmail($subject, $from, $to, $replyToAddress, $body, $attachment = null): void
     {
         $message = Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setReplyTo($replyTo)
+            ->setReplyTo($replyToAddress)
             ->setBody($body, 'text/html');
         if ($attachment) {
             $message->attach($attachment);
