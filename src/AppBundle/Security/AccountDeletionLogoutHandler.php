@@ -83,7 +83,7 @@ class AccountDeletionLogoutHandler implements LogoutHandlerInterface
      * @param Response $response
      * @param TokenInterface $token
      */
-    public function logout(Request $request, Response $response, TokenInterface $token)
+    public function logout(Request $request, Response $response, TokenInterface $token): void
     {
         // IF handler doesn't support this request it will only invalidate the session.
         if ($this->supports($request) === false) {
@@ -134,7 +134,7 @@ class AccountDeletionLogoutHandler implements LogoutHandlerInterface
      * @param Response $response
      * @param TokenInterface $token
      */
-    private function userRequestedAccountDeletion(Request $request, Response $response, TokenInterface $token)
+    private function userRequestedAccountDeletion(Request $request, Response $response, TokenInterface $token): void
     {
         $user = $token->getUser();
 
@@ -170,7 +170,7 @@ class AccountDeletionLogoutHandler implements LogoutHandlerInterface
      * @param Response $response
      * @param TokenInterface $token
      */
-    private function userConfirmedAccountDeletion(Request $request, Response $response, TokenInterface $token)
+    private function userConfirmedAccountDeletion(Request $request, Response $response, TokenInterface $token): void
     {
         $em = $this->entityManager;
 
