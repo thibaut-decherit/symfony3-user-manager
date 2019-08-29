@@ -80,7 +80,7 @@ class AccountDeletionController extends DefaultController
      * Renders account deletion confirmation view where user can click a button to confirm or cancel the deletion.
      *
      * @param Request $request
-     * @Route("/delete-account/confirmation", name="account_deletion_confirmation", methods="GET")
+     * @Route("/delete-account/confirm", name="account_deletion_confirm", methods="GET")
      * @return RedirectResponse
      */
     public function confirmAction(Request $request): Response
@@ -110,13 +110,13 @@ class AccountDeletionController extends DefaultController
      * Cancels deletion of account matching deletion token.
      *
      * @param Request $request
-     * @Route("/delete-account/cancel", name="account_deletion_cancellation", methods="POST")
+     * @Route("/delete-account/cancel", name="account_deletion_cancel", methods="POST")
      * @return RedirectResponse
      * @throws AccessDeniedException
      */
     public function cancelAction(Request $request): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('account_deletion_cancellation', $request->get('_csrf_token')) === false) {
+        if ($this->isCsrfTokenValid('account_deletion_cancel', $request->get('_csrf_token')) === false) {
             throw new AccessDeniedException('Invalid CSRF token.');
         }
 
@@ -146,7 +146,7 @@ class AccountDeletionController extends DefaultController
      * Removes user matching deletion token if token is not expired.
      *
      * @param Request $request
-     * @Route("/delete-account/deletion", name="account_deletion_delete", methods="POST")
+     * @Route("/delete-account/delete", name="account_deletion_delete", methods="POST")
      * @return RedirectResponse
      */
     public function deleteAction(Request $request): RedirectResponse

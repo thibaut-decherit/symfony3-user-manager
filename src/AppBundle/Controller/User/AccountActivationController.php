@@ -20,7 +20,7 @@ class AccountActivationController extends DefaultController
      * Renders account activation confirmation view where user can click a button to confirm the activation.
      *
      * @param Request $request
-     * @Route("/activate-account/confirmation", name="account_activation_confirmation", methods="GET")
+     * @Route("/activate-account/confirm", name="account_activation_confirm", methods="GET")
      * @return RedirectResponse
      */
     public function confirmAction(Request $request): Response
@@ -50,7 +50,7 @@ class AccountActivationController extends DefaultController
      * Activates account matching activation token.
      *
      * @param Request $request
-     * @Route("/activate-account/activation", name="account_activation_activate", methods="POST")
+     * @Route("/activate-account/activate", name="account_activation_activate", methods="POST")
      * @return RedirectResponse
      * @throws AccessDeniedException
      */
