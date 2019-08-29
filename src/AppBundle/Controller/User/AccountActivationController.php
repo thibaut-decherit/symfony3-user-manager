@@ -41,7 +41,7 @@ class AccountActivationController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render(':User:account-activation-confirmation.html.twig', [
+        return $this->render('User/account-activation-confirm.html.twig', [
             'user' => $user
         ]);
     }

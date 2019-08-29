@@ -4,6 +4,7 @@ global:
   form:
     cancel: Cancel
     change_password: Change Password
+    confirm: Confirm
     submit: Submit
     save_changes: Save Changes
 

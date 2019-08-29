@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use AppBundle\Entity\User;
 use AppBundle\Helper\StringHelper;
 use DateTime;
 use Exception;

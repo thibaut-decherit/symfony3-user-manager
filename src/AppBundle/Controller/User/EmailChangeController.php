@@ -3,19 +3,20 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use AppBundle\Entity\User;
+use AppBundle\Helper\StringHelper;
 use DateTime;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class EmailChangeController
  * @package AppBundle\Controller\User
  *
- * @Route("/account/email-change")
  */
 class EmailChangeController extends DefaultController
 {
@@ -39,7 +40,7 @@ class EmailChangeController extends DefaultController
      * Handles the email address change form submitted with ajax.
      *
      * @param Request $request
-     * @Route("/request-ajax", name="email_change_request_ajax", methods="POST")
+     * @Route("account/email-change/request-ajax", name="email_change_request_ajax", methods="POST")
      * @return JsonResponse
      * @throws Exception
      */
@@ -168,16 +169,27 @@ class EmailChangeController extends DefaultController
     }
 
     /**
-     * Handles the email address change when user clicks on verification link sent by email.
+     * Renders email change confirmation view where user can click a button to confirm or cancel the change.
      *
-     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/{emailChangeToken}", name="email_change", methods="GET")
-     * @return Response
-     * @throws Exception
+     * @param Request $request
+     * @Route("email-change/confirm", name="email_change_confirm", methods="GET")
+     * @return RedirectResponse
      */
-    public function changeAction(User $user = null): Response
+    public function confirmAction(Request $request): Response
     {
-        if (is_null($user)) {
+        $emailChangeToken = $request->get('token');
+
+        if (empty($emailChangeToken)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'emailChangeToken' => StringHelper::truncateToMySQLVarcharMaxLength($emailChangeToken)
+        ]);
+
+        if ($user === null) {
             $this->addFlash(
                 'email-change-error',
                 $this->get('translator')->trans('flash.user.email_change_token_expired')
@@ -186,7 +198,6 @@ class EmailChangeController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
-        $em = $this->getDoctrine()->getManager();
         $emailChangeTokenLifetime = $this->getParameter('email_change_token_lifetime');
 
         if ($user->isEmailChangeTokenExpired($emailChangeTokenLifetime)) {
@@ -204,9 +215,105 @@ class EmailChangeController extends DefaultController
             return $this->redirectToRoute('home');
         }
 
-        $duplicate = $em->getRepository('AppBundle:User')->findOneBy(['email' => $user->getEmailChangePending()]);
+        return $this->render(':User:email-change-confirm.html.twig', [
+            'user' => $user
+        ]);
+    }
 
-        if (is_null($duplicate)) {
+    /**
+     * Cancels email change of account matching token.
+     *
+     * @param Request $request
+     * @Route("/cancel", name="email_change_cancel", methods="POST")
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function cancelAction(Request $request): RedirectResponse
+    {
+        if ($this->isCsrfTokenValid('email_change_cancel', $request->get('_csrf_token')) === false) {
+            throw new AccessDeniedException('Invalid CSRF token.');
+        }
+
+        $emailChangeToken = $request->get('email_change_token');
+
+        if (empty($emailChangeToken)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'emailChangeToken' => StringHelper::truncateToMySQLVarcharMaxLength($emailChangeToken)
+        ]);
+
+        if ($user !== null) {
+            $user->setEmailChangePending(null);
+            $user->setEmailChangeRequestedAt(null);
+            $user->setEmailChangeToken(null);
+
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * Changes email of account matching token if token is not expired.
+     *
+     * @param Request $request
+     * @Route("email-change/change", name="email_change", methods="POST")
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function changeAction(Request $request): RedirectResponse
+    {
+        if ($this->isCsrfTokenValid('email_change', $request->get('_csrf_token')) === false) {
+            throw new AccessDeniedException('Invalid CSRF token.');
+        }
+
+        $emailChangeToken = $request->get('email_change_token');
+
+        if (empty($emailChangeToken)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'emailChangeToken' => StringHelper::truncateToMySQLVarcharMaxLength($emailChangeToken)
+        ]);
+
+        if ($user === null) {
+            $this->addFlash(
+                'email-change-error',
+                $this->get('translator')->trans('flash.user.email_change_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $emailChangeTokenLifetime = $this->getParameter('email_change_token_lifetime');
+
+        if ($user->isEmailChangeTokenExpired($emailChangeTokenLifetime)) {
+            $user->setEmailChangePending(null);
+            $user->setEmailChangeRequestedAt(null);
+            $user->setEmailChangeToken(null);
+
+            $em->flush();
+
+            $this->addFlash(
+                'email-change-error',
+                $this->get('translator')->trans('flash.user.email_change_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $duplicate = $em->getRepository('AppBundle:User')->findOneBy([
+            'email' => $user->getEmailChangePending()
+        ]);
+
+        if ($duplicate === null) {
             $user->setEmail($user->getEmailChangePending());
         }
 

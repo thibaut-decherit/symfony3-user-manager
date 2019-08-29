@@ -98,10 +98,31 @@ class AccountDeletionController extends DefaultController
         ]);
 
         if ($user === null) {
+            $this->addFlash(
+                'account-deletion-error',
+                $this->get('translator')->trans('flash.user.account_deletion_token_expired')
+            );
+
             return $this->redirectToRoute('home');
         }
 
-        return $this->render(':User:account-deletion-confirmation.html.twig', [
+        $accountDeletionTokenLifetime = $this->getParameter('account_deletion_token_lifetime');
+
+        if ($user->isAccountDeletionTokenExpired($accountDeletionTokenLifetime)) {
+            $user->setAccountDeletionToken(null);
+            $user->setAccountDeletionRequestedAt(null);
+
+            $em->flush();
+
+            $this->addFlash(
+                'account-deletion-error',
+                $this->get('translator')->trans('flash.user.account_deletion_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('User/account-deletion-confirm.html.twig', [
             'user' => $user
         ]);
     }
@@ -168,6 +189,22 @@ class AccountDeletionController extends DefaultController
         ]);
 
         if ($user === null) {
+            $this->addFlash(
+                'account-deletion-error',
+                $this->get('translator')->trans('flash.user.account_deletion_token_expired')
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $accountDeletionTokenLifetime = $this->getParameter('account_deletion_token_lifetime');
+
+        if ($user->isAccountDeletionTokenExpired($accountDeletionTokenLifetime)) {
+            $user->setAccountDeletionToken(null);
+            $user->setAccountDeletionRequestedAt(null);
+
+            $em->flush();
+
             $this->addFlash(
                 'account-deletion-error',
                 $this->get('translator')->trans('flash.user.account_deletion_token_expired')
