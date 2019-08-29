@@ -76,7 +76,7 @@ class RedirectIfAuthenticated
          * $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction is needed to ensure
          * profiler requests won't be modified by this listener.
          */
-        $profilerToolbarAction = "web_profiler.controller.profiler:toolbarAction";
+        $profilerToolbarAction = 'web_profiler.controller.profiler:toolbarAction';
         if ($this->security->getToken() === null
             || $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction
             || $this->authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
@@ -84,13 +84,13 @@ class RedirectIfAuthenticated
         }
 
         $blacklistedRoutes = [
-            "account_activation_activate",
-            "account_activation_confirm",
-            "login",
-            "password_reset",
-            "password_reset_request",
-            "registration",
-            "registration_ajax"
+            'account_activation_activate',
+            'account_activation_confirm',
+            'login',
+            'password_reset',
+            'password_reset_request',
+            'registration',
+            'registration_ajax'
         ];
 
         $requestedRoute = $this->request->getMasterRequest()->get('_route');
