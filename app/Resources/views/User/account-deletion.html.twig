@@ -23,10 +23,7 @@
                 <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">
                     {{ 'global.form.cancel' | trans }}
                 </button>
-                <a href="{{ path('account_deletion_request') }}"
-                   class="btn btn-danger rounded-0">
-                    {{ 'user.send_me_deletion_link' | trans }}
-                </a>
+                {% include ':Form/User/Button:account-deletion-request.html.twig' %}
             </div>
         </div>
     </div>

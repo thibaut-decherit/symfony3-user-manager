@@ -30,6 +30,7 @@ user:
   activate_my_account: Activate my account
   current_password: Current password
   delete_account: Delete account
+  delete_my_account: Delete my account
   email_address: Email address
   login: Login
   login_attempt: Login attempt

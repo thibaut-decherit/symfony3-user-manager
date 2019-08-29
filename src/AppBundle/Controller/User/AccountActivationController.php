@@ -17,18 +17,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AccountActivationController extends DefaultController
 {
     /**
-     * Renders account activation confirmation view where the user can click a button to confirm the activation.
+     * Renders account activation confirmation view where user can click a button to confirm the activation.
      *
      * @param Request $request
      * @Route("/activate-account/confirmation", name="account_activation_confirmation", methods="GET")
      * @return RedirectResponse
      */
-    public function activationConfirmationAction(Request $request): Response
+    public function confirmAction(Request $request): Response
     {
         $accountActivationToken = $request->get('token');
 
         if (empty($accountActivationToken)) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('home');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -38,7 +38,7 @@ class AccountActivationController extends DefaultController
         ]);
 
         if ($user === null) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render(':User:account-activation-confirmation.html.twig', [
@@ -47,7 +47,7 @@ class AccountActivationController extends DefaultController
     }
 
     /**
-     * Handles account activation once confirmation button is clicked.
+     * Activates account matching activation token.
      *
      * @param Request $request
      * @Route("/activate-account/activation", name="account_activation_activate", methods="POST")
@@ -63,7 +63,7 @@ class AccountActivationController extends DefaultController
         $accountActivationToken = $request->get('account_activation_token');
 
         if (empty($accountActivationToken)) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('home');
         }
 
         $em = $this->getDoctrine()->getManager();
