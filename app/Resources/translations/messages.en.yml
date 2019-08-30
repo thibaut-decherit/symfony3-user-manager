@@ -9,6 +9,27 @@ global:
     save_changes: Save Changes
 
 
+#Head
+
+head:
+  description: My take on user management with Symfony 3.4
+  language_code: en-US
+
+
+#Page titles
+
+page_title:
+  account_activation: Account Activation
+  account_deletion: Account Deletion
+  email_address_change: Change Email Address
+  home: Home
+  login: Login
+  logout: Logout
+  my_account: My Account
+  password_reset: Reset Password
+  registration: Registration
+
+
 # Mailer
 
 mailer:
