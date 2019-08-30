@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% set page_title = 'page_title.registration'|trans %}
+
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('password-strength-meter') }}
@@ -7,12 +9,12 @@
 
 {% block body %}
     <div class="row">
-        <h1 class="col">Registration</h1>
+        <h1 class="col">{{ 'page_title.registration'|trans }}</h1>
     </div>
 
     <div class="row mb-3">
         <div class="col">
-            <a href="{{ path('home') }}">Homepage</a>
+            <a href="{{ path('home') }}">{{ 'page_title.home'|trans }}</a>
         </div>
     </div>
 

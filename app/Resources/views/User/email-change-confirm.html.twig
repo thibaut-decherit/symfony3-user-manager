@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% set page_title = 'page_title.email_address_change'|trans %}
+
 {% block body %}
     <div class="row">
-        <h1 class="col">Change Email Address</h1>
+        <h1 class="col">{{ 'page_title.email_address_change'|trans }}</h1>
     </div>
 
     <div class="row mb-3">
         <div class="col">
             <p>
-                Hey {{ user.username }}!
-                If you click on the button below, you will change the email address linked to your account from
-                <span class="font-weight-bold">{{ user.email }}</span> to
+                {{ 'user.email_address_change_confirm_instructions_1/2'|trans }}
+                <span class="font-weight-bold">{{ user.email }}</span>
+                {{ 'user.email_address_change_confirm_instructions_2/2'|trans }}
                 <span class="font-weight-bold">{{ user.emailChangePending }}</span>
             </p>
         </div>
