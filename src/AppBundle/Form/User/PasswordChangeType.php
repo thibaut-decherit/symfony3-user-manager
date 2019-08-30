@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Class PasswordChangeType
@@ -27,10 +29,14 @@ class PasswordChangeType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => array(
+                    new Length([
+                        'max' => 50,
+                        'groups' => ['Password_Length']
+                    ]),
                     new UserPassword([
                         'message' => 'form_errors.user.wrong_password',
                         'groups' => ['Password_Change']
-                    ]),
+                    ])
                 ),
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -39,7 +45,7 @@ class PasswordChangeType extends AbstractType
                 'options' => array('attr' => array('class' => 'password-field')),
                 'required' => false,
                 'first_options' => array('label' => 'user.new_password'),
-                'second_options' => array('label' => 'user.new_password_repeat'),
+                'second_options' => array('label' => 'user.new_password_repeat')
             ]);
     }
 
@@ -50,7 +56,16 @@ class PasswordChangeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Password_Change')
+            /*
+             * GroupSequence will validate constraints sequentially by iterating through the array, it means that if
+             * password length validation fails, length error will be shown and validation will stop there.
+             * UserPassword validation will not be triggered, thus preventing potential server load (or even DoS?)
+             * if a very long password is being hashed.
+             */
+            'validation_groups' => new GroupSequence(array(
+                'Password_Length',
+                'Password_Change'
+            ))
         ));
     }
 
