@@ -33,19 +33,17 @@
 
     {% if is_granted("ROLE_USER") %}
         <div class="d-flex">
-            <p class="my-2 mr-2">Hi {{ app.user.username }}!</p>
+            <p class="my-2 mr-2">{{ 'flash.user.greeting_authenticated'|trans }}{{ app.user.username }}</p>
             <a href="{{ path('account') }}" class="my-2 mr-2">{{ 'page_title.my_account'|trans }}</a>
             <a href="{{ path('logout') }}" class="align-self-center">{{ 'page_title.logout'|trans }}</a>
         </div>
     {% else %}
-        <p class="my-2">Hi anonymous visitor!</p>
+        <p class="my-2">{{ 'flash.user.greeting_anonymous'|trans }}</p>
     {% endif %}
 
-    <p class="my-3">
-        <a href="{{ path('registration') }}">Register</a>
-        <br/>
-        <a href="{{ path('login') }}">Login</a>
-        <br/>
-        <a href="{{ path('password_reset_request') }}">Reset Password</a>
+    <p class="my-3 d-flex flex-column">
+        <a href="{{ path('registration') }}">{{ 'page_title.registration'|trans }}</a>
+        <a href="{{ path('login') }}">{{ 'page_title.login'|trans }}</a>
+        <a href="{{ path('password_reset_request') }}">{{ 'page_title.password_reset'|trans }}</a>
     </p>
 {% endblock %}

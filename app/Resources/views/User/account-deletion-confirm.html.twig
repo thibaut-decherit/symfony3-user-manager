@@ -9,12 +9,7 @@
 
     <div class="row mb-3">
         <div class="col">
-            <p>
-                Hey {{ user.username }}! Please click on the button below to delete your account.
-                If you don't want to delete your account, this is your last chance to abort.
-                Once you click on the confirmation button your account and all data associated with it will be
-                permanently removed from this website.
-            </p>
+            <p>{{ 'user.account_deletion_confirm_instructions'|trans }}</p>
         </div>
     </div>
     <div class="row">
