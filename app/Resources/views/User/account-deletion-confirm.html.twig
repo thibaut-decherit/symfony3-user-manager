@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <h1 class="col">Account Deletion</h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <p>
+                Hey {{ user.username }}! Please click on the button below to delete your account.
+                If you don't want to delete your account, this is your last chance to abort.
+                Once you click on the confirmation button your account and all data associated with it will be
+                permanently removed from this website.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            {{ include(':Form/User/Button:account-deletion-cancel.html.twig') }}
+            {{ include(':Form/User/Button:account-deletion-confirm.html.twig') }}
+        </div>
+    </div>
+
+{% endblock %}

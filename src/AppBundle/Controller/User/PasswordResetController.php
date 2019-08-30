@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use AppBundle\Entity\User;
+use AppBundle\Helper\StringHelper;
 use DateTime;
 use Exception;
 use SensioLabs\Security\Exception\HttpException;
@@ -23,7 +23,7 @@ class PasswordResetController extends DefaultController
      * Renders and handles password resetting request form.
      *
      * @param Request $request
-     * @Route(name="password_reset_request", methods={"GET", "POST"})
+     * @Route("/request", name="password_reset_request", methods={"GET", "POST"})
      * @return Response
      * @throws Exception
      */
@@ -88,12 +88,23 @@ class PasswordResetController extends DefaultController
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/{passwordResetToken}", name="password_reset", methods={"GET", "POST"})
+     * @Route("/reset", name="password_reset", methods={"GET", "POST"})
      * @return Response
      */
-    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null): Response
+    public function resetAction(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        $passwordResetToken = $request->get('token');
+
+        if (empty($passwordResetToken)) {
+            return $this->redirectToRoute('password_reset_request');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'passwordResetToken' => StringHelper::truncateToMySQLVarcharMaxLength($passwordResetToken)
+        ]);
+
         if ($user === null) {
             $this->addFlash(
                 'password-reset-error',

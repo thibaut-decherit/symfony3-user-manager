@@ -3,9 +3,12 @@
 namespace AppBundle\Controller\User;
 
 use AppBundle\Controller\DefaultController;
-use AppBundle\Entity\User;
+use AppBundle\Helper\StringHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class AccountActivationController
@@ -14,14 +17,61 @@ use Symfony\Component\Routing\Annotation\Route;
 class AccountActivationController extends DefaultController
 {
     /**
-     * Handles account activation.
+     * Renders account activation confirmation view where user can click a button to confirm the activation.
      *
-     * @param User|null $user (default to null so param converter doesn't throw 404 error if no user found)
-     * @Route("/activate-account/{accountActivationToken}", name="account_activation", methods="GET")
+     * @param Request $request
+     * @Route("/activate-account/confirm", name="account_activation_confirm", methods="GET")
      * @return RedirectResponse
      */
-    public function activateAction(User $user = null): RedirectResponse
+    public function confirmAction(Request $request): Response
     {
+        $accountActivationToken = $request->get('token');
+
+        if (empty($accountActivationToken)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'accountActivationToken' => StringHelper::truncateToMySQLVarcharMaxLength($accountActivationToken)
+        ]);
+
+        if ($user === null) {
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('User/account-activation-confirm.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Activates account matching activation token.
+     *
+     * @param Request $request
+     * @Route("/activate-account/activate", name="account_activation_activate", methods="POST")
+     * @return RedirectResponse
+     * @throws AccessDeniedException
+     */
+    public function activateAction(Request $request): RedirectResponse
+    {
+        if ($this->isCsrfTokenValid('account_activation_activate', $request->get('_csrf_token')) === false) {
+            throw new AccessDeniedException('Invalid CSRF token.');
+        }
+
+        $accountActivationToken = $request->get('account_activation_token');
+
+        if (empty($accountActivationToken)) {
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:User')->findOneBy([
+            'accountActivationToken' => StringHelper::truncateToMySQLVarcharMaxLength($accountActivationToken)
+        ]);
+
         $this->addFlash(
             'account-activation-success',
             $this->get('translator')->trans('flash.user.account_activated_successfully')
@@ -31,7 +81,7 @@ class AccountActivationController extends DefaultController
             $user->setActivated(true);
             $user->setAccountActivationToken(null);
 
-            $this->getDoctrine()->getManager()->flush();
+            $em->flush();
         }
 
         return $this->redirectToRoute('login');

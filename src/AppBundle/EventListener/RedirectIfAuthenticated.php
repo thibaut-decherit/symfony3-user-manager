@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use AppBundle\Helper\StringHelper;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -75,7 +76,7 @@ class RedirectIfAuthenticated
          * $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction is needed to ensure
          * profiler requests won't be modified by this listener.
          */
-        $profilerToolbarAction = "web_profiler.controller.profiler:toolbarAction";
+        $profilerToolbarAction = 'web_profiler.controller.profiler:toolbarAction';
         if ($this->security->getToken() === null
             || $this->request->getCurrentRequest()->get('_controller') === $profilerToolbarAction
             || $this->authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED') === false) {
@@ -83,12 +84,13 @@ class RedirectIfAuthenticated
         }
 
         $blacklistedRoutes = [
-            "account_activation",
-            "login",
-            "password_reset",
-            "password_reset_request",
-            "registration",
-            "registration_ajax"
+            'account_activation_activate',
+            'account_activation_confirm',
+            'login',
+            'password_reset',
+            'password_reset_request',
+            'registration',
+            'registration_ajax'
         ];
 
         $requestedRoute = $this->request->getMasterRequest()->get('_route');
@@ -100,14 +102,13 @@ class RedirectIfAuthenticated
 
         $referer = $this->request->getMasterRequest()->headers->get('referer');
         $baseWebsiteUrl = $this->request->getMasterRequest()->getSchemeAndHttpHost();
-
         $previousUrl = '';
 
         /*
          * IF refer url starts with base website url, the latter is removed from referer url so router can match result
          * to existing route.
          */
-        if (mb_substr($referer, 0, mb_strlen($baseWebsiteUrl, 'UTF-8'), 'UTF-8') === $baseWebsiteUrl) {
+        if (StringHelper::startsWith($referer, $baseWebsiteUrl)) {
             $previousUrl = explode($baseWebsiteUrl, $referer)[1];
 
             // Removes potential query string

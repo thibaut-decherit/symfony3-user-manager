@@ -4,6 +4,7 @@ global:
   form:
     cancel: Cancel
     change_password: Change Password
+    confirm: Confirm
     submit: Submit
     save_changes: Save Changes
 
@@ -27,8 +28,10 @@ user:
   account_deletion_instructions: 'We will send you a deletion link by email and log you out. If you click on this link
   your account will be permanently deleted.'
   account_deletion_question: Are you sure you want to delete your account?
+  activate_my_account: Activate my account
   current_password: Current password
   delete_account: Delete account
+  delete_my_account: Delete my account
   email_address: Email address
   login: Login
   login_attempt: Login attempt
@@ -48,7 +51,7 @@ user:
 
 flash:
   user:
-    account_activated_successfully: Your email address has been verified successfully, you can log in below
+    account_activated_successfully: Your account has been activated successfully, you can log in below
     account_deletion_request_email_sent: A deletion link has been sent to
     account_deletion_success: Your account has beed successfully deleted
     account_deletion_token_expired: Your account deletion request has expired
