@@ -12,37 +12,27 @@
     'textAlign': 'center'
 } %}
 
-<div class="row mt-3">
-    <div class="col">
-        {{ form_label(form.username) }}
-        {{ form_widget(form.username) }}
-    </div>
+<div class="form-group">
+    {{ form_label(form.username) }}
+    {{ form_widget(form.username) }}
 </div>
-<div class="row mt-3">
-    <div class="col">
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
-    </div>
+<div class="form-group">
+    {{ form_label(form.email) }}
+    {{ form_widget(form.email) }}
 </div>
-<div class="row mt-3">
-    <div class="col">
-        {{ form_label(form.plainPassword.first) }}
-        {{ form_widget(form.plainPassword.first) }}
-        <meter value="0" max="3" class="password-strength-meter"></meter>
-    </div>
+<div class="form-group mb-0">
+    {{ form_label(form.plainPassword.first) }}
+    {{ form_widget(form.plainPassword.first) }}
+    {% include ':Component:password-strength-meter.html.twig' %}
 </div>
-<div class="row">
-    <div class="col">
-        {{ form_label(form.plainPassword.second) }}
-        {{ form_widget(form.plainPassword.second) }}
-    </div>
+<div class="form-group">
+    {{ form_label(form.plainPassword.second) }}
+    {{ form_widget(form.plainPassword.second) }}
 </div>
 
-<div class="row mt-3">
-    <div class="col">
-        <input type="submit" class="btn btn-primary border-0 form-control rounded-0 text-white"
-               value="{{ 'user.register'|trans }}"
-        />
-    </div>
+<div class="form-group">
+    <input type="submit" class="btn btn-primary border-0 form-control rounded-0 text-white"
+           value="{{ 'user.register'|trans }}"
+    />
 </div>
 {{ form_end(form) }}

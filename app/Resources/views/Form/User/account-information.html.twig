@@ -12,16 +12,15 @@
     'textAlign': 'center'
 } %}
 
-<div class="row mt-3">
-    <div class="col">
-        {{ form_label(form.username) }}
-        {{ form_widget(form.username) }}
-    </div>
+<div class="form-group">
+    {{ form_label(form.username) }}
+    {{ form_widget(form.username) }}
 </div>
 
-<div class="row mt-3">
-    <div class="col">
-        <input type="submit" value="{{ 'global.form.save_changes'|trans }}"/>
-    </div>
+<div class="form-group">
+    <input
+            class="btn btn-primary border-0 rounded-0 text-white" type="submit"
+            value="{{ 'global.form.save_changes'|trans }}"
+    />
 </div>
 {{ form_end(form) }}

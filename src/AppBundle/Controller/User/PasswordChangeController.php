@@ -28,8 +28,15 @@ class PasswordChangeController extends DefaultController
 
         $form = $this->createForm('AppBundle\Form\User\PasswordChangeType', $user);
 
+        // Password blacklist to be used by zxcvbn.
+        $passwordBlacklist = [
+            $user->getUsername(),
+            $user->getEmail()
+        ];
+
         return $this->render(':Form/User:password-change.html.twig', array(
             'form' => $form->createView(),
+            'passwordBlacklist' => json_encode($passwordBlacklist)
         ));
     }
 
