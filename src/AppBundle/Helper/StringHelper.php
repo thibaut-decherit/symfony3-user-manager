@@ -25,15 +25,39 @@ class StringHelper
     }
 
     /**
+     * Prevents potential slowdown or DoS caused by hashing very long passwords.
      * Supports extended charsets.
      *
      * @param string $string
+     * @param int $length
      * @param string $encoding
      * @return string
      */
-    public static function truncateToMySQLVarcharMaxLength(string $string, string $encoding = 'UTF-8'): string
+    public static function truncateToPasswordEncoderMaxLength(
+        string $string,
+        int $length = 100,
+        string $encoding = 'UTF-8'
+    ): string
     {
-        return mb_substr($string, 0, 255, $encoding);
+        return mb_substr($string, 0, $length, $encoding);
+    }
+
+    /**
+     * Prevents potential slowdown or DoS caused by feeding an extremely long string to a MySQL query.
+     * Supports extended charsets.
+     *
+     * @param string $string
+     * @param int $length
+     * @param string $encoding
+     * @return string
+     */
+    public static function truncateToMySQLVarcharMaxLength(
+        string $string,
+        int $length = 255,
+        string $encoding = 'UTF-8'
+    ): string
+    {
+        return mb_substr($string, 0, $length, $encoding);
     }
 
     /**

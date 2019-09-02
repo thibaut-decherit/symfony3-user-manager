@@ -35,7 +35,9 @@ class PasswordResetController extends DefaultController
             }
 
             $em = $this->getDoctrine()->getManager();
-            $usernameOrEmail = $request->request->get('usernameOrEmail');
+            $usernameOrEmail = StringHelper::truncateToMySQLVarcharMaxLength(
+                $request->request->get('usernameOrEmail')
+            );
 
             if (preg_match('/^.+\@\S+\.\S+$/', $usernameOrEmail)) {
                 $user = $em->getRepository('AppBundle:User')->findOneBy(['email' => $usernameOrEmail]);

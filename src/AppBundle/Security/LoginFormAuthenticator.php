@@ -3,6 +3,7 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
+use AppBundle\Helper\StringHelper;
 use AppBundle\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -87,11 +88,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             return;
         }
 
-        $username = $request->get('_username');
-        $password = $request->get('_password');
+        $username = StringHelper::truncateToMySQLVarcharMaxLength($request->get('_username'));
+        $password = StringHelper::truncateToPasswordEncoderMaxLength($request->get('_password'));
         $csrfToken = $request->get('_csrf_token');
 
-        if (false === $this->csrfTokenManager->isTokenValid(new CsrfToken('authenticate', $csrfToken))) {
+        if (false === $this->csrfTokenManager->isTokenValid(new CsrfToken('login', $csrfToken))) {
             throw new InvalidCsrfTokenException();
         }
 
