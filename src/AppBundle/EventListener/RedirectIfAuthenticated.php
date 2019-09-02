@@ -105,10 +105,10 @@ class RedirectIfAuthenticated
         $previousUrl = '';
 
         /*
-         * IF refer url starts with base website url, the latter is removed from referer url so router can match result
-         * to existing route.
+         * IF refer url exists and starts with base website url, the latter is removed from referer url so router can
+         * match result to existing route.
          */
-        if (StringHelper::startsWith($referer, $baseWebsiteUrl)) {
+        if (is_string($referer) && StringHelper::startsWith($referer, $baseWebsiteUrl)) {
             $previousUrl = explode($baseWebsiteUrl, $referer)[1];
 
             // Removes potential query string
