@@ -52,7 +52,7 @@ function getCustomBlacklist() {
     // Retrieves value of current form inputs that should not be reused as a password.
     const customBlacklistFromInputs = [
         $('#appbundle_user_username').val(),
-        $('#appbundle_user_email').val(),
+        $('#appbundle_user_email').val()
     ];
 
     return customBlacklistFromInputs.concat(customBlacklistArrayFromBackEnd);
