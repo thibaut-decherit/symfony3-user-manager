@@ -31,9 +31,9 @@ class EmailChangeController extends DefaultController
 
         $form = $this->createForm('AppBundle\Form\User\EmailChangeType', $user);
 
-        return $this->render(':Form/User:email-change.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render(':Form/User:email-change.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -65,13 +65,13 @@ class EmailChangeController extends DefaultController
                     $this->get('translator')->trans('flash.user.already_current_email_address')
                 );
 
-                $template = $this->render(':Form/User:email-change.html.twig', array(
+                $template = $this->render(':Form/User:email-change.html.twig', [
                     'form' => $form->createView()
-                ));
+                ]);
                 $jsonTemplate = json_encode($template->getContent());
 
                 return new JsonResponse([
-                    'template' => $jsonTemplate,
+                    'template' => $jsonTemplate
                 ], 400);
             }
 
@@ -91,9 +91,12 @@ class EmailChangeController extends DefaultController
                         'flash.user.verification_link_retry_delay_not_expired_singular'
                     );
                 } else {
-                    $errorMessage = $this->get('translator')->trans('flash.user.verification_link_retry_delay_not_expired_plural', [
-                        '%delay%' => $limit
-                    ]);
+                    $errorMessage = $this->get('translator')->trans(
+                        'flash.user.verification_link_retry_delay_not_expired_plural',
+                        [
+                            '%delay%' => $limit
+                        ]
+                    );
                 }
 
                 $this->addFlash(
@@ -101,13 +104,13 @@ class EmailChangeController extends DefaultController
                     $errorMessage
                 );
 
-                $template = $this->render(':Form/User:email-change.html.twig', array(
+                $template = $this->render(':Form/User:email-change.html.twig', [
                     'form' => $form->createView()
-                ));
+                ]);
                 $jsonTemplate = json_encode($template->getContent());
 
                 return new JsonResponse([
-                    'template' => $jsonTemplate,
+                    'template' => $jsonTemplate
                 ], 200);
             }
 
@@ -144,22 +147,22 @@ class EmailChangeController extends DefaultController
                 $successMessage->getContent()
             );
 
-            $template = $this->render(':Form/User:email-change.html.twig', array(
+            $template = $this->render(':Form/User:email-change.html.twig', [
                 'form' => $form->createView()
-            ));
+            ]);
             $jsonTemplate = json_encode($template->getContent());
 
             return new JsonResponse([
-                'template' => $jsonTemplate,
+                'template' => $jsonTemplate
             ], 200);
         }
 
         $this->getDoctrine()->getManager()->refresh($user);
 
         // Renders and json encode the updated form (with errors)
-        $template = $this->render(':Form/User:email-change.html.twig', array(
+        $template = $this->render(':Form/User:email-change.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
         $jsonTemplate = json_encode($template->getContent());
 
         // Returns the html form and 400 Bad Request status to js

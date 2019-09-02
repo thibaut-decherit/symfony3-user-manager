@@ -34,10 +34,10 @@ class PasswordChangeController extends DefaultController
             $user->getEmail()
         ];
 
-        return $this->render(':Form/User:password-change.html.twig', array(
+        return $this->render(':Form/User:password-change.html.twig', [
             'form' => $form->createView(),
             'passwordBlacklist' => json_encode($passwordBlacklist)
-        ));
+        ]);
     }
 
     /**
@@ -67,13 +67,13 @@ class PasswordChangeController extends DefaultController
                 $this->get('translator')->trans('flash.user.password_updated')
             );
 
-            $template = $this->render(':Form/User:password-change.html.twig', array(
+            $template = $this->render(':Form/User:password-change.html.twig', [
                 'form' => $form->createView()
-            ));
+            ]);
             $jsonTemplate = json_encode($template->getContent());
 
             return new JsonResponse([
-                'template' => $jsonTemplate,
+                'template' => $jsonTemplate
             ], 200);
         }
 
@@ -84,9 +84,9 @@ class PasswordChangeController extends DefaultController
         $this->getDoctrine()->getManager()->refresh($user);
 
         // Renders and json encode the updated form (with errors)
-        $template = $this->render(':Form/User:password-change.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        $template = $this->render(':Form/User:password-change.html.twig', [
+            'form' => $form->createView()
+        ]);
         $jsonTemplate = json_encode($template->getContent());
 
         // Returns the html form and 400 Bad Request status to js

@@ -170,9 +170,9 @@ class PasswordResetController extends DefaultController
             $user->getPasswordResetToken()
         ];
 
-        return $this->render(':User:password-reset-reset.html.twig', array(
+        return $this->render(':User:password-reset-reset.html.twig', [
             'form' => $form->createView(),
-            'passwordBlacklist' => json_encode($passwordBlacklist),
-        ));
+            'passwordBlacklist' => json_encode($passwordBlacklist)
+        ]);
     }
 }

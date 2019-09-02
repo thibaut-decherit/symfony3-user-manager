@@ -28,10 +28,10 @@ class RegistrationController extends DefaultController
         $user = new User();
         $form = $this->createForm('AppBundle\Form\User\RegistrationType', $user);
 
-        return $this->render('User/registration.html.twig', array(
+        return $this->render('User/registration.html.twig', [
             'user' => $user,
-            'form' => $form->createView(),
-        ));
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -70,20 +70,20 @@ class RegistrationController extends DefaultController
                 $this->get('translator')->trans('flash.user.registration_success')
             );
 
-            $template = $this->render(':Form/User:registration.html.twig', array(
-                'form' => $form->createView(),
-            ));
+            $template = $this->render(':Form/User:registration.html.twig', [
+                'form' => $form->createView()
+            ]);
             $jsonTemplate = json_encode($template->getContent());
 
             return new JsonResponse([
-                'template' => $jsonTemplate,
+                'template' => $jsonTemplate
             ], 200);
         }
 
         // Renders and json encode the updated form (with errors and input values)
-        $template = $this->render(':Form/User:registration.html.twig', array(
+        $template = $this->render(':Form/User:registration.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
         $jsonTemplate = json_encode($template->getContent());
 
         // Returns the html form and 400 Bad Request status to js

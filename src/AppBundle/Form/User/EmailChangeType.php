@@ -25,7 +25,7 @@ class EmailChangeType extends AbstractType
                 'data' => '',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $builder->getData()->getEmail(),
+                    'placeholder' => $builder->getData()->getEmail()
                 ]
             ]);
     }
@@ -35,10 +35,12 @@ class EmailChangeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Email_Change')
-        ));
+            'validation_groups' => [
+                'Email_Change'
+            ]
+        ]);
     }
 
     /**

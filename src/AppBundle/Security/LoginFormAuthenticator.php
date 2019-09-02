@@ -103,7 +103,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         return [
             'username' => $username,
-            'password' => $password,
+            'password' => $password
         ];
     }
 

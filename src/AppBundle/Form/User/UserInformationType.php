@@ -21,7 +21,7 @@ class UserInformationType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'user.username',
+                'label' => 'user.username'
             ]);
     }
 
@@ -30,10 +30,12 @@ class UserInformationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Account_Information')
-        ));
+            'validation_groups' => [
+                'Account_Information'
+            ]
+        ]);
     }
 
     /**
