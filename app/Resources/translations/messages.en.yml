@@ -76,6 +76,16 @@ user:
   username_or_email_address: Username or Email address
 
 
+# Password strength meter
+
+password_strength_meter:
+  password_strength: "Password strength:"
+  strength:
+    average: Average
+    good: Good
+    weak: Weak
+
+
 # Flash
 
 flash:

@@ -2,11 +2,6 @@
 
 {% set page_title = 'page_title.registration'|trans %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('password-strength-meter') }}
-{% endblock %}
-
 {% block body %}
     <div class="row">
         <h1 class="col">{{ 'page_title.registration'|trans }}</h1>
