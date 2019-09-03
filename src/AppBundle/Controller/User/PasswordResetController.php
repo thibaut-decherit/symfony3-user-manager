@@ -54,11 +54,11 @@ class PasswordResetController extends DefaultController
                 return $this->render(':User:password-reset-request.html.twig');
             }
 
-            $passwordResettingRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
+            $passwordResetRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
 
             // IF retry delay is not expired, only show success message without sending email and writing in database.
             if ($user->getPasswordResetRequestedAt() !== null
-                && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
+                && $user->isPasswordResetRequestRetryDelayExpired($passwordResetRequestRetryDelay) === false) {
                 return $this->render(':User:password-reset-request.html.twig');
             }
 
