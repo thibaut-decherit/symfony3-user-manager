@@ -20,3 +20,9 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+
+# Email spooling using files is recommended, see readme at "User enumeration prevention"
+swiftmailer:
+    spool:
+        type: path
+        # path: /path/to/spooldir
