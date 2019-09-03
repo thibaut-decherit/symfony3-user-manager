@@ -24,10 +24,18 @@ class PasswordResetType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.user.repeat_password',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => [
+                    'attr' => [
+                        'class' => 'password-field'
+                    ]
+                ],
                 'required' => true,
-                'first_options' => array('label' => 'user.password'),
-                'second_options' => array('label' => 'user.password_repeat'),
+                'first_options' => [
+                    'label' => 'user.password'
+                ],
+                'second_options' => [
+                    'label' => 'user.password_repeat'
+                ]
             ]);
     }
 
@@ -36,10 +44,12 @@ class PasswordResetType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Password_Change')
-        ));
+            'validation_groups' => [
+                'Password_Change'
+            ]
+        ]);
     }
 
     /**

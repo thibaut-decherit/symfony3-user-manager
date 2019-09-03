@@ -225,7 +225,9 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
 
     public function __construct()
     {
-        $this->roles = ['ROLE_USER'];
+        $this->roles = [
+            'ROLE_USER'
+        ];
         $this->registeredAt = new DateTime();
         $this->activated = false;
     }
@@ -610,18 +612,22 @@ abstract class AbstractUser implements UserInterface, AdvancedUserInterface, Equ
     public function isEqualTo(UserInterface $user): bool
     {
         if (!$user instanceof AbstractUser) {
+
             return false;
         }
 
         if ($this->password !== $user->getPassword()) {
+
             return false;
         }
 
         if ($this->salt !== $user->getSalt()) {
+
             return false;
         }
 
         if ($this->username !== $user->getUsername()) {
+
             return false;
         }
 

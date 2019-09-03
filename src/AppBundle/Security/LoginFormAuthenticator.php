@@ -103,7 +103,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         return [
             'username' => $username,
-            'password' => $password,
+            'password' => $password
         ];
     }
 
@@ -119,7 +119,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         $usernameOrEmail = $credentials['username'];
 
-        if (preg_match('/^.+\@\S+\.\S+$/', $usernameOrEmail)) {
+        if (preg_match('/^.+@\S+\.\S+$/', $usernameOrEmail)) {
             return $this->em->getRepository('AppBundle:User')->findOneBy(['email' => $usernameOrEmail]);
         }
 
@@ -174,7 +174,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             $usernameOrEmail = $request->request->get('_username');
             $user = null;
 
-            if (preg_match('/^.+\@\S+\.\S+$/', $usernameOrEmail)) {
+            if (preg_match('/^.+@\S+\.\S+$/', $usernameOrEmail)) {
                 $user = $this->em->getRepository('AppBundle:User')->findOneBy(['email' => $usernameOrEmail]);
             } else {
                 $user = $this->em->getRepository('AppBundle:User')->findOneBy(['username' => $usernameOrEmail]);

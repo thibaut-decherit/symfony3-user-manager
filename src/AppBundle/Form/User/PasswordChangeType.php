@@ -28,7 +28,7 @@ class PasswordChangeType extends AbstractType
                 'label' => 'user.current_password',
                 'mapped' => false,
                 'required' => false,
-                'constraints' => array(
+                'constraints' => [
                     new Length([
                         'max' => 50,
                         'groups' => ['Password_Length']
@@ -37,15 +37,23 @@ class PasswordChangeType extends AbstractType
                         'message' => 'form_errors.user.wrong_password',
                         'groups' => ['Password_Change']
                     ])
-                ),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.user.repeat_password',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => [
+                    'attr' => [
+                        'class' => 'password-field'
+                    ]
+                ],
                 'required' => false,
-                'first_options' => array('label' => 'user.new_password'),
-                'second_options' => array('label' => 'user.new_password_repeat')
+                'first_options' => [
+                    'label' => 'user.new_password'
+                ],
+                'second_options' => [
+                    'label' => 'user.new_password_repeat'
+                ]
             ]);
     }
 
@@ -54,7 +62,7 @@ class PasswordChangeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User',
             /*
              * GroupSequence will validate constraints sequentially by iterating through the array, it means that if
@@ -62,11 +70,11 @@ class PasswordChangeType extends AbstractType
              * UserPassword validation will not be triggered, thus preventing potential server load (or even DoS?)
              * if a very long password is being hashed.
              */
-            'validation_groups' => new GroupSequence(array(
+            'validation_groups' => new GroupSequence([
                 'Password_Length',
                 'Password_Change'
-            ))
-        ));
+            ])
+        ]);
     }
 
     /**

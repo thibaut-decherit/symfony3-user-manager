@@ -13,72 +13,89 @@ My take on user management with Symfony 3.4
 
 Feel free to tailor each feature to your needs.
 
-### Internationalization:
+### Internationalization
 - Content is compatible with translation files
 - English translation
 
-### Mailer:
+### Mailer
 - Service
-- Account activation email
-- Password reset email
 - Add your own methods to send other emails
+- Keep in mind that emails are translated in the locale of the current user, which could differ from the locale of the recipient, especially for password reset email and emails related to user enumeration prevention. If it's a problem for you, consider storing the locale of each user in the database and translating emails with this locale instead of the default one
 
-### Registration:
+### Registration
 - Registration form with expected validations on each field (see User entity for details)
 - Form submitted with AJAX to avoid refresh, so you can freely embed it in another view (e.g. in a modal)
 - Custom Symfony form errors
-- Bootstrap alert success with message on successful registration
-- Email with activation link sent to newly registered user
-  - Redirect to login page with custom flash message with Bootstrap alert success if account successfully activated
-  - Redirect to login page with custom flash message with Bootstrap alert success if account already activated
+- Custom flash message with Bootstrap alert success on successful registration
+- Activation link sent to newly registered user, leading to confirmation view with a button
+  - On button click, redirect to login page with custom flash message with Bootstrap alert success
 
-### Login with Guard component:
+### Login with Guard component
 - Login form, submitted with AJAX to avoid refresh, so you can freely embed it in another view (e.g. in a modal)
   - Username/email compatible field
 - Bootstrap alert danger with message on wrong credentials
-- Bootstrap alert danger with message on login attempt to unactivated account
 - Redirect to login page on access attempt to page requiring authentication
 - Remember me
 - Guard
   - Add your own logic to what happens when user logs in successfully (e.g. redirect to specific route depending on user role)
-  - Add your own logic to what happens when user fails to log in (e.g. count before account lockdown)
+  - Add your own logic to what happens when user fails to log in (e.g. count before account timeout)
 
-### Logout:
+### Logout
 - Logout route
 
-### User profile:
-- Account information edit form with username and email fields (add fields as needed)
-- Form embedded in parent view through Twig `{{ render(controler()) }}` , so you can group it together with password change form
+### User profile
+- Account information edit form with username field (add fields as needed)
+- Form embedded in parent view through Twig `{{ render(controler()) }}` , so you can group it together with other account related forms
 - Form submitted with AJAX to avoid refresh
 - Custom Symfony form errors
 - Bootstrap alert success with message on successful edit
 
-### Password change:
+### Email address change
+- Email change form submitted with AJAX to avoid refresh
+- Form embedded in parent view through Twig `{{ render(controler()) }}`, so you can group it together with other account related forms
+- Custom Symfony form errors
+- Custom flash message with Bootstrap alert success on successful submit
+- Verification link and link lifetime sent to new email address, leading to confirmation view with a button
+  - On button click, redirect to login page with custom flash message with Bootstrap alert success
+- Customizable delay between each change request
+  - Prevents user from spamming another email address
+  - If delay is not expired, shows successful submit flash message
+- Customizable verification link lifetime
+  - Custom flash message with Bootstrap alert danger if verification link has expired
+
+### Password change
 - Password change form submitted with AJAX to avoid refresh
-- Form embedded in parent view through Twig `{{ render(controler()) }}` , so you can group it together with profile edit form
+- Form embedded in parent view through Twig `{{ render(controler()) }}`, so you can group it together with other account related forms
 - Current password field
 - Repeat new password field
 - Custom Symfony form errors
-- Bootstrap alert success with message on successful change
+- Custom flash message with Bootstrap alert success on successful change
 
-### Password reset:
+### Password reset
 - Password reset form with username/email compatible field
-- Custom flash message with Bootstrap alert danger if no user found for submitted username/email
-- Custom flash message with Bootstrap alert danger if account not yet activated
+- Custom flash message with Bootstrap alert success on successful submit
 - Customizable delay between each reset request
-  - Custom flash message with Bootstrap alert danger if delay has not expired, informing user of delay duration
+  - Shows previous success flash message even if delay is not expired (email is probably on the way and the user is impatient)
 - Customizable reset link lifetime
   - Custom flash message with Bootstrap alert danger if reset link has expired
-- Email with reset link and expiration delay sent to user
-- On reset link click, email address is considered to be verified if it wasn't already
+- Email with reset link and link lifetime sent to user
+- On reset password form submit, account is considered to be activated if it wasn't already
 - On reset success, redirect to login page and custom flash message with Bootstrap alert success
 
-### Redirect if authenticated:
+### Account deletion
+- Request modal reachable only if user is logged-in
+- Customizable deletion link lifetime
+  - Custom flash message with Bootstrap alert danger if deletion link has expired
+- Confirmation link and link lifetime sent to user, leading to confirmation view with two buttons
+  - On delete button click, account is deleted and user is redirected to homepage with custom flash message with Bootstrap alert success
+  - On cancel button click, user fields related to account deletion are cleared, invalidating the deletion link, and user is redirected to homepage
+
+### Redirect if authenticated
 - Event listener triggered on each request through `onKernelRequest()` method 
 - Redirect to homepage if authenticated user attempts to access "logged-out only" routes (e.g. login, register and password reset)
 - Add your own routes and modify existing list
 
-### Password rehash on user authentication if needed:
+### Password rehash on user authentication if cost change
 - Event listener triggered on login through `onSecurityInteractiveLogin` method
 - Rehashes password on login if bcrypt cost has been modified in `config.yml`
   - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
@@ -89,34 +106,34 @@ Feel free to tailor each feature to your needs.
 - Bcrypt implementation
 - Modify listener and config files to implement another algorithm. If you need to switch algorithm on an existing database, see [here](https://gist.github.com/thibaut-decherit/fb041311b6e387132a8077062acd6ded#the-following-is-optional-needed-if-you-have-passwords-hashed-with-legacy-algorithms-eg-sha-1-you-have-two-options)
 
-### Haveibeenpwned API password validator:
+### Haveibeenpwned API password validator
 - Prevents your users from choosing a password compromised in known data breaches
 - Password validation through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API
 - Custom Symfony form error
 - Consider implementing this through something less strict than a validator if you think it could deter potential users (e.g. an informative message on user profile)
 
-### Password strength meter:
+### Password strength meter
 - Usable separately or conjointly with the back-end HIBP password validator
 - Visual indicator ONLY, to help your users choose a "good" password
 - Password strength is based on length, [zxcvbn](https://github.com/dropbox/zxcvbn) password strength estimator from Dropbox and a check against previously leaked passwords through Troy Hunt [haveibeenpwned.com](https://haveibeenpwned.com/) API (if available)
 
-### Unactivated accounts removal command:
+### Unactivated accounts removal command
 - Command to delete users registered for more than `d` days if they haven't activated their account
 - Removes accounts that will most probably never be used
 - Modify time between registration and removal as needed
 - Execute `php bin/console app:remove-unactivated-accounts-older-than d` command (e.g. through a cron job)
 
-### User enumeration prevention:
+### User enumeration prevention
 - Registration
   - If form is valid, shows success message even if email address is already registered to another account
   - If email address is already registered to another account and is:
-    - verified: sends an email to the existing user, suggesting to reset his password (we assume user is trying to create a new account because he forgot the password)
+    - verified: sends an email to the existing user, suggesting him to reset his password (we assume user is trying to create a new account because he forgot the password)
     - unverified: sends an email to the existing user with a verification link (similar logic)
 - Login
   - Same error message if wrong password or if user doesn't exist
   - If email address is not yet verified a new verification email is sent
 - Password reset
-  - If form is valid, shows success message even if email address or username is not registered to any account or if retry delay has not yet expired
+  - If form is valid, shows success message even if email address or username is not registered to any account
   - If email address or username is registered to an account and retry delay is expired or inexistant (first try), sends the email
 - Email address change
   - If form is valid and new email address is not the same than current email address, shows success message
@@ -126,7 +143,7 @@ Feel free to tailor each feature to your needs.
 
 **Important:** Spool emails should be enabled in production environment or the delay between form submission and server response could hint that an email has been sent.
 
-### Response header setter:
+### Response header setter
 - Event listener triggered on each response through `onKernelResponse()` method
 - Adds custom headers to the response
 - Support for "static" headers specified in `config.yml`

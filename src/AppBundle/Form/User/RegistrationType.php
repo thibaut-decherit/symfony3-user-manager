@@ -25,19 +25,27 @@ class RegistrationType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'user.username',
-                'required' => false,
+                'required' => false
             ])
             ->add('email', EmailType::class, [
                 'label' => 'user.email_address',
-                'required' => false,
+                'required' => false
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'form_errors.user.repeat_password',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => [
+                    'attr' => [
+                        'class' => 'password-field'
+                    ]
+                ],
                 'required' => false,
-                'first_options' => array('label' => 'user.password'),
-                'second_options' => array('label' => 'user.password_repeat'),
+                'first_options' => [
+                    'label' => 'user.password'
+                ],
+                'second_options' => [
+                    'label' => 'user.password_repeat'
+                ]
             ]);
     }
 
@@ -46,10 +54,12 @@ class RegistrationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\User',
-            'validation_groups' => array('Registration')
-        ));
+            'validation_groups' => [
+                'Registration'
+            ]
+        ]);
     }
 
     /**

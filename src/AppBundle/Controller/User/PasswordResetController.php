@@ -54,11 +54,11 @@ class PasswordResetController extends DefaultController
                 return $this->render(':User:password-reset-request.html.twig');
             }
 
-            $passwordResettingRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
+            $passwordResetRequestRetryDelay = $this->getParameter('password_reset_request_send_email_again_delay');
 
             // IF retry delay is not expired, only show success message without sending email and writing in database.
             if ($user->getPasswordResetRequestedAt() !== null
-                && $user->isPasswordResetRequestRetryDelayExpired($passwordResettingRequestRetryDelay) === false) {
+                && $user->isPasswordResetRequestRetryDelayExpired($passwordResetRequestRetryDelay) === false) {
                 return $this->render(':User:password-reset-request.html.twig');
             }
 
@@ -116,16 +116,6 @@ class PasswordResetController extends DefaultController
             return $this->redirectToRoute('password_reset_request');
         }
 
-        /*
-         * User just clicked a password reset link sent by email, so we consider the email address has successfully
-         * been verified, even if user never actually clicked on the dedicated link sent in the activation email.
-         */
-        if ($user->isActivated() === false) {
-            $user->setActivated(true);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
         $passwordResetTokenLifetime = $this->getParameter('password_reset_token_lifetime');
 
         if ($user->isPasswordResetTokenExpired($passwordResetTokenLifetime)) {
@@ -145,6 +135,15 @@ class PasswordResetController extends DefaultController
         $form = $this->createForm('AppBundle\Form\User\PasswordResetType', $user);
 
         $form->handleRequest($request);
+
+        /*
+         * User just submitted a password reset form, so we consider his email address has successfully been verified,
+         * even if user never actually activated his account through the dedicated feature.
+         */
+        if ($form->isSubmitted() && $user->isActivated() === false) {
+            $user->setActivated(true);
+            $em->flush();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
@@ -170,9 +169,9 @@ class PasswordResetController extends DefaultController
             $user->getPasswordResetToken()
         ];
 
-        return $this->render(':User:password-reset-reset.html.twig', array(
+        return $this->render(':User:password-reset-reset.html.twig', [
             'form' => $form->createView(),
-            'passwordBlacklist' => json_encode($passwordBlacklist),
-        ));
+            'passwordBlacklist' => json_encode($passwordBlacklist)
+        ]);
     }
 }
