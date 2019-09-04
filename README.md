@@ -15,7 +15,8 @@ Feel free to tailor each feature to your needs.
 
 ### Internationalization
 - Content is compatible with translation files
-- English translation
+  - English translation included
+  - Add your own, modify existing one
 
 ### Mailer
 - Service
@@ -55,7 +56,7 @@ Feel free to tailor each feature to your needs.
 - Form embedded in parent view through Twig `{{ render(controler()) }}`, so you can group it together with other account related forms
 - Custom Symfony form errors
 - Custom flash message with Bootstrap alert success on successful submit
-- Verification link and link lifetime sent to new email address, leading to confirmation view with a button
+- Verification link and link lifetime sent to the new email address, leading to confirmation view with a button
   - On button click, redirect to login page with custom flash message with Bootstrap alert success
 - Customizable delay between each change request
   - Prevents user from spamming another email address
@@ -100,7 +101,7 @@ Feel free to tailor each feature to your needs.
 - Rehashes password on login if bcrypt cost has been modified in `config.yml`
   - Without this listener, cost change would apply only to password persisted (registration) or updated (password change or reset) after the change
   - This could be an issue if your existing users don't update their password
-  - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that? Have you been hacked? Are my data safe?")
+  - A workaround would be to force your users to change password but it is bad practice for multiple reasons and you could have to deal with distrust ("Why are you asking me that? Have you been hacked? Is my data safe?")
   - This listener prevents all that by working seamlessly in the backgroup while your users log in
 - Password checked through `password_needs_rehash`  method
 - Bcrypt implementation
