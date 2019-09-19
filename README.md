@@ -1,6 +1,8 @@
 # Symfony User Manager
 My take on user management with Symfony 3.4
 
+## **DEPRECATED**
+Symfony 4 version is available [here](https://github.com/thibaut-decherit/symfony4-user-manager).
 
 ## **Dependencies**
 - Webpack Encore (SCSS and JS compilation)
